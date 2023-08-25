@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		DD08E51B2A97B3C300E8FEB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD08E51A2A97B3C300E8FEB8 /* AppDelegate.swift */; };
-		DD08E51D2A97B3C300E8FEB8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD08E51C2A97B3C300E8FEB8 /* SceneDelegate.swift */; };
 		DD08E51F2A97B3C300E8FEB8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD08E51E2A97B3C300E8FEB8 /* ViewController.swift */; };
 		DD08E5242A97B3C300E8FEB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD08E5232A97B3C300E8FEB8 /* Assets.xcassets */; };
 		DD08E5272A97B3C300E8FEB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD08E5252A97B3C300E8FEB8 /* LaunchScreen.storyboard */; };
@@ -17,7 +16,6 @@
 /* Begin PBXFileReference section */
 		DD08E5172A97B3C300E8FEB8 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD08E51A2A97B3C300E8FEB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DD08E51C2A97B3C300E8FEB8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		DD08E51E2A97B3C300E8FEB8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		DD08E5232A97B3C300E8FEB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DD08E5262A97B3C300E8FEB8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -65,7 +63,6 @@
 			isa = PBXGroup;
 			children = (
 				DD08E51A2A97B3C300E8FEB8 /* AppDelegate.swift */,
-				DD08E51C2A97B3C300E8FEB8 /* SceneDelegate.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -152,7 +149,6 @@
 			files = (
 				DD08E51F2A97B3C300E8FEB8 /* ViewController.swift in Sources */,
 				DD08E51B2A97B3C300E8FEB8 /* AppDelegate.swift in Sources */,
-				DD08E51D2A97B3C300E8FEB8 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
