@@ -22,6 +22,16 @@ final class TrackersListViewController: UIViewController {
         return collectionView
     }()
     
+    private var label: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Что будем отслеживать?"
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.textColor = .blackYP
+        label.textAlignment = .center
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationItem()
@@ -45,6 +55,7 @@ final class TrackersListViewController: UIViewController {
         let datePicker = UIDatePicker()
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
+        datePicker.locale = .current
         
         let rightItem = UIBarButtonItem(customView: datePicker)
         
@@ -59,7 +70,8 @@ final class TrackersListViewController: UIViewController {
     
     private func setupConstraints() {
         view.addSubview(collectionView)
-        view.addSubview(imageView)
+        collectionView.addSubview(imageView)
+        collectionView.addSubview(label)
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -67,8 +79,12 @@ final class TrackersListViewController: UIViewController {
             collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            imageView.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor),
+            
+            label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            label.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
+            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
     }
     
