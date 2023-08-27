@@ -16,13 +16,13 @@ final class TrackersListViewController: UIViewController {
         return imageView
     }()
     
-    private var collectionView: UICollectionView = {
+    private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
     
-    private var label: UILabel = {
+    private let label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Что будем отслеживать?"
@@ -37,6 +37,7 @@ final class TrackersListViewController: UIViewController {
         setupNavigationItem()
         setupConstraints()
         view.backgroundColor = .whiteYP
+        collectionView.dataSource = self
     }
     
     private func setupNavigationItem() {
@@ -62,6 +63,7 @@ final class TrackersListViewController: UIViewController {
         navigationItem.rightBarButtonItem = rightItem
         
         let searchController = UISearchController()
+        searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "Поиск"
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.setValue("Отменить", forKey: "cancelButtonText")
@@ -76,8 +78,8 @@ final class TrackersListViewController: UIViewController {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             imageView.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
             imageView.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor),
@@ -89,7 +91,25 @@ final class TrackersListViewController: UIViewController {
     }
     
     @objc private func addTracker() {
-        
+        let forkVC = ForkViewController()
+        present(forkVC, animated: true)
     }
 }
 
+// MARK: - UICollectionViewDataSource
+
+extension TrackersListViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        UICollectionViewCell()
+    }
+}
+
+// MARK: - UISearchBarDelegate
+
+extension TrackersListViewController: UISearchBarDelegate {
+    
+}
