@@ -10,7 +10,7 @@ import UIKit
 final class ForkViewController: UIViewController {
     
     private let trackerButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .blackYP
         button.setTitle("Привычка", for: .normal)
@@ -21,7 +21,7 @@ final class ForkViewController: UIViewController {
     }()
     
     private let eventButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .blackYP
         button.setTitle("Нерегулярное событие", for: .normal)
