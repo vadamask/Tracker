@@ -62,6 +62,14 @@ final class TrackersListViewController: UIViewController {
         return label
     }()
     
+    private let searchField: UISearchTextField = {
+        let searchField = UISearchTextField()
+        searchField.translatesAutoresizingMaskIntoConstraints = false
+        searchField.placeholder = "Поиск"
+        searchField.clearButtonMode = .always
+        return searchField
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationItem()
@@ -69,6 +77,7 @@ final class TrackersListViewController: UIViewController {
         setupCollectionView()
         view.backgroundColor = .whiteYP
         checkImageView()
+        searchField.delegate = self
     }
     
     private func setupCollectionView() {
@@ -87,7 +96,6 @@ final class TrackersListViewController: UIViewController {
             target: self,
             action: #selector(addTracker)
         )
-        
         leftItem.tintColor = .blackYP
         navigationItem.leftBarButtonItem = leftItem
         
@@ -95,29 +103,24 @@ final class TrackersListViewController: UIViewController {
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
         datePicker.locale = .init(identifier: "Ru_ru")
-        
-        let rightItem = UIBarButtonItem(customView: datePicker)
-        
-        navigationItem.rightBarButtonItem = rightItem
-        
-        let searchController = UISearchController()
-        searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = "Поиск"
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchBar.setValue("Отменить", forKey: "cancelButtonText")
-        navigationItem.searchController = searchController
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
     }
     
     private func setupConstraints() {
         view.addSubview(collectionView)
+        view.addSubview(searchField)
         collectionView.addSubview(imageView)
         collectionView.addSubview(label)
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.topAnchor.constraint(equalTo: searchField.bottomAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            searchField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            searchField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             imageView.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
             imageView.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor),
@@ -129,7 +132,7 @@ final class TrackersListViewController: UIViewController {
     }
     
     @objc private func addTracker() {
-        let forkVC = ForkViewController()
+        let forkVC = TrackerTypeViewController()
         present(forkVC, animated: true)
     }
     
@@ -180,6 +183,6 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - UISearchBarDelegate
 
-extension TrackersListViewController: UISearchBarDelegate {
+extension TrackersListViewController: UITextFieldDelegate {
     
 }
