@@ -11,11 +11,13 @@ final class TrackerSetupViewController: UIViewController {
     
     var isTracker: Bool!
     
-    private let topLabel = UILabel(title: "Новая привычка")
+    
+    private var topLabel: UILabel!
     
     private let createButton: UIButton = {
         let button = UIButton(title: "Создать", backgroundColor: .grayYP)
         button.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+        button.isEnabled = false
         return button
     }()
     
@@ -47,7 +49,7 @@ final class TrackerSetupViewController: UIViewController {
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
         return textField
     }()
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -56,8 +58,14 @@ final class TrackerSetupViewController: UIViewController {
     
     private func setupViews() {
         view.backgroundColor = .whiteYP
+        
+        topLabel = isTracker ? UILabel(title: "Новая привычка") : UILabel(title: "Новое нерегулярное событие")
+        
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(TrackerSetupCell.self, forCellReuseIdentifier: "cell")
+        
+        textField.delegate = self
     }
     
     private func setupConstraints() {
@@ -111,14 +119,19 @@ extension TrackerSetupViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        cell.backgroundColor = .backgroundYP
-        cell.accessoryType = .disclosureIndicator
-        cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
-        cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        cell.textLabel?.textColor = .blackYP
-        cell.layer.cornerRadius = 16
-        return cell
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "cell") {
+            cell.backgroundColor = .backgroundYP
+            cell.accessoryType = .disclosureIndicator
+            cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+            cell.textLabel?.textColor = .blackYP
+            cell.layer.cornerRadius = 16
+            cell.detailTextLabel?.textColor = .grayYP
+            cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+            return cell
+        } else {
+            return UITableViewCell()
+        }
     }
 }
 
@@ -131,8 +144,31 @@ extension TrackerSetupViewController: UITableViewDelegate {
             
         } else {
             let vc = ScheduleViewController()
+            vc.delegate = self
             present(vc, animated: true)
         }
     }
+}
+
+// MARK: - ScheduleViewControllerDelegate
+
+extension TrackerSetupViewController: ScheduleViewControllerDelegate {
+    func daysDidSelected(_ days: String) {
+        let indexPath = IndexPath(row: 1, section: 0)
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.detailTextLabel?.text = days
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension TrackerSetupViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        guard let range = Range(range, in: currentText) else { return false }
+        let updatedText = currentText.replacingCharacters(in: range, with: string)
+        return updatedText.count <= 38
+    }
+    
     
 }

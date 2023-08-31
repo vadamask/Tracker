@@ -12,5 +12,11 @@ struct Tracker {
     let name: String
     let color: String
     let emoji: String
-    let schedule: Int
+    let schedule: [WeekDay]
+}
+
+struct WeekDay {
+    let fullName: String
+    let shortName: String
+    var isOn: Bool = false
 }
