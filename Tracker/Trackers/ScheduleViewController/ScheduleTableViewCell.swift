@@ -23,8 +23,9 @@ final class ScheduleTableViewCell: UITableViewCell {
         return switcher
     }()
     
-    func configure(at row: Int) {
+    func configure(at row: Int, isOn: Bool) {
         self.row = row
+        switcher.isOn = isOn
         self.accessoryView = switcher
         textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         textLabel?.textColor = .blackYP

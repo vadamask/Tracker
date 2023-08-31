@@ -141,7 +141,7 @@ final class TrackersListViewController: UIViewController {
     }
     
     private func checkPlaceholder() {
-        placeholder.isHidden = !trackers.isEmpty
+        placeholder.isHidden = !categories.isEmpty
         label.isHidden = placeholder.isHidden
     }
 }

@@ -11,6 +11,15 @@ final class TrackerSetupViewController: UIViewController {
     
     var isTracker: Bool!
     
+    private var schedule =  [
+        WeekDay(fullName: "Понедельник", shortName: "Пн"),
+        WeekDay(fullName: "Вторник", shortName: "Вт"),
+        WeekDay(fullName: "Среда", shortName: "Ср"),
+        WeekDay(fullName: "Четверг", shortName: "Чт"),
+        WeekDay(fullName: "Пятница", shortName: "Пт"),
+        WeekDay(fullName: "Суббота", shortName: "Сб"),
+        WeekDay(fullName: "Воскресенье", shortName: "Вс")
+    ]
     
     private var topLabel: UILabel!
     
@@ -120,14 +129,7 @@ extension TrackerSetupViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "cell") {
-            cell.backgroundColor = .backgroundYP
-            cell.accessoryType = .disclosureIndicator
             cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-            cell.textLabel?.textColor = .blackYP
-            cell.layer.cornerRadius = 16
-            cell.detailTextLabel?.textColor = .grayYP
-            cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
             return cell
         } else {
             return UITableViewCell()
@@ -143,8 +145,7 @@ extension TrackerSetupViewController: UITableViewDelegate {
         if indexPath.row == 0 {
             
         } else {
-            let vc = ScheduleViewController()
-            vc.delegate = self
+            let vc = ScheduleViewController(delegate: self, schedule: schedule)
             present(vc, animated: true)
         }
     }
@@ -153,10 +154,15 @@ extension TrackerSetupViewController: UITableViewDelegate {
 // MARK: - ScheduleViewControllerDelegate
 
 extension TrackerSetupViewController: ScheduleViewControllerDelegate {
-    func daysDidSelected(_ days: String) {
+    func didSelected(_ schedule: [WeekDay]) {
+        self.schedule = schedule
+        let selectedDays = schedule
+            .filter { $0.isOn == true }
+            .map { $0.shortName }
+        
         let indexPath = IndexPath(row: 1, section: 0)
         let cell = tableView.cellForRow(at: indexPath)
-        cell?.detailTextLabel?.text = days
+        cell?.detailTextLabel?.text = selectedDays.count < 7 ? selectedDays.joined(separator: ", ") : "Каждый день"
     }
 }
 

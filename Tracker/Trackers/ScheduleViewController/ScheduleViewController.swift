@@ -8,22 +8,14 @@
 import UIKit
 
 protocol ScheduleViewControllerDelegate: AnyObject {
-    func daysDidSelected(_ days: String)
+    func didSelected(_ schedule: [WeekDay])
 }
 
 final class ScheduleViewController: UIViewController {
     
     weak var delegate: ScheduleViewControllerDelegate?
     
-    private var days: [WeekDay] = [
-        WeekDay(fullName: "Понедельник", shortName: "Пн"),
-        WeekDay(fullName: "Вторник", shortName: "Вт"),
-        WeekDay(fullName: "Среда", shortName: "Ср"),
-        WeekDay(fullName: "Четверг", shortName: "Чт"),
-        WeekDay(fullName: "Пятница", shortName: "Пт"),
-        WeekDay(fullName: "Суббота", shortName: "Сб"),
-        WeekDay(fullName: "Воскресенье", shortName: "Вс")
-    ]
+    private var schedule: [WeekDay] = []
     
     private let topLabel = UILabel(title: "Расписание")
     
@@ -42,6 +34,16 @@ final class ScheduleViewController: UIViewController {
         button.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         return button
     }()
+    
+    init(delegate: ScheduleViewControllerDelegate, schedule: [WeekDay]) {
+        self.delegate = delegate
+        self.schedule = schedule
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,13 +79,7 @@ final class ScheduleViewController: UIViewController {
     }
     
     @objc private func doneButtonTapped() {
-        let selectedDays = days
-            .filter { $0.isOn == true }
-            .map { $0.shortName }
-        
-        selectedDays.count < 7 ?
-        delegate?.daysDidSelected(selectedDays.joined(separator: ", ")) :
-        delegate?.daysDidSelected("Каждый день")
+        delegate?.didSelected(schedule)
         dismiss(animated: true)
     }
 }
@@ -92,14 +88,14 @@ final class ScheduleViewController: UIViewController {
 
 extension ScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        days.count
+        schedule.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? ScheduleTableViewCell {
-            cell.textLabel?.text = days[indexPath.row].fullName
+            cell.textLabel?.text = schedule[indexPath.row].fullName
             cell.delegate = self
-            cell.configure(at: indexPath.row)
+            cell.configure(at: indexPath.row, isOn: schedule[indexPath.row].isOn)
             return cell
         } else {
             return UITableViewCell()
@@ -111,6 +107,6 @@ extension ScheduleViewController: UITableViewDataSource {
 
 extension ScheduleViewController: ScheduleTableViewCellDelegate {
     func switchDidTapped(_ isOn: Bool, at row: Int) {
-        days[row].isOn = isOn
+        schedule[row].isOn = isOn
     }
 }
