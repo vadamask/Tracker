@@ -7,9 +7,14 @@
 
 import UIKit
 
+protocol TrackerSetupViewControllerDelegate: AnyObject {
+    func didCreateTrackerWith(_ category: TrackerCategory)
+}
+
 final class TrackerSetupViewController: UIViewController {
     
-    var isTracker: Bool!
+    weak var delegate: TrackerSetupViewControllerDelegate?
+    private var isTracker: Bool
     
     private var schedule =  [
         WeekDay(fullName: "Понедельник", shortName: "Пн"),
@@ -26,7 +31,7 @@ final class TrackerSetupViewController: UIViewController {
     private let createButton: UIButton = {
         let button = UIButton(title: "Создать", backgroundColor: .grayYP)
         button.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
-        button.isEnabled = false
+        //button.isEnabled = false
         return button
     }()
     
@@ -56,8 +61,19 @@ final class TrackerSetupViewController: UIViewController {
         textField.layer.cornerRadius = 16
         textField.leftViewMode = .always
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
+        textField.returnKeyType = .done
         return textField
     }()
+    
+    init(delegate: TrackerSetupViewControllerDelegate?, isTracker: Bool) {
+        self.delegate = delegate
+        self.isTracker = isTracker
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,6 +91,7 @@ final class TrackerSetupViewController: UIViewController {
         tableView.register(TrackerSetupCell.self, forCellReuseIdentifier: "cell")
         
         textField.delegate = self
+        textField.becomeFirstResponder()
     }
     
     private func setupConstraints() {
@@ -115,7 +132,10 @@ final class TrackerSetupViewController: UIViewController {
     }
     
     @objc private func createButtonTapped() {
-        
+        let category = TrackerCategory(
+            title: "Title category",
+            trackers: [Tracker(id: UUID(), name: textField.text!, color: "Color selection 0", emoji: "🤬", schedule: schedule)])
+        delegate?.didCreateTrackerWith(category)
     }
 }
 
@@ -145,6 +165,7 @@ extension TrackerSetupViewController: UITableViewDelegate {
         if indexPath.row == 0 {
             
         } else {
+            view.endEditing(true)
             let vc = ScheduleViewController(delegate: self, schedule: schedule)
             present(vc, animated: true)
         }
@@ -163,6 +184,7 @@ extension TrackerSetupViewController: ScheduleViewControllerDelegate {
         let indexPath = IndexPath(row: 1, section: 0)
         let cell = tableView.cellForRow(at: indexPath)
         cell?.detailTextLabel?.text = selectedDays.count < 7 ? selectedDays.joined(separator: ", ") : "Каждый день"
+        dismiss(animated: true)
     }
 }
 
@@ -175,6 +197,7 @@ extension TrackerSetupViewController: UITextFieldDelegate {
         let updatedText = currentText.replacingCharacters(in: range, with: string)
         return updatedText.count <= 38
     }
-    
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.endEditing(true)
+    }
 }

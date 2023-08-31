@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol TrackerTypeViewControllerDelegate: AnyObject {
+    func didCreateTrackerWith(_ category: TrackerCategory)
+}
+
 final class TrackerTypeViewController: UIViewController {
+    
+    weak var delegate: TrackerTypeViewControllerDelegate?
     
     private let topLabel = UILabel(title: "Создание трекера")
     
@@ -22,6 +28,15 @@ final class TrackerTypeViewController: UIViewController {
         button.addTarget(self, action: #selector(eventButtonTapped), for: .touchUpInside)
         return button
     }()
+    
+    init(delegate: TrackerTypeViewControllerDelegate?) {
+        self.delegate = delegate
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,15 +69,19 @@ final class TrackerTypeViewController: UIViewController {
         ])
     }
     
-    @objc private func trackerButtonTapped() {
-        let vc = TrackerSetupViewController()
-        vc.isTracker = true
+    @objc private func trackerButtonTapped(sender: Any) {
+        let vc = TrackerSetupViewController(delegate: self, isTracker: true)
         present(vc, animated: true)
     }
     
     @objc private func eventButtonTapped() {
-        let vc = TrackerSetupViewController()
-        vc.isTracker = false
+        let vc = TrackerSetupViewController(delegate: self, isTracker: false)
         present(vc, animated: true)
+    }
+}
+
+extension TrackerTypeViewController: TrackerSetupViewControllerDelegate {
+    func didCreateTrackerWith(_ category: TrackerCategory) {
+        delegate?.didCreateTrackerWith(category)
     }
 }

@@ -15,7 +15,7 @@ final class TabBarController: UITabBarController {
     }
     
     private func setupTabBar() {
-        let trackersVC = TrackersListViewController()
+        let trackersVC = TrackersCollectionViewController()
         let statisticsVC = StatisticsViewController()
         let navigationVC = UINavigationController(rootViewController: trackersVC)
         navigationVC.navigationBar.prefersLargeTitles = true

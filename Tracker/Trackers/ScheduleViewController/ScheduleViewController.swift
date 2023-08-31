@@ -35,7 +35,7 @@ final class ScheduleViewController: UIViewController {
         return button
     }()
     
-    init(delegate: ScheduleViewControllerDelegate, schedule: [WeekDay]) {
+    init(delegate: ScheduleViewControllerDelegate?, schedule: [WeekDay]) {
         self.delegate = delegate
         self.schedule = schedule
         super.init(nibName: nil, bundle: nil)
@@ -80,7 +80,6 @@ final class ScheduleViewController: UIViewController {
     
     @objc private func doneButtonTapped() {
         delegate?.didSelected(schedule)
-        dismiss(animated: true)
     }
 }
 

@@ -82,13 +82,13 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-//    func configure(with category: Category) {
-//        titleLabel.text =
-//        emojiLabel.text =
-//        cardView.backgroundColor =
-//        dayLabel.text =
-//        plusButton.tintColor = 
-//    }
+    func configure(with category: TrackerCategory) {
+        titleLabel.text = category.trackers[0].name
+        emojiLabel.text = category.trackers[0].emoji
+        cardView.backgroundColor = UIColor(named: category.trackers[0].color)
+        dayLabel.text = "0 дней"
+        plusButton.tintColor = UIColor(named: category.trackers[0].color)
+    }
     
     private func setupViews() {
         

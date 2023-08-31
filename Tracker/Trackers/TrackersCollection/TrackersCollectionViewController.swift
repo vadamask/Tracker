@@ -23,10 +23,14 @@ struct GeometricParams {
     }
 }
 
-final class TrackersListViewController: UIViewController {
+final class TrackersCollectionViewController: UIViewController {
     
     private var categories: [Category] = []
-    private var visibleCategories: [Category] = []
+    private var visibleCategories: [TrackerCategory] = [] {
+        didSet {
+            checkPlaceholder()
+        }
+    }
     private var completedTrackers: [TrackerRecord] = []
     private var currentDate: Date!
     
@@ -136,19 +140,19 @@ final class TrackersListViewController: UIViewController {
     }
     
     @objc private func addTracker() {
-        let forkVC = TrackerTypeViewController()
+        let forkVC = TrackerTypeViewController(delegate: self)
         present(forkVC, animated: true)
     }
     
     private func checkPlaceholder() {
-        placeholder.isHidden = !categories.isEmpty
+        placeholder.isHidden = !visibleCategories.isEmpty
         label.isHidden = placeholder.isHidden
     }
 }
 
 // MARK: - UICollectionViewDataSource
 
-extension TrackersListViewController: UICollectionViewDataSource {
+extension TrackersCollectionViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         visibleCategories.count
     }
@@ -158,7 +162,7 @@ extension TrackersListViewController: UICollectionViewDataSource {
             withReuseIdentifier: TrackersCollectionViewCell.identifier,
             for: indexPath
         ) as? TrackersCollectionViewCell {
-            //cell.configure(with: visibleCategories[indexPath.row])
+            cell.configure(with: visibleCategories[indexPath.row])
             return cell
         } else {
             return UICollectionViewCell()
@@ -168,7 +172,7 @@ extension TrackersListViewController: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewFlowLayout
 
-extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
+extension TrackersCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         params.cellSpacing
     }
@@ -190,6 +194,16 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - UISearchBarDelegate
 
-extension TrackersListViewController: UISearchBarDelegate {
+extension TrackersCollectionViewController: UISearchBarDelegate {
     
+}
+
+// MARK: - TrackerTypeViewControllerDelegate
+
+extension TrackersCollectionViewController: TrackerTypeViewControllerDelegate {
+    func didCreateTrackerWith(_ category: TrackerCategory) {
+        visibleCategories.append(category)
+        collectionView.reloadData()
+        dismiss(animated: true)
+    }
 }
