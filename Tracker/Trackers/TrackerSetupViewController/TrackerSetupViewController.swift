@@ -15,15 +15,20 @@ final class TrackerSetupViewController: UIViewController {
     
     weak var delegate: TrackerSetupViewControllerDelegate?
     private var isTracker: Bool
+    private var scheduleIsSet: Bool = false {
+        didSet {
+            checkCreateButtonActivation(textField.text)
+        }
+    }
     
     private var schedule =  [
-        WeekDay(fullName: "Понедельник", shortName: "Пн"),
-        WeekDay(fullName: "Вторник", shortName: "Вт"),
-        WeekDay(fullName: "Среда", shortName: "Ср"),
-        WeekDay(fullName: "Четверг", shortName: "Чт"),
-        WeekDay(fullName: "Пятница", shortName: "Пт"),
-        WeekDay(fullName: "Суббота", shortName: "Сб"),
-        WeekDay(fullName: "Воскресенье", shortName: "Вс")
+        WeekDay(fullName: "Понедельник", shortName: "Пн", isOn: false),
+        WeekDay(fullName: "Вторник", shortName: "Вт", isOn: false),
+        WeekDay(fullName: "Среда", shortName: "Ср", isOn: false),
+        WeekDay(fullName: "Четверг", shortName: "Чт", isOn: false),
+        WeekDay(fullName: "Пятница", shortName: "Пт", isOn: false),
+        WeekDay(fullName: "Суббота", shortName: "Сб", isOn: false),
+        WeekDay(fullName: "Воскресенье", shortName: "Вс", isOn: false)
     ]
     
     private var topLabel: UILabel!
@@ -31,7 +36,7 @@ final class TrackerSetupViewController: UIViewController {
     private let createButton: UIButton = {
         let button = UIButton(title: "Создать", backgroundColor: .grayYP)
         button.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
-        //button.isEnabled = false
+        button.isEnabled = false
         return button
     }()
     
@@ -83,6 +88,7 @@ final class TrackerSetupViewController: UIViewController {
     
     private func setupViews() {
         view.backgroundColor = .whiteYP
+        self.hideKeyboardWhenTappedAround()
         
         topLabel = isTracker ? UILabel(title: "Новая привычка") : UILabel(title: "Новое нерегулярное событие")
         
@@ -137,6 +143,16 @@ final class TrackerSetupViewController: UIViewController {
             trackers: [Tracker(id: UUID(), name: textField.text!, color: "Color selection 0", emoji: "🤬", schedule: schedule)])
         delegate?.didCreateTrackerWith(category)
     }
+    
+    private func checkCreateButtonActivation(_ text: String?) {
+        if let text = text, !text.isEmpty, scheduleIsSet {
+            createButton.isEnabled = true
+            createButton.backgroundColor = .blackYP
+        } else {
+            createButton.isEnabled = false
+            createButton.backgroundColor = .grayYP
+        }
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -165,8 +181,7 @@ extension TrackerSetupViewController: UITableViewDelegate {
         if indexPath.row == 0 {
             
         } else {
-            view.endEditing(true)
-            let vc = ScheduleViewController(delegate: self, schedule: schedule)
+            let vc = TrackerScheduleViewController(delegate: self, schedule: schedule)
             present(vc, animated: true)
         }
     }
@@ -174,13 +189,13 @@ extension TrackerSetupViewController: UITableViewDelegate {
 
 // MARK: - ScheduleViewControllerDelegate
 
-extension TrackerSetupViewController: ScheduleViewControllerDelegate {
+extension TrackerSetupViewController: TrackerScheduleViewControllerDelegate {
     func didSelected(_ schedule: [WeekDay]) {
         self.schedule = schedule
         let selectedDays = schedule
             .filter { $0.isOn == true }
             .map { $0.shortName }
-        
+        scheduleIsSet = selectedDays.isEmpty ? false : true
         let indexPath = IndexPath(row: 1, section: 0)
         let cell = tableView.cellForRow(at: indexPath)
         cell?.detailTextLabel?.text = selectedDays.count < 7 ? selectedDays.joined(separator: ", ") : "Каждый день"
@@ -195,6 +210,7 @@ extension TrackerSetupViewController: UITextFieldDelegate {
         let currentText = textField.text ?? ""
         guard let range = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: range, with: string)
+        checkCreateButtonActivation(updatedText)
         return updatedText.count <= 38
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
