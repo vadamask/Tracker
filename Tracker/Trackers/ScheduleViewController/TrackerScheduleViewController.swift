@@ -7,13 +7,13 @@
 
 import UIKit
 
-protocol ScheduleViewControllerDelegate: AnyObject {
+protocol TrackerScheduleViewControllerDelegate: AnyObject {
     func didSelected(_ schedule: [WeekDay])
 }
 
-final class ScheduleViewController: UIViewController {
+final class TrackerScheduleViewController: UIViewController {
     
-    weak var delegate: ScheduleViewControllerDelegate?
+    weak var delegate: TrackerScheduleViewControllerDelegate?
     
     private var schedule: [WeekDay] = []
     
@@ -35,7 +35,7 @@ final class ScheduleViewController: UIViewController {
         return button
     }()
     
-    init(delegate: ScheduleViewControllerDelegate?, schedule: [WeekDay]) {
+    init(delegate: TrackerScheduleViewControllerDelegate?, schedule: [WeekDay]) {
         self.delegate = delegate
         self.schedule = schedule
         super.init(nibName: nil, bundle: nil)
@@ -85,7 +85,7 @@ final class ScheduleViewController: UIViewController {
 
 // MARK: - UITableViewDataSource
 
-extension ScheduleViewController: UITableViewDataSource {
+extension TrackerScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         schedule.count
     }
@@ -104,8 +104,8 @@ extension ScheduleViewController: UITableViewDataSource {
 
 // MARK: - ScheduleTableViewCellDelegate
 
-extension ScheduleViewController: ScheduleTableViewCellDelegate {
+extension TrackerScheduleViewController: ScheduleTableViewCellDelegate {
     func switchDidTapped(_ isOn: Bool, at row: Int) {
-        schedule[row].isOn = isOn
+        schedule[row] = WeekDay(fullName: schedule[row].fullName, shortName: schedule[row].shortName, isOn: isOn)
     }
 }

@@ -56,7 +56,7 @@ final class TrackerTypeViewController: UIViewController {
         NSLayoutConstraint.activate([
             trackerButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             trackerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            trackerButton.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 295),
+            trackerButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             trackerButton.heightAnchor.constraint(equalToConstant: 60),
             
             eventButton.leadingAnchor.constraint(equalTo: trackerButton.leadingAnchor),

@@ -18,5 +18,5 @@ struct Tracker {
 struct WeekDay {
     let fullName: String
     let shortName: String
-    var isOn: Bool = false
+    let isOn: Bool
 }

@@ -17,8 +17,10 @@ final class TabBarController: UITabBarController {
     private func setupTabBar() {
         let trackersVC = TrackersCollectionViewController()
         let statisticsVC = StatisticsViewController()
-        let navigationVC = UINavigationController(rootViewController: trackersVC)
-        navigationVC.navigationBar.prefersLargeTitles = true
+        let trackersNavigationVC = UINavigationController(rootViewController: trackersVC)
+        let statisticsNavigationVC = UINavigationController(rootViewController: statisticsVC)
+        trackersNavigationVC.navigationBar.prefersLargeTitles = true
+        statisticsNavigationVC.navigationBar.prefersLargeTitles = true
         
         trackersVC.tabBarItem = UITabBarItem(
             title: "Трекеры",
@@ -42,7 +44,7 @@ final class TabBarController: UITabBarController {
         tabBar.tintColor = .blueYP
         tabBar.unselectedItemTintColor = .grayYP
         
-        self.viewControllers = [navigationVC, statisticsVC]
+        self.viewControllers = [trackersNavigationVC, statisticsNavigationVC]
     }
 }
 

@@ -106,6 +106,7 @@ final class TrackersCollectionViewController: UIViewController {
         navigationItem.leftBarButtonItem = leftItem
         
         let datePicker = UIDatePicker()
+        datePicker.widthAnchor.constraint(equalToConstant: 95).isActive = true
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
         datePicker.locale = .init(identifier: "Ru_ru")
