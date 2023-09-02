@@ -25,31 +25,35 @@ struct GeometricParams {
 
 final class TrackersCollectionViewController: UIViewController {
     
-    private var categories: [TrackerCategory] = [
-//        TrackerCategory(title: "Домашние дела", trackers: [Tracker(id: UUID(), name: "Полить цветы", color: "Color selection 0", emoji: "😌", schedule: []),
-//                                                           Tracker(id: UUID(), name: "Полить цветы", color: "Color selection 0", emoji: "😌", schedule: [])]),
-//        TrackerCategory(title: "Другие дела", trackers: [Tracker(id: UUID(), name: "Полить цветы", color: "Color selection 1", emoji: "😌", schedule: [])])
-    ] {
+    private var categories: [TrackerCategory] = [] {
         didSet {
-            visibleCategories = categories
+            filterRelevantTrackers()
         }
     }
     
-    private var visibleCategories: [TrackerCategory] = [
-//        TrackerCategory(title: "Домашние дела", trackers: [Tracker(id: UUID(), name: "Полить цветы", color: "Color selection 0", emoji: "😌", schedule: []),
-//                                                           Tracker(id: UUID(), name: "Полить цветы", color: "Color selection 0", emoji: "😌", schedule: [])]),
-//        TrackerCategory(title: "Другие дела", trackers: [Tracker(id: UUID(), name: "Полить цветы", color: "Color selection 1", emoji: "😌", schedule: [])])
-    ] {
+    private var visibleCategories: [TrackerCategory] = [] {
         didSet {
             collectionView.reloadData()
             checkPlaceholder()
         }
     }
     
-    
+    private var visibleCategoriesAtSpecificDay: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
-    private var currentDate: Date!
+    
+    private var currentDate: Date! {
+        didSet {
+            filterRelevantTrackers()
+        }
+    }
+    
     private var params: GeometricParams!
+    
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE"
+        return formatter
+    }()
     
     private let placeholder: UIImageView = {
         let imageView = UIImageView()
@@ -85,32 +89,11 @@ final class TrackersCollectionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
-        setupConstraints()
-        checkPlaceholder()
-    }
-    
-    private func setupViews() {
         view.backgroundColor = .whiteYP
         setupNavigationItem()
         setupCollectionView()
-    }
-    
-    private func setupCollectionView() {
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.register(
-            TrackersCollectionViewCell.self,
-            forCellWithReuseIdentifier: TrackersCollectionViewCell.identifier
-        )
-        collectionView.register(
-            TrackerCategoryHeader.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: TrackerCategoryHeader.identifier
-        )
-        params = GeometricParams(cellCount: 2, leftInset: 16, rightInset: 16, cellSpacing: 9)
+        setupConstraints()
+        checkPlaceholder()
     }
     
     private func setupNavigationItem() {
@@ -129,7 +112,7 @@ final class TrackersCollectionViewController: UIViewController {
         datePicker.widthAnchor.constraint(equalToConstant: 100).isActive = true
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
-        datePicker.locale = .init(identifier: "Ru_ru")
+        datePicker.addTarget(self, action: #selector(datePickerDidChanged(sender:)), for: .valueChanged)
         currentDate = datePicker.date
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
         
@@ -139,6 +122,23 @@ final class TrackersCollectionViewController: UIViewController {
         searchController.searchBar.setValue("Отменить", forKey: "cancelButtonText")
         searchController.searchBar.delegate = self
         navigationItem.searchController = searchController
+    }
+    
+    private func setupCollectionView() {
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.register(
+            TrackersCollectionViewCell.self,
+            forCellWithReuseIdentifier: TrackersCollectionViewCell.identifier
+        )
+        collectionView.register(
+            TrackerCategoryHeader.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: TrackerCategoryHeader.identifier
+        )
+        params = GeometricParams(cellCount: 2, leftInset: 16, rightInset: 16, cellSpacing: 9)
     }
     
     private func setupConstraints() {
@@ -167,8 +167,12 @@ final class TrackersCollectionViewController: UIViewController {
         present(typeVC, animated: true)
     }
     
+    @objc private func datePickerDidChanged(sender: UIDatePicker) {
+        currentDate = sender.date
+    }
+    
     private func checkPlaceholder() {
-        if categories.isEmpty {
+        if categories.isEmpty || visibleCategoriesAtSpecificDay.isEmpty {
             placeholder.image = UIImage(named: "empty list")
             label.text = "Что будем отслеживать?"
         } else {
@@ -177,6 +181,31 @@ final class TrackersCollectionViewController: UIViewController {
         }
         placeholder.isHidden = !visibleCategories.isEmpty
         label.isHidden = placeholder.isHidden
+    }
+    
+    private func filterRelevantTrackers() {
+        let currentDay = dateFormatter.string(from: currentDate).capitalized
+
+        let relevantCategories = categories
+            .filter { $0.trackers
+                .contains(where: { $0.schedule
+                    .contains(where: { $0.fullName == currentDay && $0.isOn })
+                })
+            }
+        
+        let relevantTrackers = relevantCategories
+            .map { $0.trackers
+                .filter {$0.schedule
+                    .contains(where: {$0.fullName == currentDay && $0.isOn})
+                }}
+        
+        var result: [TrackerCategory] = []
+        
+        for i in 0..<relevantCategories.count {
+            result.append(TrackerCategory(title: relevantCategories[i].title, trackers: relevantTrackers[i]))
+        }
+        self.visibleCategoriesAtSpecificDay = result
+        self.visibleCategories = result
     }
 }
 
@@ -263,7 +292,8 @@ extension TrackersCollectionViewController: UICollectionViewDelegate {
 
 extension TrackersCollectionViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        visibleCategories = categories
+        
+        visibleCategories = visibleCategoriesAtSpecificDay
             .filter { $0.trackers
                 .contains(where: {
                     $0.name.lowercased().hasPrefix(searchText.lowercased())
@@ -275,6 +305,12 @@ extension TrackersCollectionViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         checkPlaceholder()
         visibleCategories = categories
+        navigationItem.rightBarButtonItem?.isEnabled = true
+    }
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        return true
     }
 }
 

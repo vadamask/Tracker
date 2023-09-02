@@ -37,7 +37,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     private let emojiLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         label.textAlignment = .center
         return label
     }()
