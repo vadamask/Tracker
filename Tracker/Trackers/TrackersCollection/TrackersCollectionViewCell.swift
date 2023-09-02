@@ -37,7 +37,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     private let emojiLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         label.textAlignment = .center
         return label
     }()
@@ -66,9 +66,10 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     }()
     
     private let plusButton: UIButton = {
-        let button = UIButton(type: .system)
+        let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "add day button"), for: .normal)
+        button.setImage(UIImage(named: "add day button")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -82,12 +83,13 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with category: TrackerCategory) {
-        titleLabel.text = category.trackers[0].name
-        emojiLabel.text = category.trackers[0].emoji
-        cardView.backgroundColor = UIColor(named: category.trackers[0].color)
+    func configure(with tracker: Tracker) {
+        titleLabel.text = tracker.name
+        emojiLabel.text = tracker.emoji
+        cardView.backgroundColor = UIColor(named: tracker.color)
         dayLabel.text = "0 дней"
-        plusButton.tintColor = UIColor(named: category.trackers[0].color)
+        plusButton.tintColor = UIColor(named: tracker.color)
+        pinImageView.isHidden = true
     }
     
     private func setupViews() {
@@ -144,5 +146,10 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             plusButton.heightAnchor.constraint(equalToConstant: 34),
             plusButton.widthAnchor.constraint(equalToConstant: 34)
         ])
+    }
+    
+    @objc private func plusButtonTapped() {
+        let image = UIImage(named: "done")?.withRenderingMode(.alwaysTemplate)
+        plusButton.setImage(image, for: .normal)
     }
 }
