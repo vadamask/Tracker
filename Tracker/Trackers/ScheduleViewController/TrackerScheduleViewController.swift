@@ -8,7 +8,7 @@
 import UIKit
 
 protocol TrackerScheduleViewControllerDelegate: AnyObject {
-    func didSelected(_ schedule: [WeekDay])
+    func didSelectedDays(in schedule: [WeekDay])
 }
 
 final class TrackerScheduleViewController: UIViewController {
@@ -79,7 +79,7 @@ final class TrackerScheduleViewController: UIViewController {
     }
     
     @objc private func doneButtonTapped() {
-        delegate?.didSelected(schedule)
+        delegate?.didSelectedDays(in: schedule)
     }
 }
 

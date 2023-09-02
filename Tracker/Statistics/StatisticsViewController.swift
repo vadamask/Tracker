@@ -44,6 +44,8 @@ final class StatisticsViewController: UIViewController {
         NSLayoutConstraint.activate([
             placeholder.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             placeholder.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            placeholder.heightAnchor.constraint(equalToConstant: 80),
+            placeholder.widthAnchor.constraint(equalToConstant: 80),
             label.topAnchor.constraint(equalTo: placeholder.bottomAnchor, constant: 8),
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)

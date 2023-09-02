@@ -117,7 +117,7 @@ final class TrackerSetupViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -16),
             
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
             
             createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -190,7 +190,7 @@ extension TrackerSetupViewController: UITableViewDelegate {
 // MARK: - ScheduleViewControllerDelegate
 
 extension TrackerSetupViewController: TrackerScheduleViewControllerDelegate {
-    func didSelected(_ schedule: [WeekDay]) {
+    func didSelectedDays(in schedule: [WeekDay]) {
         self.schedule = schedule
         let selectedDays = schedule
             .filter { $0.isOn == true }
@@ -213,7 +213,13 @@ extension TrackerSetupViewController: UITextFieldDelegate {
         checkCreateButtonActivation(updatedText)
         return updatedText.count <= 38
     }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         view.endEditing(true)
+    }
+    
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        checkCreateButtonActivation("")
+        return true
     }
 }
