@@ -15,7 +15,7 @@ final class TrackerTypeViewController: UIViewController {
     
     weak var delegate: TrackerTypeViewControllerDelegate?
     
-    private let topLabel = UILabel(title: "Создание трекера")
+    private let topLabel = UILabel(text: "Создание трекера", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
     
     private let trackerButton: UIButton = {
         let button = UIButton(title: "Привычка")

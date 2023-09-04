@@ -17,15 +17,16 @@ final class TrackerScheduleViewController: UIViewController {
     
     private var schedule: [WeekDay] = []
     
-    private let topLabel = UILabel(title: "Расписание")
+    private let topLabel = UILabel(text: "Расписание", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
     
     private let scheduleTableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .insetGrouped)
+        let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
         tableView.rowHeight = 75
         tableView.backgroundColor = .whiteYP
         tableView.allowsSelection = false
+        tableView.layer.cornerRadius = 16
         return tableView
     }()
     
@@ -66,15 +67,15 @@ final class TrackerScheduleViewController: UIViewController {
             topLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 27),
             topLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            scheduleTableView.topAnchor.constraint(equalTo: topLabel.bottomAnchor),
-            scheduleTableView.bottomAnchor.constraint(equalTo: doneButton.topAnchor),
-            scheduleTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scheduleTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scheduleTableView.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 30),
+            scheduleTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            scheduleTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            doneButton.heightAnchor.constraint(equalToConstant: 60)
+            doneButton.heightAnchor.constraint(equalToConstant: 60),
+            doneButton.topAnchor.constraint(equalTo: scheduleTableView.bottomAnchor, constant: 47)
         ])
     }
     

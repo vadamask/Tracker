@@ -32,6 +32,9 @@ final class TrackerSetupViewController: UIViewController {
     ]
     
     private var topLabel: UILabel!
+    private let textFieldSymbolConstraintLabel = UILabel(text: "Ограничение 38 символов",
+                                                    textColor: .redYP,
+                                                    font: .systemFont(ofSize: 17, weight: .regular))
     
     private let createButton: UIButton = {
         let button = UIButton(title: "Создать", backgroundColor: .grayYP)
@@ -49,11 +52,12 @@ final class TrackerSetupViewController: UIViewController {
     }()
     
     private let tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .insetGrouped)
+        let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
         tableView.rowHeight = 75
         tableView.backgroundColor = .whiteYP
+        
         return tableView
     }()
     
@@ -88,9 +92,12 @@ final class TrackerSetupViewController: UIViewController {
     
     private func setupViews() {
         view.backgroundColor = .whiteYP
+        textFieldSymbolConstraintLabel.isHidden = true
         self.hideKeyboardWhenTappedAround()
         
-        topLabel = isTracker ? UILabel(title: "Новая привычка") : UILabel(title: "Новое нерегулярное событие")
+        topLabel = isTracker ?
+        UILabel(text: "Новая привычка", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium)) :
+        UILabel(text: "Новое нерегулярное событие", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -102,34 +109,38 @@ final class TrackerSetupViewController: UIViewController {
     
     private func setupConstraints() {
         view.addSubview(topLabel)
+        view.addSubview(textField)
+        view.addSubview(textFieldSymbolConstraintLabel)
         view.addSubview(tableView)
         view.addSubview(cancelButton)
         view.addSubview(createButton)
-        view.addSubview(textField)
         
         NSLayoutConstraint.activate([
             topLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 27),
             topLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            tableView.topAnchor.constraint(equalTo: textField.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -16),
+            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            textField.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 38),
+            textField.heightAnchor.constraint(equalToConstant: 75),
             
+            textFieldSymbolConstraintLabel.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 8),
+            textFieldSymbolConstraintLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            tableView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 62),
+            tableView.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
+            
+            cancelButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 16),
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
             
-            createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            createButton.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor),
+            createButton.centerYAnchor.constraint(equalTo: cancelButton.centerYAnchor),
             createButton.heightAnchor.constraint(equalTo: cancelButton.heightAnchor),
-            createButton.leadingAnchor.constraint(equalTo: cancelButton.trailingAnchor, constant: 8),
             createButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor),
-            
-            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            textField.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 38),
-            textField.heightAnchor.constraint(equalToConstant: 75)
+            createButton.leadingAnchor.constraint(equalTo: cancelButton.trailingAnchor, constant: 8),
+            createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
     }
     
@@ -165,7 +176,19 @@ extension TrackerSetupViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "cell") {
-            cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
+            cell.layer.masksToBounds = true
+            cell.layer.cornerRadius = 16
+            switch indexPath.row {
+            case 0:
+                cell.textLabel?.text = "Категория"
+                cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            case 1:
+                cell.textLabel?.text = "Расписание"
+                cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+                cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 400)
+            default:
+                break
+            }
             return cell
         } else {
             return UITableViewCell()
@@ -211,7 +234,14 @@ extension TrackerSetupViewController: UITextFieldDelegate {
         guard let range = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: range, with: string)
         checkCreateButtonActivation(updatedText)
-        return updatedText.count <= 38
+        if updatedText.count <= 38 {
+            textFieldSymbolConstraintLabel.isHidden = true
+            return true
+        } else {
+            textFieldSymbolConstraintLabel.isHidden = false
+            return false
+        }
+        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -220,6 +250,7 @@ extension TrackerSetupViewController: UITextFieldDelegate {
     
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         checkCreateButtonActivation("")
+        textFieldSymbolConstraintLabel.isHidden = true
         return true
     }
 }

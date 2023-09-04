@@ -30,6 +30,11 @@ final class ScheduleTableViewCell: UITableViewCell {
         textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         textLabel?.textColor = .blackYP
         backgroundColor = .backgroundYP
+        if row == 6 {
+            separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 400)
+            layer.cornerRadius = 16
+            layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        }
     }
     
     @objc private func switchTapped() {

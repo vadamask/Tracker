@@ -9,11 +9,11 @@ import UIKit
 
 extension UILabel {
     
-    convenience init(title: String) {
+    convenience init(text: String, textColor: UIColor, font: UIFont) {
         self.init()
-        text = title
-        textColor = .blackYP
-        font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        self.text = text
+        self.textColor = textColor
+        self.font = font
         translatesAutoresizingMaskIntoConstraints = false
     }
 }
