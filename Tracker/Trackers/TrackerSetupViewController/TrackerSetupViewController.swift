@@ -181,7 +181,7 @@ extension TrackerSetupViewController: UITableViewDataSource {
             switch indexPath.row {
             case 0:
                 cell.textLabel?.text = "Категория"
-                cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+                cell.layer.maskedCorners = isTracker ? [.layerMinXMinYCorner, .layerMaxXMinYCorner] : [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
             case 1:
                 cell.textLabel?.text = "Расписание"
                 cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
