@@ -21,7 +21,7 @@ final class TrackerSetupViewController: UIViewController {
         }
     }
     
-    private var schedule =  [
+    private var schedule = [
         WeekDay(fullName: "Понедельник", shortName: "Пн", isOn: false),
         WeekDay(fullName: "Вторник", shortName: "Вт", isOn: false),
         WeekDay(fullName: "Среда", shortName: "Ср", isOn: false),
@@ -57,7 +57,7 @@ final class TrackerSetupViewController: UIViewController {
         tableView.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
         tableView.rowHeight = 75
         tableView.backgroundColor = .whiteYP
-        
+        tableView.layer.cornerRadius = 16
         return tableView
     }()
     
@@ -151,7 +151,7 @@ final class TrackerSetupViewController: UIViewController {
     @objc private func createButtonTapped() {
         let category = TrackerCategory(
             title: "Title category",
-            trackers: [Tracker(id: UUID(), name: textField.text!, color: "Color selection 0", emoji: "🤬", schedule: schedule)])
+            trackers: [Tracker(id: UUID(), name: textField.text!, color: "Color selection 10", emoji: "🌸", schedule: schedule)])
         delegate?.didCreateTrackerWith(category)
     }
     

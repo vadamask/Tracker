@@ -40,6 +40,7 @@ final class TrackersCollectionViewController: UIViewController {
     
     private var visibleCategoriesAtSpecificDay: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
+    private var completedID: Set<UUID> = []
     
     private var currentDate: Date! {
         didSet {
@@ -49,9 +50,15 @@ final class TrackersCollectionViewController: UIViewController {
     
     private var params: GeometricParams!
     
-    private let dateFormatter: DateFormatter = {
+    private lazy var dayFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE"
+        return formatter
+    }()
+    
+    private lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MM yyyy"
         return formatter
     }()
     
@@ -103,7 +110,7 @@ final class TrackersCollectionViewController: UIViewController {
             image: UIImage(named: "add tracker button"),
             style: .plain,
             target: self,
-            action: #selector(addTracker)
+            action: #selector(addNewTracker)
         )
         leftItem.tintColor = .blackYP
         navigationItem.leftBarButtonItem = leftItem
@@ -162,7 +169,7 @@ final class TrackersCollectionViewController: UIViewController {
         ])
     }
     
-    @objc private func addTracker() {
+    @objc private func addNewTracker() {
         let typeVC = TrackerTypeViewController(delegate: self)
         present(typeVC, animated: true)
     }
@@ -184,8 +191,8 @@ final class TrackersCollectionViewController: UIViewController {
     }
     
     private func filterRelevantTrackers() {
-        let currentDay = dateFormatter.string(from: currentDate).capitalized
-
+        let currentDay = dayFormatter.string(from: currentDate).capitalized
+        
         let relevantCategories = categories
             .filter { $0.trackers
                 .contains(where: { $0.schedule
@@ -224,7 +231,10 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
             withReuseIdentifier: TrackersCollectionViewCell.identifier,
             for: indexPath
         ) as? TrackersCollectionViewCell {
-            cell.configure(with: visibleCategories[indexPath.section].trackers[indexPath.row])
+            cell.delegate = self
+            let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
+            let id = tracker.id
+            cell.configure(with: tracker, isDone: completedID.contains(id))
             return cell
         } else {
             return UICollectionViewCell()
@@ -277,14 +287,14 @@ extension TrackersCollectionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         // FIXME: убрать отсюда, пока для простоты удаления
-        if categories[indexPath.section].trackers.count == 1 {
-            categories.remove(at: indexPath.section)
-        } else {
-            categories[indexPath.section] = TrackerCategory(
-                title: categories[indexPath.section].title,
-                trackers: categories[indexPath.section].trackers.enumerated().filter { $0.offset != indexPath.row }.map { $0.element }
-            )
-        }
+//        if categories[indexPath.section].trackers.count == 1 {
+//            categories.remove(at: indexPath.section)
+//        } else {
+//            categories[indexPath.section] = TrackerCategory(
+//                title: categories[indexPath.section].title,
+//                trackers: categories[indexPath.section].trackers.enumerated().filter { $0.offset != indexPath.row }.map { $0.element }
+//            )
+//        }
     }
 }
 
@@ -304,7 +314,7 @@ extension TrackersCollectionViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         checkPlaceholder()
-        visibleCategories = categories
+        visibleCategories = visibleCategoriesAtSpecificDay
         navigationItem.rightBarButtonItem?.isEnabled = true
     }
     
@@ -319,10 +329,37 @@ extension TrackersCollectionViewController: UISearchBarDelegate {
 extension TrackersCollectionViewController: TrackerTypeViewControllerDelegate {
     func didCreateTrackerWith(_ category: TrackerCategory) {
         if let index = categories.firstIndex(where: { $0.title == category.title }) {
-            categories[index] = TrackerCategory(title: category.title, trackers: categories[index].trackers + category.trackers)
+            categories[index] = TrackerCategory(
+                title: category.title,
+                trackers: (categories[index].trackers + category.trackers)
+            )
         } else {
             categories.append(category)
         }
         dismiss(animated: true)
+    }
+}
+
+// MARK: - TrackersCollectionViewCellDelegate
+
+extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
+    func recordWillAdd(with id: UUID) -> Bool {
+        if dateFormatter.string(from: currentDate) == dateFormatter.string(from: Date()) {
+            completedTrackers.append(TrackerRecord(id: id, date: currentDate))
+            completedID.insert(id)
+            return true
+        }
+        return false
+    }
+    
+    func recordWillRemove(with id: UUID) -> Bool {
+        if dateFormatter.string(from: currentDate) == dateFormatter.string(from: Date()),
+           completedID.contains(id), //FIXME: узнать про сет
+           let index = completedTrackers.firstIndex(where: {$0.id == id}) {
+                completedTrackers.remove(at: index)
+                completedID.remove(id)
+                return true
+            }
+        return false
     }
 }

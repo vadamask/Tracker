@@ -18,6 +18,7 @@ final class TrackerSetupCell: UITableViewCell {
         layer.cornerRadius = 16
         detailTextLabel?.textColor = .grayYP
         detailTextLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        selectionStyle = .none
     }
     
     required init?(coder: NSCoder) {

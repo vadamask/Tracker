@@ -7,8 +7,22 @@
 
 import UIKit
 
+protocol TrackersCollectionViewCellDelegate: AnyObject {
+    func recordWillAdd(with id: UUID) -> Bool
+    func recordWillRemove(with id: UUID) -> Bool
+}
+
 final class TrackersCollectionViewCell: UICollectionViewCell {
     static let identifier = "TrackersCollectionViewCell"
+    weak var delegate: TrackersCollectionViewCellDelegate?
+    
+    private var tracker: Tracker!
+    private var isDone = false
+    private var completedDays = 0 {
+        didSet {
+            dayLabel.text = "\(completedDays) \(correctStringForNumber(completedDays))"
+        }
+    }
     
     private let cardView: UIView = {
         let view = UIView(frame: .zero)
@@ -68,8 +82,8 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     private let plusButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "add day button")?.withRenderingMode(.alwaysTemplate), for: .normal)
         button.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
+        button.layer.cornerRadius = 17
         return button
     }()
     
@@ -83,17 +97,19 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with tracker: Tracker) {
+    func configure(with tracker: Tracker, isDone: Bool) {
+        self.tracker = tracker
+        self.isDone = isDone
+        completedDays = isDone ? 1 : 0
         titleLabel.text = tracker.name
         emojiLabel.text = tracker.emoji
         cardView.backgroundColor = UIColor(named: tracker.color)
-        dayLabel.text = "0 дней"
-        plusButton.tintColor = UIColor(named: tracker.color)
-        pinImageView.isHidden = true
+        setupButton()
     }
     
     private func setupViews() {
-        
+        pinImageView.isHidden = true
+        dayLabel.text = "\(completedDays) \(correctStringForNumber(completedDays))"
     }
     
     private func setupConstraints() {
@@ -149,7 +165,51 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     }
     
     @objc private func plusButtonTapped() {
-        let image = UIImage(named: "done")?.withRenderingMode(.alwaysTemplate)
-        plusButton.setImage(image, for: .normal)
+        guard let delegate = delegate else { return }
+        if isDone {
+            if delegate.recordWillRemove(with: tracker.id) {
+                plusButton.setImage(UIImage(named: "add day button"), for: .normal)
+                plusButton.alpha = 1.0
+                plusButton.backgroundColor = .clear
+                completedDays -= 1
+                isDone.toggle()
+            }
+        } else {
+            if delegate.recordWillAdd(with: tracker.id) {
+                plusButton.setImage(UIImage(named: "done"), for: .normal)
+                plusButton.alpha = 0.3
+                plusButton.backgroundColor = UIColor(named: tracker.color)
+                completedDays += 1
+                isDone.toggle()
+            }
+        }
+    }
+    
+    private func correctStringForNumber(_ num: Int) -> String {
+        switch num % 10 {
+        case 1 where (num - 1) % 100 != 10:
+            return "день"
+        case 2 where (num - 2) % 100 != 10:
+            return "дня"
+        case 3 where (num - 3) % 100 != 10:
+            return "дня"
+        case 4 where (num - 4) % 100 != 10:
+            return "дня"
+        default:
+            return "дней"
+        }
+    }
+    
+    private func setupButton() {
+        if isDone {
+            plusButton.setImage(UIImage(named: "done"), for: .normal)
+            plusButton.alpha = 0.3
+            plusButton.backgroundColor = UIColor(named: tracker.color)
+            plusButton.tintColor = UIColor(named: tracker.color)
+        } else {
+            plusButton.setImage(UIImage(named: "add day button"), for: .normal)
+            plusButton.backgroundColor = .whiteYP
+            plusButton.tintColor = UIColor(named: tracker.color)
+        }
     }
 }
