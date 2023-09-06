@@ -7,13 +7,13 @@
 
 import UIKit
 
-protocol ScheduleTableViewCellDelegate: AnyObject {
+protocol TrackerScheduleTableViewCellDelegate: AnyObject {
     func switchDidTapped(_ isOn: Bool, at row: Int)
 }
 
-final class ScheduleTableViewCell: UITableViewCell {
+final class TrackerScheduleTableViewCell: UITableViewCell {
     
-    weak var delegate: ScheduleTableViewCellDelegate?
+    weak var delegate: TrackerScheduleTableViewCellDelegate?
     private var row: Int!
 
     private let switcher: UISwitch = {

@@ -21,15 +21,7 @@ final class TrackerSetupViewController: UIViewController {
         }
     }
     
-    private var schedule = [
-        WeekDay(fullName: "Понедельник", shortName: "Пн", isOn: false),
-        WeekDay(fullName: "Вторник", shortName: "Вт", isOn: false),
-        WeekDay(fullName: "Среда", shortName: "Ср", isOn: false),
-        WeekDay(fullName: "Четверг", shortName: "Чт", isOn: false),
-        WeekDay(fullName: "Пятница", shortName: "Пт", isOn: false),
-        WeekDay(fullName: "Суббота", shortName: "Сб", isOn: false),
-        WeekDay(fullName: "Воскресенье", shortName: "Вс", isOn: false)
-    ]
+    private var schedule: Set<WeekDay> = []
     
     private var topLabel: UILabel!
     private let textFieldSymbolConstraintLabel = UILabel(text: "Ограничение 38 символов",
@@ -101,7 +93,7 @@ final class TrackerSetupViewController: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(TrackerSetupCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(TrackerSetupTableViewCell.self, forCellReuseIdentifier: "cell")
         
         textField.delegate = self
         textField.becomeFirstResponder()
@@ -213,11 +205,11 @@ extension TrackerSetupViewController: UITableViewDelegate {
 // MARK: - ScheduleViewControllerDelegate
 
 extension TrackerSetupViewController: TrackerScheduleViewControllerDelegate {
-    func didSelectedDays(in schedule: [WeekDay]) {
+    func didSelectedDays(in schedule: Set<WeekDay>) {
         self.schedule = schedule
         let selectedDays = schedule
-            .filter { $0.isOn == true }
-            .map { $0.shortName }
+            .sorted(by: {$0.rawValue < $1.rawValue})
+            .map { WeekDay.shortName(for: $0.rawValue) }
         scheduleIsSet = selectedDays.isEmpty ? false : true
         let indexPath = IndexPath(row: 1, section: 0)
         let cell = tableView.cellForRow(at: indexPath)

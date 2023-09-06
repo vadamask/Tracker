@@ -38,23 +38,16 @@ final class TrackersCollectionViewController: UIViewController {
         }
     }
     
-    private var visibleCategoriesAtSpecificDay: [TrackerCategory] = []
-    private var completedTrackers: [TrackerRecord] = []
-    private var completedID: Set<UUID> = []
-    
     private var currentDate: Date! {
         didSet {
             filterRelevantTrackers()
         }
     }
     
+    private var visibleCategoriesAtSpecificDay: [TrackerCategory] = []
+    private var completedTrackers: [TrackerRecord] = []
+    private var completedID: Set<UUID> = []
     private var params: GeometricParams!
-    
-    private lazy var dayFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE"
-        return formatter
-    }()
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -191,28 +184,25 @@ final class TrackersCollectionViewController: UIViewController {
     }
     
     private func filterRelevantTrackers() {
-        let currentDay = dayFormatter.string(from: currentDate).capitalized
+        let calendar = Calendar(identifier: .gregorian)
+        let weekday = calendar.component(.weekday, from: currentDate) - 2
         
-        let relevantCategories = categories
-            .filter { $0.trackers
-                .contains(where: { $0.schedule
-                    .contains(where: { $0.fullName == currentDay && $0.isOn })
-                })
+        if let day = WeekDay(rawValue: weekday) {
+            
+            let relevantCategories = categories
+                .filter { $0.trackers.contains(where: { $0.schedule.contains(day)})}
+            
+            let relevantTrackers = relevantCategories
+                .map { $0.trackers.filter {$0.schedule.contains(day)}}
+            
+            var result: [TrackerCategory] = []
+            
+            for i in 0..<relevantCategories.count {
+                result.append(TrackerCategory(title: relevantCategories[i].title, trackers: relevantTrackers[i]))
             }
-        
-        let relevantTrackers = relevantCategories
-            .map { $0.trackers
-                .filter {$0.schedule
-                    .contains(where: {$0.fullName == currentDay && $0.isOn})
-                }}
-        
-        var result: [TrackerCategory] = []
-        
-        for i in 0..<relevantCategories.count {
-            result.append(TrackerCategory(title: relevantCategories[i].title, trackers: relevantTrackers[i]))
+            self.visibleCategoriesAtSpecificDay = result
+            self.visibleCategories = result
         }
-        self.visibleCategoriesAtSpecificDay = result
-        self.visibleCategories = result
     }
 }
 
@@ -228,13 +218,22 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: TrackersCollectionViewCell.identifier,
-            for: indexPath
+            withReuseIdentifier: TrackersCollectionViewCell.identifier, for: indexPath
         ) as? TrackersCollectionViewCell {
+            
             cell.delegate = self
             let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
-            let id = tracker.id
-            cell.configure(with: tracker, isDone: completedID.contains(id))
+            
+            if completedID.contains(tracker.id) {
+                let isDone = completedTrackers
+                    .contains(where: {
+                        $0.id == tracker.id && dateFormatter.string(from: $0.date) == dateFormatter.string(from: currentDate)})
+                let completedDays = completedTrackers.filter({ $0.id == tracker.id }).count
+                cell.configure(
+                    with: tracker, isDone: isDone, completedDays: completedDays)
+            } else {
+                cell.configure(with: tracker, isDone: false, completedDays: 0)
+            }
             return cell
         } else {
             return UICollectionViewCell()
@@ -279,11 +278,7 @@ extension TrackersCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         CGSize(width: 0, height: 18)
     }
-}
-
-// MARK: - UICollectionViewDelegate
-
-extension TrackersCollectionViewController: UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         // FIXME: убрать отсюда, пока для простоты удаления
@@ -302,7 +297,6 @@ extension TrackersCollectionViewController: UICollectionViewDelegate {
 
 extension TrackersCollectionViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
         visibleCategories = visibleCategoriesAtSpecificDay
             .filter { $0.trackers
                 .contains(where: {
@@ -316,10 +310,12 @@ extension TrackersCollectionViewController: UISearchBarDelegate {
         checkPlaceholder()
         visibleCategories = visibleCategoriesAtSpecificDay
         navigationItem.rightBarButtonItem?.isEnabled = true
+        navigationItem.leftBarButtonItem?.isEnabled = true
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         navigationItem.rightBarButtonItem?.isEnabled = false
+        navigationItem.leftBarButtonItem?.isEnabled = false
         return true
     }
 }
@@ -344,7 +340,7 @@ extension TrackersCollectionViewController: TrackerTypeViewControllerDelegate {
 
 extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
     func recordWillAdd(with id: UUID) -> Bool {
-        if dateFormatter.string(from: currentDate) == dateFormatter.string(from: Date()) {
+        if currentDate < Date() {
             completedTrackers.append(TrackerRecord(id: id, date: currentDate))
             completedID.insert(id)
             return true
@@ -353,13 +349,14 @@ extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
     }
     
     func recordWillRemove(with id: UUID) -> Bool {
-        if dateFormatter.string(from: currentDate) == dateFormatter.string(from: Date()),
-           completedID.contains(id), //FIXME: узнать про сет
-           let index = completedTrackers.firstIndex(where: {$0.id == id}) {
-                completedTrackers.remove(at: index)
+        if let index = completedTrackers.firstIndex(where: {
+            $0.id == id && dateFormatter.string(from: $0.date) == dateFormatter.string(from: currentDate)}) {
+            completedTrackers.remove(at: index)
+            if completedTrackers.filter({$0.id == id}).isEmpty {
                 completedID.remove(id)
-                return true
             }
+            return true
+        }
         return false
     }
 }

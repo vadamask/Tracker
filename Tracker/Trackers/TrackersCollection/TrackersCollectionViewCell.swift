@@ -51,7 +51,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     private let emojiLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textAlignment = .center
         return label
     }()
@@ -82,7 +82,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     private let plusButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(recordButtonTapped), for: .touchUpInside)
         button.layer.cornerRadius = 17
         return button
     }()
@@ -97,10 +97,10 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with tracker: Tracker, isDone: Bool) {
+    func configure(with tracker: Tracker, isDone: Bool, completedDays: Int) {
         self.tracker = tracker
         self.isDone = isDone
-        completedDays = isDone ? 1 : 0
+        self.completedDays = completedDays
         titleLabel.text = tracker.name
         emojiLabel.text = tracker.emoji
         cardView.backgroundColor = UIColor(named: tracker.color)
@@ -164,7 +164,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         ])
     }
     
-    @objc private func plusButtonTapped() {
+    @objc private func recordButtonTapped() {
         guard let delegate = delegate else { return }
         if isDone {
             if delegate.recordWillRemove(with: tracker.id) {
@@ -208,6 +208,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             plusButton.tintColor = UIColor(named: tracker.color)
         } else {
             plusButton.setImage(UIImage(named: "add day button"), for: .normal)
+            plusButton.alpha = 1.0
             plusButton.backgroundColor = .whiteYP
             plusButton.tintColor = UIColor(named: tracker.color)
         }

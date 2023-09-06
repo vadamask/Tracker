@@ -8,15 +8,14 @@
 import UIKit
 
 protocol TrackerScheduleViewControllerDelegate: AnyObject {
-    func didSelectedDays(in schedule: [WeekDay])
+    func didSelectedDays(in schedule: Set<WeekDay>)
 }
 
 final class TrackerScheduleViewController: UIViewController {
     
     weak var delegate: TrackerScheduleViewControllerDelegate?
     
-    private var schedule: [WeekDay] = []
-    
+    private var schedule: Set<WeekDay> = []
     private let topLabel = UILabel(text: "Расписание", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
     
     private let scheduleTableView: UITableView = {
@@ -36,7 +35,7 @@ final class TrackerScheduleViewController: UIViewController {
         return button
     }()
     
-    init(delegate: TrackerScheduleViewControllerDelegate?, schedule: [WeekDay]) {
+    init(delegate: TrackerScheduleViewControllerDelegate?, schedule: Set<WeekDay>) {
         self.delegate = delegate
         self.schedule = schedule
         super.init(nibName: nil, bundle: nil)
@@ -55,7 +54,7 @@ final class TrackerScheduleViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = .whiteYP
         scheduleTableView.dataSource = self
-        scheduleTableView.register(ScheduleTableViewCell.self, forCellReuseIdentifier: "cell")
+        scheduleTableView.register(TrackerScheduleTableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
     private func setupConstraints() {
@@ -88,14 +87,16 @@ final class TrackerScheduleViewController: UIViewController {
 
 extension TrackerScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        schedule.count
+        7
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? ScheduleTableViewCell {
-            cell.textLabel?.text = schedule[indexPath.row].fullName
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? TrackerScheduleTableViewCell {
+            cell.textLabel?.text = WeekDay.fullName(for: indexPath.row)
             cell.delegate = self
-            cell.configure(at: indexPath.row, isOn: schedule[indexPath.row].isOn)
+            if let day = WeekDay(rawValue: indexPath.row) {
+                cell.configure(at: indexPath.row, isOn: schedule.contains(day))
+            }
             return cell
         } else {
             return UITableViewCell()
@@ -105,8 +106,14 @@ extension TrackerScheduleViewController: UITableViewDataSource {
 
 // MARK: - ScheduleTableViewCellDelegate
 
-extension TrackerScheduleViewController: ScheduleTableViewCellDelegate {
+extension TrackerScheduleViewController: TrackerScheduleTableViewCellDelegate {
     func switchDidTapped(_ isOn: Bool, at row: Int) {
-        schedule[row] = WeekDay(fullName: schedule[row].fullName, shortName: schedule[row].shortName, isOn: isOn)
+        if let day = WeekDay(rawValue: row) {
+            if isOn {
+                schedule.insert(day)
+            } else {
+                schedule.remove(day)
+            }
+        }
     }
 }
