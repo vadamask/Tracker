@@ -7,22 +7,6 @@
 
 import UIKit
 
-struct GeometricParams {
-    let cellCount: Int
-    let leftInset: CGFloat
-    let rightInset: CGFloat
-    let cellSpacing: CGFloat
-    let paddingWidth: CGFloat
-    
-    init(cellCount: Int, leftInset: CGFloat, rightInset: CGFloat, cellSpacing: CGFloat) {
-        self.cellCount = cellCount
-        self.leftInset = leftInset
-        self.rightInset = rightInset
-        self.cellSpacing = cellSpacing
-        self.paddingWidth = leftInset + rightInset + CGFloat(cellCount - 1) * cellSpacing
-    }
-}
-
 final class TrackersCollectionViewController: UIViewController {
     
     private var categories: [TrackerCategory] = [] {
@@ -45,9 +29,8 @@ final class TrackersCollectionViewController: UIViewController {
     }
     
     private var visibleCategoriesAtSpecificDay: [TrackerCategory] = []
-    private var completedTrackers: [TrackerRecord] = []
-    private var completedID: Set<UUID> = []
-    private var params: GeometricParams!
+    private var completedTrackers: Set<TrackerRecord> = []
+    private let params: GeometricParameters
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -86,6 +69,15 @@ final class TrackersCollectionViewController: UIViewController {
         searchField.clearButtonMode = .always
         return searchField
     }()
+    
+    init(params: GeometricParameters) {
+        self.params = params
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -138,7 +130,6 @@ final class TrackersCollectionViewController: UIViewController {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: TrackerCategoryHeader.identifier
         )
-        params = GeometricParams(cellCount: 2, leftInset: 16, rightInset: 16, cellSpacing: 9)
     }
     
     private func setupConstraints() {
@@ -184,9 +175,9 @@ final class TrackersCollectionViewController: UIViewController {
     }
     
     private func filterRelevantTrackers() {
-        let calendar = Calendar(identifier: .gregorian)
-        let weekday = calendar.component(.weekday, from: currentDate) - 2
-        
+        var weekday = Calendar(identifier: .gregorian).component(.weekday, from: currentDate)
+        weekday = weekday == 1 ? 6 : (weekday - 2)
+                
         if let day = WeekDay(rawValue: weekday) {
             
             let relevantCategories = categories
@@ -224,16 +215,13 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
             cell.delegate = self
             let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
             
-            if completedID.contains(tracker.id) {
-                let isDone = completedTrackers
-                    .contains(where: {
+            let isDone = completedTrackers.contains(where: {
                         $0.id == tracker.id && dateFormatter.string(from: $0.date) == dateFormatter.string(from: currentDate)})
-                let completedDays = completedTrackers.filter({ $0.id == tracker.id }).count
-                cell.configure(
-                    with: tracker, isDone: isDone, completedDays: completedDays)
-            } else {
-                cell.configure(with: tracker, isDone: false, completedDays: 0)
-            }
+            
+            let completedDays = completedTrackers.filter({ $0.id == tracker.id }).count
+            
+            cell.configure(with: tracker, isDone: isDone, completedDays: completedDays)
+            
             return cell
         } else {
             return UICollectionViewCell()
@@ -277,19 +265,6 @@ extension TrackersCollectionViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         CGSize(width: 0, height: 18)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        // FIXME: убрать отсюда, пока для простоты удаления
-//        if categories[indexPath.section].trackers.count == 1 {
-//            categories.remove(at: indexPath.section)
-//        } else {
-//            categories[indexPath.section] = TrackerCategory(
-//                title: categories[indexPath.section].title,
-//                trackers: categories[indexPath.section].trackers.enumerated().filter { $0.offset != indexPath.row }.map { $0.element }
-//            )
-//        }
     }
 }
 
@@ -341,8 +316,7 @@ extension TrackersCollectionViewController: TrackerTypeViewControllerDelegate {
 extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
     func recordWillAdd(with id: UUID) -> Bool {
         if currentDate < Date() {
-            completedTrackers.append(TrackerRecord(id: id, date: currentDate))
-            completedID.insert(id)
+            completedTrackers.insert(TrackerRecord(id: id, date: currentDate))
             return true
         }
         return false
@@ -352,9 +326,6 @@ extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
         if let index = completedTrackers.firstIndex(where: {
             $0.id == id && dateFormatter.string(from: $0.date) == dateFormatter.string(from: currentDate)}) {
             completedTrackers.remove(at: index)
-            if completedTrackers.filter({$0.id == id}).isEmpty {
-                completedID.remove(id)
-            }
             return true
         }
         return false

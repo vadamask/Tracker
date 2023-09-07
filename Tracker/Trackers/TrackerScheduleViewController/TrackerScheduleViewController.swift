@@ -15,7 +15,7 @@ final class TrackerScheduleViewController: UIViewController {
     
     weak var delegate: TrackerScheduleViewControllerDelegate?
     
-    private var schedule: Set<WeekDay> = []
+    private var schedule: Set<WeekDay>
     private let topLabel = UILabel(text: "Расписание", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
     
     private let scheduleTableView: UITableView = {

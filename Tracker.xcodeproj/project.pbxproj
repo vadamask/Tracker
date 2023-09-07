@@ -14,6 +14,7 @@
 		DD1D1AA92A9B816600BF2BCF /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1D1AA82A9B816600BF2BCF /* Tracker.swift */; };
 		DD1D1AAB2A9B820100BF2BCF /* TrackerCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1D1AAA2A9B820100BF2BCF /* TrackerCategory.swift */; };
 		DD1D1AAD2A9B823500BF2BCF /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1D1AAC2A9B823500BF2BCF /* TrackerRecord.swift */; };
+		DD41BA8E2AA9D63B00943466 /* GeometricParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */; };
 		DD7574252A9E2DE800619147 /* TrackerSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7574242A9E2DE800619147 /* TrackerSetupViewController.swift */; };
 		DD7574282A9E48D400619147 /* UIButton+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7574272A9E48D400619147 /* UIButton+Extensions.swift */; };
 		DD75742A2A9E790000619147 /* TrackerScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7574292A9E790000619147 /* TrackerScheduleViewController.swift */; };
@@ -39,6 +40,7 @@
 		DD1D1AA82A9B816600BF2BCF /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		DD1D1AAA2A9B820100BF2BCF /* TrackerCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategory.swift; sourceTree = "<group>"; };
 		DD1D1AAC2A9B823500BF2BCF /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
+		DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometricParameters.swift; sourceTree = "<group>"; };
 		DD7574242A9E2DE800619147 /* TrackerSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerSetupViewController.swift; sourceTree = "<group>"; };
 		DD7574272A9E48D400619147 /* UIButton+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extensions.swift"; sourceTree = "<group>"; };
 		DD7574292A9E790000619147 /* TrackerScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerScheduleViewController.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				DD1D1AA82A9B816600BF2BCF /* Tracker.swift */,
 				DD1D1AAA2A9B820100BF2BCF /* TrackerCategory.swift */,
 				DD1D1AAC2A9B823500BF2BCF /* TrackerRecord.swift */,
+				DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -281,6 +284,7 @@
 				DD08E51F2A97B3C300E8FEB8 /* TabBarController.swift in Sources */,
 				DDD982F12A9FD70100994B01 /* TrackerSetupTableViewCell.swift in Sources */,
 				DD7574282A9E48D400619147 /* UIButton+Extensions.swift in Sources */,
+				DD41BA8E2AA9D63B00943466 /* GeometricParameters.swift in Sources */,
 				DDBA49D92A9B2DE400E1E0C9 /* UIColor+Extensions.swift in Sources */,
 				DD8E80272AA2406C00790687 /* UIViewController+Extensions.swift in Sources */,
 				DDFD06272A9BDA99005F3117 /* UILabel+Extensions.swift in Sources */,

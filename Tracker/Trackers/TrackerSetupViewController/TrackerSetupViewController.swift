@@ -22,8 +22,8 @@ final class TrackerSetupViewController: UIViewController {
     }
     
     private var schedule: Set<WeekDay> = []
+    private var topLabel = UILabel(text: "", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
     
-    private var topLabel: UILabel!
     private let textFieldSymbolConstraintLabel = UILabel(text: "Ограничение 38 символов",
                                                     textColor: .redYP,
                                                     font: .systemFont(ofSize: 17, weight: .regular))
@@ -87,9 +87,7 @@ final class TrackerSetupViewController: UIViewController {
         textFieldSymbolConstraintLabel.isHidden = true
         self.hideKeyboardWhenTappedAround()
         
-        topLabel = isTracker ?
-        UILabel(text: "Новая привычка", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium)) :
-        UILabel(text: "Новое нерегулярное событие", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
+        topLabel.text = isTracker ? "Новая привычка" : "Новое нерегулярное событие"
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -173,7 +171,14 @@ extension TrackerSetupViewController: UITableViewDataSource {
             switch indexPath.row {
             case 0:
                 cell.textLabel?.text = "Категория"
-                cell.layer.maskedCorners = isTracker ? [.layerMinXMinYCorner, .layerMaxXMinYCorner] : [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
+                
+                cell.layer.maskedCorners = isTracker ?
+                [.layerMinXMinYCorner, .layerMaxXMinYCorner] :
+                [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
+                
+                if !isTracker {
+                    cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 400)
+                }
             case 1:
                 cell.textLabel?.text = "Расписание"
                 cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
