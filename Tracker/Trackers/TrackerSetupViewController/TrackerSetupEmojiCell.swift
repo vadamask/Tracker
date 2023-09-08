@@ -23,6 +23,7 @@ final class TrackerSetupEmojiCell: UICollectionViewCell {
         contentView.addSubview(label)
         label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        layer.cornerRadius = 16
     }
     
     required init?(coder: NSCoder) {

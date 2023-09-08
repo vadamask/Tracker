@@ -14,10 +14,24 @@ protocol TrackerSetupViewControllerDelegate: AnyObject {
 final class TrackerSetupViewController: UIViewController {
     
     weak var delegate: TrackerSetupViewControllerDelegate?
-    
-    private let emoji = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     private var isTracker: Bool
-    private var scheduleIsSet: Bool = false {
+    private let emoji = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
+    private var selectedColor = ""
+    private var selectedEmoji = ""
+    
+    private var emojiIsSet: Bool = false {
+        didSet {
+            checkCreateButtonActivation(textField.text)
+        }
+    }
+    
+    private var colorIsSet = false {
+        didSet {
+            checkCreateButtonActivation(textField.text)
+        }
+    }
+    
+    private var scheduleIsSet = false {
         didSet {
             checkCreateButtonActivation(textField.text)
         }
@@ -67,6 +81,7 @@ final class TrackerSetupViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.contentInset = UIEdgeInsets(top: 24, left: 18, bottom: 24, right: 18)
         collectionView.isScrollEnabled = false
+        collectionView.allowsMultipleSelection = true
         return collectionView
     }()
     
@@ -184,12 +199,12 @@ final class TrackerSetupViewController: UIViewController {
     @objc private func createButtonTapped() {
         let category = TrackerCategory(
             title: "Title category",
-            trackers: [Tracker(id: UUID(), name: textField.text!, color: "Color selection 10", emoji: "🌸", schedule: schedule)])
+            trackers: [Tracker(id: UUID(), name: textField.text!, color: selectedColor, emoji: selectedEmoji, schedule: schedule)])
         delegate?.didCreateTrackerWith(category)
     }
     
     private func checkCreateButtonActivation(_ text: String?) {
-        if let text = text, !text.isEmpty, scheduleIsSet {
+        if let text = text, !text.isEmpty, scheduleIsSet, emojiIsSet, colorIsSet {
             createButton.isEnabled = true
             createButton.backgroundColor = .blackYP
         } else {
@@ -254,10 +269,13 @@ extension TrackerSetupViewController: UITableViewDelegate {
 extension TrackerSetupViewController: TrackerScheduleViewControllerDelegate {
     func didSelectedDays(in schedule: Set<WeekDay>) {
         self.schedule = schedule
+        
         let selectedDays = schedule
             .sorted(by: {$0.rawValue < $1.rawValue})
-            .map { WeekDay.shortName(for: $0.rawValue) }
+            .map { WeekDay.shortName(for: $0.rawValue)}
+        
         scheduleIsSet = selectedDays.isEmpty ? false : true
+        
         let indexPath = IndexPath(row: 1, section: 0)
         let cell = tableView.cellForRow(at: indexPath)
         cell?.detailTextLabel?.text = selectedDays.count < 7 ? selectedDays.joined(separator: ", ") : "Каждый день"
@@ -354,6 +372,43 @@ extension TrackerSetupViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         CGSize(width: view.bounds.width, height: 74)
+    }
+}
+
+// MARK: - UICollectionViewDelegate
+
+extension TrackerSetupViewController {
+  
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let indexes = collectionView.indexPathsForSelectedItems {
+            indexes.filter { $0.section == indexPath.section && $0 != indexPath }.forEach { i in
+                    collectionView.deselectItem(at: i, animated: false)
+                (collectionView.cellForItem(at: i) as? TrackerSetupEmojiCell)?.backgroundColor = .clear
+                (collectionView.cellForItem(at: i) as? TrackerSetupColorCell)?.itemDidSelect(false)
+                }
+        }
+        if let cell = collectionView.cellForItem(at: indexPath) as? TrackerSetupEmojiCell {
+            cell.backgroundColor = .lightGrayYP
+            emojiIsSet = true
+            selectedEmoji = emoji[indexPath.row]
+        }
+        if let cell = collectionView.cellForItem(at: indexPath) as? TrackerSetupColorCell {
+            cell.itemDidSelect(true)
+            colorIsSet = true
+            selectedColor = "Color selection \(indexPath.row)"
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? TrackerSetupEmojiCell {
+            cell.backgroundColor = .clear
+            emojiIsSet = false
+        }
+        if let cell = collectionView.cellForItem(at: indexPath) as? TrackerSetupColorCell {
+            cell.itemDidSelect(false)
+            colorIsSet = false
+        }
     }
 }
 
