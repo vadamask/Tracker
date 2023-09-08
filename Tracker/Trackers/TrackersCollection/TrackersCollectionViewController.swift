@@ -272,12 +272,22 @@ extension TrackersCollectionViewController: UICollectionViewDelegateFlowLayout {
 
 extension TrackersCollectionViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        visibleCategories = visibleCategoriesAtSpecificDay
+
+        let relevantCategories = visibleCategoriesAtSpecificDay
             .filter { $0.trackers
-                .contains(where: {
-                    $0.name.lowercased().hasPrefix(searchText.lowercased())
-                })
-            }
+                .contains { $0.name.lowercased().hasPrefix(searchText.lowercased())} }
+        
+        let relevantTrackers = relevantCategories
+            .map { $0.trackers
+                    .filter { $0.name.lowercased().hasPrefix(searchText.lowercased())} }
+        
+        var result: [TrackerCategory] = []
+        
+        for i in 0..<relevantCategories.count {
+            result.append(TrackerCategory(title: relevantCategories[i].title, trackers: relevantTrackers[i]))
+        }
+        
+        visibleCategories = result
         checkPlaceholder()
     }
     
