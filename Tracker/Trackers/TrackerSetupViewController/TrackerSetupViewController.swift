@@ -172,7 +172,7 @@ final class TrackerSetupViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 62),
             tableView.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
-            tableView.heightAnchor.constraint(equalToConstant: 150),
+            tableView.heightAnchor.constraint(equalToConstant: isTracker ? 150 : 75),
             
             collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
@@ -298,7 +298,6 @@ extension TrackerSetupViewController: UITextFieldDelegate {
             constraintLabel.isHidden = false
             return false
         }
-        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
