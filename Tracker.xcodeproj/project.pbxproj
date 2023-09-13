@@ -13,7 +13,7 @@
 		DD08E5272A97B3C300E8FEB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD08E5252A97B3C300E8FEB8 /* LaunchScreen.storyboard */; };
 		DD1D1AA92A9B816600BF2BCF /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1D1AA82A9B816600BF2BCF /* Tracker.swift */; };
 		DD1D1AAB2A9B820100BF2BCF /* TrackerCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1D1AAA2A9B820100BF2BCF /* TrackerCategory.swift */; };
-		DD1D1AAD2A9B823500BF2BCF /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1D1AAC2A9B823500BF2BCF /* TrackerRecord.swift */; };
+		DD4137D22AB23127002B851A /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4137D12AB23127002B851A /* TrackerRecord.swift */; };
 		DD41BA8E2AA9D63B00943466 /* GeometricParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */; };
 		DD7574252A9E2DE800619147 /* TrackerSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7574242A9E2DE800619147 /* TrackerSetupViewController.swift */; };
 		DD7574282A9E48D400619147 /* UIButton+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7574272A9E48D400619147 /* UIButton+Extensions.swift */; };
@@ -46,7 +46,7 @@
 		DD08E5282A97B3C300E8FEB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD1D1AA82A9B816600BF2BCF /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		DD1D1AAA2A9B820100BF2BCF /* TrackerCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategory.swift; sourceTree = "<group>"; };
-		DD1D1AAC2A9B823500BF2BCF /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
+		DD4137D12AB23127002B851A /* TrackerRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
 		DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometricParameters.swift; sourceTree = "<group>"; };
 		DD7574242A9E2DE800619147 /* TrackerSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerSetupViewController.swift; sourceTree = "<group>"; };
 		DD7574272A9E48D400619147 /* UIButton+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extensions.swift"; sourceTree = "<group>"; };
@@ -134,8 +134,8 @@
 			isa = PBXGroup;
 			children = (
 				DD1D1AA82A9B816600BF2BCF /* Tracker.swift */,
+				DD4137D12AB23127002B851A /* TrackerRecord.swift */,
 				DD1D1AAA2A9B820100BF2BCF /* TrackerCategory.swift */,
-				DD1D1AAC2A9B823500BF2BCF /* TrackerRecord.swift */,
 				DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */,
 			);
 			path = Models;
@@ -314,13 +314,13 @@
 				DDDF41282AAB3AA500F4A75F /* TrackerSetupEmojiCell.swift in Sources */,
 				DDFD06272A9BDA99005F3117 /* UILabel+Extensions.swift in Sources */,
 				DD1D1AAB2A9B820100BF2BCF /* TrackerCategory.swift in Sources */,
+				DD4137D22AB23127002B851A /* TrackerRecord.swift in Sources */,
 				DDFD06252A9BCE99005F3117 /* TrackerTypeViewController.swift in Sources */,
 				DD7574252A9E2DE800619147 /* TrackerSetupViewController.swift in Sources */,
 				DDDF413D2AACA96100F4A75F /* TrackerStore.swift in Sources */,
 				DDBA49D22A9B242000E1E0C9 /* TrackersCollectionViewController.swift in Sources */,
 				DDDF413F2AACA97000F4A75F /* TrackerCategoryStore.swift in Sources */,
 				DDFD06292A9CFB2E005F3117 /* TrackersCollectionViewCell.swift in Sources */,
-				DD1D1AAD2A9B823500BF2BCF /* TrackerRecord.swift in Sources */,
 				DD8E80292AA262EC00790687 /* TrackerCategoryHeader.swift in Sources */,
 				DDD982EB2A9FB48000994B01 /* TrackerScheduleTableViewCell.swift in Sources */,
 				DD08E51B2A97B3C300E8FEB8 /* AppDelegate.swift in Sources */,

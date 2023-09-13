@@ -9,27 +9,16 @@ import UIKit
 
 final class TrackersCollectionViewController: UIViewController {
     
-    private var categories: [TrackerCategory] = [] {
+    private var trackerStore = TrackerStore(selectedDate: Date())
+    private let recordStore = TrackerRecordStore()
+    private var currentDate = Date() {
         didSet {
-            filterRelevantTrackers()
-        }
-    }
-    
-    private var visibleCategories: [TrackerCategory] = [] {
-        didSet {
+            trackerStore = TrackerStore(selectedDate: currentDate)
             collectionView.reloadData()
             checkPlaceholder()
         }
     }
-    
-    private var currentDate: Date! {
-        didSet {
-            filterRelevantTrackers()
-        }
-    }
-    
-    private var visibleCategoriesAtSpecificDay: [TrackerCategory] = []
-    private var completedTrackers: Set<TrackerRecord> = []
+
     private let params: GeometricParameters
     
     private lazy var dateFormatter: DateFormatter = {
@@ -82,6 +71,9 @@ final class TrackersCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .whiteYP
+        
+        trackerStore.delegate = self
+        
         setupNavigationItem()
         setupCollectionView()
         setupConstraints()
@@ -105,7 +97,7 @@ final class TrackersCollectionViewController: UIViewController {
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(datePickerDidChanged(sender:)), for: .valueChanged)
-        currentDate = datePicker.date
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
         
         let searchController = UISearchController()
@@ -154,7 +146,8 @@ final class TrackersCollectionViewController: UIViewController {
     }
     
     @objc private func addNewTracker() {
-        let typeVC = TrackerTypeViewController(delegate: self)
+        let typeVC = TrackerTypeViewController()
+        typeVC.delegate = self
         present(typeVC, animated: true)
     }
     
@@ -163,37 +156,15 @@ final class TrackersCollectionViewController: UIViewController {
     }
     
     private func checkPlaceholder() {
-        if categories.isEmpty || visibleCategoriesAtSpecificDay.isEmpty {
+        if trackerStore.numberOfSections() == 0 {
             placeholder.image = UIImage(named: "empty list")
             label.text = "Что будем отслеживать?"
         } else {
             placeholder.image = UIImage(named: "empty search result")
             label.text = "Ничего не найдено"
         }
-        placeholder.isHidden = !visibleCategories.isEmpty
+        placeholder.isHidden = trackerStore.numberOfSections() != 0
         label.isHidden = placeholder.isHidden
-    }
-    
-    private func filterRelevantTrackers() {
-        var weekday = Calendar(identifier: .gregorian).component(.weekday, from: currentDate)
-        weekday = weekday == 1 ? 6 : (weekday - 2)
-                
-        if let day = WeekDay(rawValue: weekday) {
-            
-            let relevantCategories = categories
-                .filter { $0.trackers.contains(where: { $0.schedule.contains(day)})}
-            
-            let relevantTrackers = relevantCategories
-                .map { $0.trackers.filter {$0.schedule.contains(day)}}
-            
-            var result: [TrackerCategory] = []
-            
-            for i in 0..<relevantCategories.count {
-                result.append(TrackerCategory(title: relevantCategories[i].title, trackers: relevantTrackers[i]))
-            }
-            self.visibleCategoriesAtSpecificDay = result
-            self.visibleCategories = result
-        }
     }
 }
 
@@ -201,26 +172,22 @@ final class TrackersCollectionViewController: UIViewController {
 
 extension TrackersCollectionViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        visibleCategories.count
+        trackerStore.numberOfSections() ?? 0
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        visibleCategories[section].trackers.count
+        trackerStore.numberOfItemsIn(section) ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let tracker = trackerStore.cellForItem(at: indexPath) else { return UICollectionViewCell() }
+        
         if let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: TrackersCollectionViewCell.identifier, for: indexPath
         ) as? TrackersCollectionViewCell {
             
             cell.delegate = self
-            let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
-            
-            let isDone = completedTrackers.contains(where: {
-                        $0.id == tracker.id && dateFormatter.string(from: $0.date) == dateFormatter.string(from: currentDate)})
-            
-            let completedDays = completedTrackers.filter({ $0.id == tracker.id }).count
-            
-            cell.configure(with: tracker, isDone: isDone, completedDays: completedDays)
+            let details = trackerStore.detailsFor(indexPath, at: dateFormatter.string(from: currentDate))
+            cell.configure(with: tracker, isDone: details.isDone, completedDays: details.completedDays)
             
             return cell
         } else {
@@ -229,12 +196,13 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let title = trackerStore.titleForSection(at: indexPath) else { return UICollectionReusableView() }
         if let supView = collectionView.dequeueReusableSupplementaryView(
             ofKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: TrackerCategoryHeader.identifier,
             for: indexPath
         ) as? TrackerCategoryHeader {
-            supView.configure(with: visibleCategories[indexPath.section])
+            supView.configure(with: title)
             return supView
         } else {
             return UICollectionReusableView()
@@ -268,32 +236,26 @@ extension TrackersCollectionViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+// MARK: - UICollectionViewDelegate
+
+extension TrackersCollectionViewController {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+      
+    }
+}
+
 // MARK: - UISearchBarDelegate
 
 extension TrackersCollectionViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 
-        let relevantCategories = visibleCategoriesAtSpecificDay
-            .filter { $0.trackers
-                .contains { $0.name.lowercased().hasPrefix(searchText.lowercased())} }
         
-        let relevantTrackers = relevantCategories
-            .map { $0.trackers
-                    .filter { $0.name.lowercased().hasPrefix(searchText.lowercased())} }
-        
-        var result: [TrackerCategory] = []
-        
-        for i in 0..<relevantCategories.count {
-            result.append(TrackerCategory(title: relevantCategories[i].title, trackers: relevantTrackers[i]))
-        }
-        
-        visibleCategories = result
         checkPlaceholder()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         checkPlaceholder()
-        visibleCategories = visibleCategoriesAtSpecificDay
+        
         navigationItem.rightBarButtonItem?.isEnabled = true
         navigationItem.leftBarButtonItem?.isEnabled = true
     }
@@ -305,39 +267,55 @@ extension TrackersCollectionViewController: UISearchBarDelegate {
     }
 }
 
+// MARK: - TrackersCollectionViewCellDelegate
+
+extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
+    func recordWillAdd(with uuid: UUID) -> Bool {
+        if currentDate < Date() {
+            do {
+                try recordStore.addRecord(TrackerRecord(uuid: uuid.uuidString, date: dateFormatter.string(from: currentDate)))
+                return true
+            } catch {
+                print(error.localizedDescription)
+                return false
+            }
+        }
+        return false
+    }
+    
+    func recordWillRemove(with uuid: UUID) -> Bool {
+        do {
+            try recordStore.removeRecord(with: uuid, at: dateFormatter.string(from: currentDate))
+            return true
+        } catch {
+            print(error.localizedDescription)
+        }
+        return false
+    }
+}
+
 // MARK: - TrackerTypeViewControllerDelegate
 
 extension TrackersCollectionViewController: TrackerTypeViewControllerDelegate {
-    func didCreateTrackerWith(_ category: TrackerCategory) {
-        if let index = categories.firstIndex(where: { $0.title == category.title }) {
-            categories[index] = TrackerCategory(
-                title: category.title,
-                trackers: (categories[index].trackers + category.trackers)
-            )
-        } else {
-            categories.append(category)
+    func didTapCancelButton() {
+        dismiss(animated: true)
+    }
+    
+    func didCreate(_ tracker: Tracker, with title: String) {
+        do {
+            try trackerStore.add(tracker, with: title)
+        } catch {
+            print(error.localizedDescription)
         }
         dismiss(animated: true)
     }
 }
 
-// MARK: - TrackersCollectionViewCellDelegate
+// MARK: - TrackerStoreDelegate
 
-extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
-    func recordWillAdd(with id: UUID) -> Bool {
-        if currentDate < Date() {
-            completedTrackers.insert(TrackerRecord(id: id, date: currentDate))
-            return true
-        }
-        return false
-    }
-    
-    func recordWillRemove(with id: UUID) -> Bool {
-        if let index = completedTrackers.firstIndex(where: {
-            $0.id == id && dateFormatter.string(from: $0.date) == dateFormatter.string(from: currentDate)}) {
-            completedTrackers.remove(at: index)
-            return true
-        }
-        return false
+extension TrackersCollectionViewController: TrackerStoreDelegate {
+    func didUpdate(_ trackerStoreUpdate: TrackerStoreUpdate) {
+        collectionView.reloadData()
+        checkPlaceholder()
     }
 }

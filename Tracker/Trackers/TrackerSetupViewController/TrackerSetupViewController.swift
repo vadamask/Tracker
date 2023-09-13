@@ -8,16 +8,20 @@
 import UIKit
 
 protocol TrackerSetupViewControllerDelegate: AnyObject {
-    func didCreateTrackerWith(_ category: TrackerCategory)
+    func didTapCancelButton()
+    func didCreate(_ tracker: Tracker, with title: String)
 }
 
 final class TrackerSetupViewController: UIViewController {
     
     weak var delegate: TrackerSetupViewControllerDelegate?
+    
+    private let categoryStore = TrackerCategoryStore()
     private var isTracker: Bool
     private let emoji = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     private var selectedColor = ""
     private var selectedEmoji = ""
+    private var categoryTitle = "test"
     
     private var emojiIsSet: Bool = false {
         didSet {
@@ -100,8 +104,7 @@ final class TrackerSetupViewController: UIViewController {
         return button
     }()
     
-    init(delegate: TrackerSetupViewControllerDelegate?, isTracker: Bool) {
-        self.delegate = delegate
+    init(isTracker: Bool) {
         self.isTracker = isTracker
         super.init(nibName: nil, bundle: nil)
     }
@@ -193,24 +196,26 @@ final class TrackerSetupViewController: UIViewController {
     }
     
     @objc private func cancelButtonTapped() {
-        dismiss(animated: true)
+        delegate?.didTapCancelButton()
     }
     
     @objc private func createButtonTapped() {
-        let category = TrackerCategory(
-            title: "Title category",
-            trackers: [Tracker(id: UUID(), name: textField.text!, color: selectedColor, emoji: selectedEmoji, schedule: schedule)])
-        delegate?.didCreateTrackerWith(category)
+        let tracker = Tracker(uuid: UUID(), name: textField.text!, color: selectedColor, emoji: selectedEmoji, schedule: schedule)
+        do {
+            try categoryStore.add(categoryTitle) // FIXME: - убрать
+            delegate?.didCreate(tracker, with: categoryTitle)
+        } catch {
+            assertionFailure("Failure with adding tracker")
+        }
     }
     
     private func checkCreateButtonActivation(_ text: String?) {
-        if let text = text, !text.isEmpty, scheduleIsSet, emojiIsSet, colorIsSet {
-            createButton.isEnabled = true
-            createButton.backgroundColor = .blackYP
-        } else {
-            createButton.isEnabled = false
-            createButton.backgroundColor = .grayYP
+        if let text = text {
+            createButton.isEnabled = isTracker ?
+            !text.isEmpty && scheduleIsSet && emojiIsSet && colorIsSet :
+            !text.isEmpty && emojiIsSet && colorIsSet
         }
+        createButton.backgroundColor = createButton.isEnabled ? .blackYP : .grayYP
     }
 }
 

@@ -29,7 +29,7 @@ final class TrackerCategoryHeader: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with category: TrackerCategory) {
-        label.text = category.title
+    func configure(with title: String) {
+        label.text = title
     }
 }
