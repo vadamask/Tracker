@@ -14,8 +14,6 @@ final class TrackersCollectionViewController: UIViewController {
     private var currentDate = Date() {
         didSet {
             trackerStore.filterTrackers(at: currentDate)
-            collectionView.reloadData()
-            checkPlaceholder()
         }
     }
 
@@ -156,7 +154,6 @@ final class TrackersCollectionViewController: UIViewController {
     }
     
     private func checkPlaceholder() {
-
         if trackerStore.numberOfSections() == 0 && navigationItem.leftBarButtonItem!.isEnabled {
             placeholder.image = UIImage(named: "empty list")
             label.text = "Что будем отслеживать?"
@@ -175,6 +172,7 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         trackerStore.numberOfSections() ?? 0
     }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         trackerStore.numberOfItemsIn(section) ?? 0
     }
@@ -297,7 +295,6 @@ extension TrackersCollectionViewController: TrackerTypeViewControllerDelegate {
     }
     
     func didCreate(_ tracker: Tracker, with title: String) {
-       
         dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
             do {
