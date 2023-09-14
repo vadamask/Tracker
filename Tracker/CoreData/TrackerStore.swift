@@ -9,28 +9,32 @@ import UIKit
 import CoreData
 
 struct TrackerStoreUpdate {
-    let insertedIndexes: [IndexPath]
-    let deletedIndexes: [IndexPath]
+    let insertedItems: [IndexPath]
+    let deletedItems: [IndexPath]
+    let insertedSections: IndexSet
+    let deletedSections: IndexSet
 }
 
 protocol TrackerStoreDelegate: AnyObject {
     func didUpdate(_ trackerStoreUpdate: TrackerStoreUpdate)
+    func didFetchedObjects()
 }
 
 final class TrackerStore: NSObject {
     
-    let context: NSManagedObjectContext
     weak var delegate: TrackerStoreDelegate?
-    
-    private var insertedIndexes: [IndexPath] = []
-    private var deletedIndexes: [IndexPath] = []
+    private let context: NSManagedObjectContext
+    private var insertedItems: [IndexPath] = []
+    private var deletedItems: [IndexPath] = []
+    private var insertedSections: IndexSet = []
+    private var deletedSections: IndexSet = []
     private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>?
     
     init(context: NSManagedObjectContext) {
         self.context = context
     }
     
-    convenience init(selectedDate: Date) {
+    convenience override init() {
         if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
             self.init(context: context)
         } else {
@@ -38,8 +42,8 @@ final class TrackerStore: NSObject {
         }
         
         let request = TrackerCoreData.fetchRequest()
-        let date = weekday(for: selectedDate)
-        request.sortDescriptors = [NSSortDescriptor(key: "category.title", ascending: false)]
+        let date = weekday(for: Date())
+        request.sortDescriptors = [NSSortDescriptor(key: "category.title", ascending: true)]
         request.predicate = NSPredicate(format: "%K CONTAINS %@", #keyPath(TrackerCoreData.schedule), date)
         
         let controller = NSFetchedResultsController(
@@ -59,13 +63,13 @@ final class TrackerStore: NSObject {
         let categories = try context.fetch(request)
         guard !categories.isEmpty else { return }
         
-        let entity = TrackerCoreData(context: context)
-        entity.uuid = tracker.uuid.uuidString
-        entity.color = tracker.color
-        entity.emoji = tracker.emoji
-        entity.name = tracker.name
-        entity.schedule = tracker.schedule.map {String($0.rawValue)}.joined(separator: ",")
-        entity.category = categories[0]
+        let object = TrackerCoreData(context: context)
+        object.uuid = tracker.uuid.uuidString
+        object.color = tracker.color
+        object.emoji = tracker.emoji
+        object.name = tracker.name
+        object.schedule = tracker.schedule.map {String($0.rawValue)}.joined(separator: ",")
+        object.category = categories[0]
         try context.save()
     }
     
@@ -73,23 +77,23 @@ final class TrackerStore: NSObject {
         fetchedResultsController?.sections?.count
     }
     
+    func titleForSection(at indexPath: IndexPath) -> String? {
+        return fetchedResultsController?.sections?[indexPath.section].name
+    }
+    
     func numberOfItemsIn(_ section: Int) -> Int? {
         fetchedResultsController?.sections?[section].numberOfObjects
     }
     
     func cellForItem(at indexPath: IndexPath) -> Tracker? {
-        if let entity = fetchedResultsController?.object(at: indexPath) {
-            return convertToTracker(entity)
+        if let object = fetchedResultsController?.object(at: indexPath) {
+            return convertToTracker(object)
         } else {
             return nil
         }
     }
     
-    func titleForSection(at indexPath: IndexPath) -> String? {
-        return fetchedResultsController?.sections?[indexPath.section].name
-    }
-    
-    func detailsFor(_ indexPath: IndexPath, at date: String) -> (isDone: Bool, completedDays: Int) {
+    func detailsForCell(_ indexPath: IndexPath, at date: String) -> (isDone: Bool, completedDays: Int) {
         if let object = fetchedResultsController?.object(at: indexPath),
            let records = object.records as? Set<TrackerRecordCoreData> {
             return (
@@ -100,17 +104,41 @@ final class TrackerStore: NSObject {
         return (false, 0)
     }
     
-    private func convertToTracker(_ entity: TrackerCoreData) -> Tracker {
+    func filterTrackers(at date: Date) {
+        let weekday = weekday(for: date)
+        let datePredicate = NSPredicate(format: "%K CONTAINS %@", #keyPath(TrackerCoreData.schedule), weekday)
+        fetchedResultsController?.fetchRequest.predicate = datePredicate
+        do {
+            try fetchedResultsController?.performFetch()
+            delegate?.didFetchedObjects()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func searchTrackers(with prefix: String, at date: Date) {
+        let weekday = weekday(for: date)
+        let prefixPredicate = NSPredicate(format: "%K BEGINSWITH[c] %@", #keyPath(TrackerCoreData.name), prefix)
+        let datePredicate = NSPredicate(format: "%K CONTAINS %@", #keyPath(TrackerCoreData.schedule), weekday)
+        fetchedResultsController?.fetchRequest.predicate = NSCompoundPredicate(type: .and, subpredicates: [prefixPredicate, datePredicate])
+        do {
+            try fetchedResultsController?.performFetch()
+            delegate?.didFetchedObjects()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    private func convertToTracker(_ object: TrackerCoreData) -> Tracker {
         guard
-            let id = entity.uuid,
-            let name = entity.name,
-            let color = entity.color,
-            let emoji = entity.emoji,
-            let rawValues = entity.schedule
+            let id = object.uuid,
+            let name = object.name,
+            let color = object.color,
+            let emoji = object.emoji,
+            let rawValues = object.schedule
         else { fatalError() }
         
         let schedule = rawValues.components(separatedBy: ",").compactMap { Int($0) }.compactMap { WeekDay(rawValue: $0)}
-        
         return Tracker(uuid: UUID(uuidString: id) ?? UUID(), name: name, color: color, emoji: emoji, schedule: Set(schedule))
     }
     
@@ -122,24 +150,47 @@ final class TrackerStore: NSObject {
 }
 
 extension TrackerStore: NSFetchedResultsControllerDelegate {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        insertedSections = []
+        deletedSections = []
+    }
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .insert:
             if let indexPath = newIndexPath {
-                insertedIndexes.append(indexPath)
+                insertedItems.append(indexPath)
             }
         case .delete:
             if let indexPath = newIndexPath {
-                deletedIndexes.append(indexPath)
+                deletedItems.append(indexPath)
             }
         default:
             break
         }
     }
     
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        switch type {
+        case .insert:
+            insertedSections.insert(sectionIndex)
+        case .delete:
+            deletedSections.insert(sectionIndex)
+        default:
+            break
+        }
+    }
+    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        delegate?.didUpdate(TrackerStoreUpdate(insertedIndexes: insertedIndexes, deletedIndexes: deletedIndexes))
-        insertedIndexes.removeAll()
-        deletedIndexes.removeAll()
+        delegate?.didUpdate(TrackerStoreUpdate(
+            insertedItems: insertedItems,
+            deletedItems: deletedItems,
+            insertedSections: insertedSections,
+            deletedSections: deletedSections)
+        )
+        insertedItems.removeAll()
+        deletedItems.removeAll()
+        insertedSections.removeAll()
+        deletedSections.removeAll()
     }
 }

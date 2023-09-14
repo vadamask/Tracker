@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 
 final class TrackerRecordStore {
-    let context: NSManagedObjectContext
+    private let context: NSManagedObjectContext
     
     init(context: NSManagedObjectContext) {
         self.context = context
@@ -26,12 +26,12 @@ final class TrackerRecordStore {
     func addRecord(_ record: TrackerRecord) throws {
         let request = TrackerCoreData.fetchRequest()
         request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.uuid), record.uuid)
-        let trackerEntity = try? context.fetch(request)[0]
+        let trackerObject = try? context.fetch(request)[0]
         
-        let recordEntity = TrackerRecordCoreData(context: context)
-        recordEntity.uuid = record.uuid
-        recordEntity.date = record.date
-        recordEntity.tracker = trackerEntity
+        let recordObject = TrackerRecordCoreData(context: context)
+        recordObject.uuid = record.uuid
+        recordObject.date = record.date
+        recordObject.tracker = trackerObject
         try context.save()
     }
     

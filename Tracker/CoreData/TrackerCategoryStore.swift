@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 
 final class TrackerCategoryStore {
-    let context: NSManagedObjectContext
+    private let context: NSManagedObjectContext
     
     init(context: NSManagedObjectContext) {
         self.context = context

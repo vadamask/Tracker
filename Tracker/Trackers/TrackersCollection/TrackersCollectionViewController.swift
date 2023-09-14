@@ -9,11 +9,11 @@ import UIKit
 
 final class TrackersCollectionViewController: UIViewController {
     
-    private var trackerStore = TrackerStore(selectedDate: Date())
+    private var trackerStore = TrackerStore()
     private let recordStore = TrackerRecordStore()
     private var currentDate = Date() {
         didSet {
-            trackerStore = TrackerStore(selectedDate: currentDate)
+            trackerStore.filterTrackers(at: currentDate)
             collectionView.reloadData()
             checkPlaceholder()
         }
@@ -156,7 +156,8 @@ final class TrackersCollectionViewController: UIViewController {
     }
     
     private func checkPlaceholder() {
-        if trackerStore.numberOfSections() == 0 {
+
+        if trackerStore.numberOfSections() == 0 && navigationItem.leftBarButtonItem!.isEnabled {
             placeholder.image = UIImage(named: "empty list")
             label.text = "Что будем отслеживать?"
         } else {
@@ -186,7 +187,8 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
         ) as? TrackersCollectionViewCell {
             
             cell.delegate = self
-            let details = trackerStore.detailsFor(indexPath, at: dateFormatter.string(from: currentDate))
+            let date = dateFormatter.string(from: currentDate)
+            let details = trackerStore.detailsForCell(indexPath, at: date)
             cell.configure(with: tracker, isDone: details.isDone, completedDays: details.completedDays)
             
             return cell
@@ -236,28 +238,21 @@ extension TrackersCollectionViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-// MARK: - UICollectionViewDelegate
-
-extension TrackersCollectionViewController {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-      
-    }
-}
-
 // MARK: - UISearchBarDelegate
 
 extension TrackersCollectionViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-
-        
-        checkPlaceholder()
+        if searchText.isEmpty {
+            trackerStore.filterTrackers(at: currentDate)
+        } else {
+            trackerStore.searchTrackers(with: searchText, at: currentDate)
+        }
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        checkPlaceholder()
-        
         navigationItem.rightBarButtonItem?.isEnabled = true
         navigationItem.leftBarButtonItem?.isEnabled = true
+        trackerStore.filterTrackers(at: currentDate)
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -302,12 +297,15 @@ extension TrackersCollectionViewController: TrackerTypeViewControllerDelegate {
     }
     
     func didCreate(_ tracker: Tracker, with title: String) {
-        do {
-            try trackerStore.add(tracker, with: title)
-        } catch {
-            print(error.localizedDescription)
+       
+        dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            do {
+                try trackerStore.add(tracker, with: title)
+            } catch {
+                print(error.localizedDescription)
+            }
         }
-        dismiss(animated: true)
     }
 }
 
@@ -315,6 +313,16 @@ extension TrackersCollectionViewController: TrackerTypeViewControllerDelegate {
 
 extension TrackersCollectionViewController: TrackerStoreDelegate {
     func didUpdate(_ trackerStoreUpdate: TrackerStoreUpdate) {
+        collectionView.performBatchUpdates {
+            collectionView.insertItems(at: trackerStoreUpdate.insertedItems)
+            collectionView.deleteItems(at: trackerStoreUpdate.deletedItems)
+            collectionView.insertSections(trackerStoreUpdate.insertedSections)
+            collectionView.deleteSections(trackerStoreUpdate.deletedSections)
+        }
+        checkPlaceholder()
+    }
+    
+    func didFetchedObjects() {
         collectionView.reloadData()
         checkPlaceholder()
     }

@@ -21,7 +21,8 @@ final class TrackerSetupViewController: UIViewController {
     private let emoji = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     private var selectedColor = ""
     private var selectedEmoji = ""
-    private var categoryTitle = "test"
+    private var categoryTitle = "тест"
+    private var schedule: Set<WeekDay> = []
     
     private var emojiIsSet: Bool = false {
         didSet {
@@ -41,7 +42,6 @@ final class TrackerSetupViewController: UIViewController {
         }
     }
     
-    private var schedule: Set<WeekDay> = []
     private let constraintLabel = UILabel(
         text: "Ограничение 38 символов",
         textColor: .redYP,
@@ -117,6 +117,7 @@ final class TrackerSetupViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setupConstraints()
+        if !isTracker { schedule = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday] }
     }
     
     private func setupViews() {
@@ -200,7 +201,13 @@ final class TrackerSetupViewController: UIViewController {
     }
     
     @objc private func createButtonTapped() {
-        let tracker = Tracker(uuid: UUID(), name: textField.text!, color: selectedColor, emoji: selectedEmoji, schedule: schedule)
+        let tracker = Tracker(
+            uuid: UUID(),
+            name: textField.text!,
+            color: selectedColor,
+            emoji: selectedEmoji,
+            schedule: schedule
+        )
         do {
             try categoryStore.add(categoryTitle) // FIXME: - убрать
             delegate?.didCreate(tracker, with: categoryTitle)
