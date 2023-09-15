@@ -8,7 +8,8 @@
 import UIKit
 
 protocol TrackerTypeViewControllerDelegate: AnyObject {
-    func didCreateTrackerWith(_ category: TrackerCategory)
+    func didTapCancelButton()
+    func didCreate(_ tracker: Tracker, with title: String)
 }
 
 final class TrackerTypeViewController: UIViewController {
@@ -28,15 +29,6 @@ final class TrackerTypeViewController: UIViewController {
         button.addTarget(self, action: #selector(eventButtonTapped), for: .touchUpInside)
         return button
     }()
-    
-    init(delegate: TrackerTypeViewControllerDelegate?) {
-        self.delegate = delegate
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,18 +62,28 @@ final class TrackerTypeViewController: UIViewController {
     }
     
     @objc private func trackerButtonTapped(sender: Any) {
-        let vc = TrackerSetupViewController(delegate: self, isTracker: true)
+        let vc = TrackerSetupViewController(isTracker: true)
+        vc.delegate = self
         present(vc, animated: true)
     }
     
     @objc private func eventButtonTapped() {
-        let vc = TrackerSetupViewController(delegate: self, isTracker: false)
+        let vc = TrackerSetupViewController(isTracker: false)
+        vc.delegate = self
         present(vc, animated: true)
     }
 }
 
+// MARK: - TrackerSetupViewControllerDelegate
+
 extension TrackerTypeViewController: TrackerSetupViewControllerDelegate {
-    func didCreateTrackerWith(_ category: TrackerCategory) {
-        delegate?.didCreateTrackerWith(category)
+    func didTapCancelButton() {
+        delegate?.didTapCancelButton()
     }
+    
+    func didCreate(_ tracker: Tracker, with title: String) {
+        delegate?.didCreate(tracker, with: title)
+    }
+    
+    
 }

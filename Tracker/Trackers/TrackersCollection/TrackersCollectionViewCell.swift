@@ -8,8 +8,8 @@
 import UIKit
 
 protocol TrackersCollectionViewCellDelegate: AnyObject {
-    func recordWillAdd(with id: UUID) -> Bool
-    func recordWillRemove(with id: UUID) -> Bool
+    func recordWillAdd(with uuid: UUID) -> Bool
+    func recordWillRemove(with uuid: UUID) -> Bool
 }
 
 final class TrackersCollectionViewCell: UICollectionViewCell {
@@ -167,7 +167,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     @objc private func recordButtonTapped() {
         guard let delegate = delegate else { return }
         if isDone {
-            if delegate.recordWillRemove(with: tracker.id) {
+            if delegate.recordWillRemove(with: tracker.uuid) {
                 plusButton.setImage(UIImage(named: "add day button"), for: .normal)
                 plusButton.alpha = 1.0
                 plusButton.backgroundColor = .clear
@@ -175,7 +175,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
                 isDone.toggle()
             }
         } else {
-            if delegate.recordWillAdd(with: tracker.id) {
+            if delegate.recordWillAdd(with: tracker.uuid) {
                 plusButton.setImage(UIImage(named: "done"), for: .normal)
                 plusButton.alpha = 0.3
                 plusButton.backgroundColor = UIColor(named: tracker.color)

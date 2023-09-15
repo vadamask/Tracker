@@ -8,7 +8,7 @@
 import Foundation
 
 struct Tracker {
-    let id: UUID
+    let uuid: UUID
     let name: String
     let color: String
     let emoji: String
