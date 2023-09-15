@@ -170,11 +170,11 @@ final class TrackersCollectionViewController: UIViewController {
 
 extension TrackersCollectionViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        trackerStore.numberOfSections() ?? 0
+        trackerStore.numberOfSections() ?? .zero
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        trackerStore.numberOfItemsIn(section) ?? 0
+        trackerStore.numberOfItemsIn(section) ?? .zero
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -266,7 +266,7 @@ extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
     func recordWillAdd(with uuid: UUID) -> Bool {
         if currentDate < Date() {
             do {
-                try recordStore.addRecord(TrackerRecord(uuid: uuid.uuidString, date: dateFormatter.string(from: currentDate)))
+                try recordStore.addRecord(TrackerRecord(uuid: uuid, date: dateFormatter.string(from: currentDate)))
                 return true
             } catch {
                 print(error.localizedDescription)

@@ -5,8 +5,8 @@
 //  Created by Вадим Шишков on 09.09.2023.
 //
 
-import UIKit
 import CoreData
+import UIKit
 
 final class TrackerCategoryStore {
     private let context: NSManagedObjectContext
@@ -16,11 +16,10 @@ final class TrackerCategoryStore {
     }
     
     convenience init() {
-        if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
-            self.init(context: context)
-        } else {
+        guard let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
             fatalError("Failed with context")
         }
+        self.init(context: context)
     }
     
     func add(_ title: String) throws {

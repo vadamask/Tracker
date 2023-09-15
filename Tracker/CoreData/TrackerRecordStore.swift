@@ -5,8 +5,8 @@
 //  Created by Вадим Шишков on 09.09.2023.
 //
 
-import UIKit
 import CoreData
+import UIKit
 
 final class TrackerRecordStore {
     private let context: NSManagedObjectContext
@@ -16,20 +16,19 @@ final class TrackerRecordStore {
     }
     
     convenience init() {
-        if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
-            self.init(context: context)
-        } else {
-            fatalError("Не удалось получить контекст")
+        guard let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
+            fatalError("Failed with context")
         }
+        self.init(context: context)
     }
     
     func addRecord(_ record: TrackerRecord) throws {
         let request = TrackerCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.uuid), record.uuid)
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.uuid), record.uuid.uuidString)
         let trackerObject = try? context.fetch(request)[0]
         
         let recordObject = TrackerRecordCoreData(context: context)
-        recordObject.uuid = record.uuid
+        recordObject.uuid = record.uuid.uuidString
         recordObject.date = record.date
         recordObject.tracker = trackerObject
         try context.save()

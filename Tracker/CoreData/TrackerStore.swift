@@ -5,8 +5,8 @@
 //  Created by Вадим Шишков on 09.09.2023.
 //
 
-import UIKit
 import CoreData
+import UIKit
 
 struct TrackerStoreUpdate {
     let insertedItems: [IndexPath]
@@ -35,11 +35,10 @@ final class TrackerStore: NSObject {
     }
     
     convenience override init() {
-        if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
-            self.init(context: context)
-        } else {
+        guard let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
             fatalError("Failed with context")
         }
+        self.init(context: context)
         
         let request = TrackerCoreData.fetchRequest()
         let date = weekday(for: Date())
@@ -139,7 +138,13 @@ final class TrackerStore: NSObject {
         else { fatalError() }
         
         let schedule = rawValues.components(separatedBy: ",").compactMap { Int($0) }.compactMap { WeekDay(rawValue: $0)}
-        return Tracker(uuid: UUID(uuidString: id) ?? UUID(), name: name, color: color, emoji: emoji, schedule: Set(schedule))
+        return Tracker(
+            uuid: UUID(uuidString: id) ?? UUID(),
+            name: name,
+            color: color,
+            emoji: emoji,
+            schedule: Set(schedule)
+        )
     }
     
     private func weekday(for selectedDate: Date) -> String {
@@ -150,11 +155,6 @@ final class TrackerStore: NSObject {
 }
 
 extension TrackerStore: NSFetchedResultsControllerDelegate {
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        insertedSections = []
-        deletedSections = []
-    }
-    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .insert:

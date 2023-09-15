@@ -86,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				DD08E5192A97B3C300E8FEB8 /* Tracker */,
+				DD08E51E2A97B3C300E8FEB8 /* TabBarController.swift */,
 				DD08E5182A97B3C300E8FEB8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -104,7 +105,6 @@
 				DDDF413B2AACA8E200F4A75F /* CoreData */,
 				DD08E52E2A97B85300E8FEB8 /* Application */,
 				DDBA49D72A9B2DCD00E1E0C9 /* Extensions */,
-				DDBA49D02A9B23E600E1E0C9 /* TabBarController */,
 				DDBA49CF2A9B20EB00E1E0C9 /* Trackers */,
 				DDBA49D32A9B242600E1E0C9 /* Statistics */,
 				DD08E52F2A97B87500E8FEB8 /* Resources */,
@@ -151,14 +151,6 @@
 				DDD982EC2A9FB48400994B01 /* TrackerScheduleViewController */,
 			);
 			path = Trackers;
-			sourceTree = "<group>";
-		};
-		DDBA49D02A9B23E600E1E0C9 /* TabBarController */ = {
-			isa = PBXGroup;
-			children = (
-				DD08E51E2A97B3C300E8FEB8 /* TabBarController.swift */,
-			);
-			path = TabBarController;
 			sourceTree = "<group>";
 		};
 		DDBA49D32A9B242600E1E0C9 /* Statistics */ = {
