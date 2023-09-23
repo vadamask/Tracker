@@ -13,6 +13,8 @@
 		DD08E5272A97B3C300E8FEB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD08E5252A97B3C300E8FEB8 /* LaunchScreen.storyboard */; };
 		DD1D1AA92A9B816600BF2BCF /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1D1AA82A9B816600BF2BCF /* Tracker.swift */; };
 		DD1D1AAB2A9B820100BF2BCF /* TrackerCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1D1AAA2A9B820100BF2BCF /* TrackerCategory.swift */; };
+		DD3941A52ABEE38A0059233A /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3941A42ABEE38A0059233A /* OnboardingViewController.swift */; };
+		DD3941A82ABEF7520059233A /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3941A72ABEF7520059233A /* PageViewController.swift */; };
 		DD4137D22AB23127002B851A /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4137D12AB23127002B851A /* TrackerRecord.swift */; };
 		DD41BA8E2AA9D63B00943466 /* GeometricParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */; };
 		DD7574252A9E2DE800619147 /* TrackerSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7574242A9E2DE800619147 /* TrackerSetupViewController.swift */; };
@@ -46,6 +48,8 @@
 		DD08E5282A97B3C300E8FEB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD1D1AA82A9B816600BF2BCF /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		DD1D1AAA2A9B820100BF2BCF /* TrackerCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategory.swift; sourceTree = "<group>"; };
+		DD3941A42ABEE38A0059233A /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		DD3941A72ABEF7520059233A /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
 		DD4137D12AB23127002B851A /* TrackerRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
 		DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometricParameters.swift; sourceTree = "<group>"; };
 		DD7574242A9E2DE800619147 /* TrackerSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerSetupViewController.swift; sourceTree = "<group>"; };
@@ -86,7 +90,6 @@
 			isa = PBXGroup;
 			children = (
 				DD08E5192A97B3C300E8FEB8 /* Tracker */,
-				DD08E51E2A97B3C300E8FEB8 /* TabBarController.swift */,
 				DD08E5182A97B3C300E8FEB8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,6 +111,8 @@
 				DDBA49CF2A9B20EB00E1E0C9 /* Trackers */,
 				DDBA49D32A9B242600E1E0C9 /* Statistics */,
 				DD08E52F2A97B87500E8FEB8 /* Resources */,
+				DD3941A62ABEF6FB0059233A /* Onboarding */,
+				DD08E51E2A97B3C300E8FEB8 /* TabBarController.swift */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -139,6 +144,15 @@
 				DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		DD3941A62ABEF6FB0059233A /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				DD3941A42ABEE38A0059233A /* OnboardingViewController.swift */,
+				DD3941A72ABEF7520059233A /* PageViewController.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		DDBA49CF2A9B20EB00E1E0C9 /* Trackers */ = {
@@ -308,7 +322,9 @@
 				DD1D1AAB2A9B820100BF2BCF /* TrackerCategory.swift in Sources */,
 				DD4137D22AB23127002B851A /* TrackerRecord.swift in Sources */,
 				DDFD06252A9BCE99005F3117 /* TrackerTypeViewController.swift in Sources */,
+				DD3941A82ABEF7520059233A /* PageViewController.swift in Sources */,
 				DD7574252A9E2DE800619147 /* TrackerSetupViewController.swift in Sources */,
+				DD3941A52ABEE38A0059233A /* OnboardingViewController.swift in Sources */,
 				DDDF413D2AACA96100F4A75F /* TrackerStore.swift in Sources */,
 				DDBA49D22A9B242000E1E0C9 /* TrackersCollectionViewController.swift in Sources */,
 				DDDF413F2AACA97000F4A75F /* TrackerCategoryStore.swift in Sources */,
