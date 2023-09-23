@@ -28,20 +28,17 @@ final class TrackersCollectionViewController: UIViewController {
     private let placeholder: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "empty list")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .whiteYP
         return collectionView
     }()
     
     private let label: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Что будем отслеживать?"
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textColor = .blackYP
@@ -51,7 +48,6 @@ final class TrackersCollectionViewController: UIViewController {
     
     private let searchField: UISearchTextField = {
         let searchField = UISearchTextField()
-        searchField.translatesAutoresizingMaskIntoConstraints = false
         searchField.placeholder = "Поиск"
         searchField.clearButtonMode = .always
         return searchField
@@ -74,7 +70,7 @@ final class TrackersCollectionViewController: UIViewController {
         
         setupNavigationItem()
         setupCollectionView()
-        setupConstraints()
+        setupLayout()
         checkPlaceholder()
     }
     
@@ -122,27 +118,6 @@ final class TrackersCollectionViewController: UIViewController {
         )
     }
     
-    private func setupConstraints() {
-        view.addSubview(collectionView)
-        collectionView.addSubview(placeholder)
-        collectionView.addSubview(label)
-        
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
-            placeholder.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            placeholder.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            placeholder.heightAnchor.constraint(equalToConstant: 80),
-            placeholder.widthAnchor.constraint(equalToConstant: 80),
-
-            label.topAnchor.constraint(equalTo: placeholder.bottomAnchor, constant: 8),
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
-    }
-    
     @objc private func addNewTracker() {
         let typeVC = TrackerTypeViewController()
         typeVC.delegate = self
@@ -163,6 +138,36 @@ final class TrackersCollectionViewController: UIViewController {
         }
         placeholder.isHidden = trackerStore.numberOfSections() != 0
         label.isHidden = placeholder.isHidden
+    }
+    
+    private func setupLayout() {
+        view.addSubview(collectionView)
+        collectionView.addSubview(placeholder)
+        collectionView.addSubview(label)
+        
+        placeholder.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        label.translatesAutoresizingMaskIntoConstraints = false
+        searchField.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            placeholder.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            placeholder.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            placeholder.heightAnchor.constraint(equalToConstant: 80),
+            placeholder.widthAnchor.constraint(equalToConstant: 80)
+        ])
+        
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: placeholder.bottomAnchor, constant: 8),
+            label.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
     }
 }
 
