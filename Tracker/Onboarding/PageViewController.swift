@@ -5,6 +5,7 @@
 //  Created by Вадим Шишков on 23.09.2023.
 //
 
+import SnapKit
 import UIKit
 
 final class PageViewController: UIViewController {
@@ -15,10 +16,8 @@ final class PageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
         setupLayout()
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        button.addTarget(self, action: #selector(buttonDidTapped), for: .touchUpInside)
     }
     
     init(imageName: String, textLabel: String) {
@@ -39,31 +38,32 @@ final class PageViewController: UIViewController {
         }
     }
     
+    private func setupViews() {
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        button.addTarget(self, action: #selector(buttonDidTapped), for: .touchUpInside)
+    }
+    
     private func setupLayout() {
         view.addSubview(imageView)
         view.addSubview(label)
         view.addSubview(button)
         
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         
-        NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: view.topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
+        label.snp.makeConstraints { make in
+            make.leading.equalTo(16)
+            make.trailing.equalTo(-16)
+            make.bottom.equalTo(button.snp.top).offset(-160)
+        }
         
-        NSLayoutConstraint.activate([
-            label.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -160),
-            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
-        ])
-        
-        NSLayoutConstraint.activate([
-            button.heightAnchor.constraint(equalToConstant: 60),
-            button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
-            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
-        ])
+        button.snp.makeConstraints { make in
+            make.leading.equalTo(20)
+            make.trailing.equalTo(-20)
+            make.height.equalTo(60)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-50)
+        }
     }
 }

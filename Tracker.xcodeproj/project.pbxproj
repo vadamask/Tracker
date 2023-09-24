@@ -118,10 +118,10 @@
 				DDDF413B2AACA8E200F4A75F /* CoreData */,
 				DD08E52E2A97B85300E8FEB8 /* Application */,
 				DDBA49D72A9B2DCD00E1E0C9 /* Extensions */,
+				DD3941A62ABEF6FB0059233A /* Onboarding */,
 				DDBA49CF2A9B20EB00E1E0C9 /* Trackers */,
 				DDBA49D32A9B242600E1E0C9 /* Statistics */,
 				DD08E52F2A97B87500E8FEB8 /* Resources */,
-				DD3941A62ABEF6FB0059233A /* Onboarding */,
 				DD08E51E2A97B3C300E8FEB8 /* TabBarController.swift */,
 			);
 			path = Tracker;

@@ -5,6 +5,7 @@
 //  Created by Вадим Шишков on 23.09.2023.
 //
 
+import SnapKit
 import UIKit
 
 final class OnboardingViewController: UIViewController {
@@ -41,24 +42,20 @@ final class OnboardingViewController: UIViewController {
         view.addSubview(pageViewController.view)
         view.addSubview(pageControl)
         
-        pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        pageViewController.view.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         
-        NSLayoutConstraint.activate([
-            pageViewController.view.topAnchor.constraint(equalTo: view.topAnchor),
-            pageViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            pageViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            pageViewController.view.rightAnchor.constraint(equalTo: view.rightAnchor)
-        ])
-        
-        NSLayoutConstraint.activate([
-            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pageControl.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -134)
-        ])
+        pageControl.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-134)
+        }
             
         pageViewController.didMove(toParent: self)
     }
 }
+
+// MARK: - UIPageViewControllerDataSource
 
 extension OnboardingViewController: UIPageViewControllerDataSource {
     
@@ -81,6 +78,8 @@ extension OnboardingViewController: UIPageViewControllerDataSource {
     }
     
 }
+
+// MARK: - UIPageViewControllerDelegate
 
 extension OnboardingViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
