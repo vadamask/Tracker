@@ -25,8 +25,6 @@ final class OnboardingViewController: UIViewController {
         return control
     }()
     
-    private let button = UIButton(title: "Вот это технологии!")
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,21 +34,11 @@ final class OnboardingViewController: UIViewController {
         pageViewController.dataSource = self
         pageViewController.delegate = self
         setupLayout()
-        button.addTarget(self, action: #selector(buttonDidTapped), for: .touchUpInside)
-    }
-    
-    @objc private func buttonDidTapped() {
-        if let delegate = UIApplication.shared.delegate as? AppDelegate {
-            let vc = TabBarController()
-            delegate.window?.rootViewController = vc
-            UserDefaults.standard.setValue(true, forKey: "onboardingDidVisited")
-        }
     }
     
     private func setupLayout() {
         addChild(pageViewController)
         view.addSubview(pageViewController.view)
-        view.addSubview(button)
         view.addSubview(pageControl)
         
         pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -64,15 +52,8 @@ final class OnboardingViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
-            button.heightAnchor.constraint(equalToConstant: 60),
-            button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
-            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
-        ])
-        
-        NSLayoutConstraint.activate([
             pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pageControl.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -24)
+            pageControl.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -134)
         ])
             
         pageViewController.didMove(toParent: self)
