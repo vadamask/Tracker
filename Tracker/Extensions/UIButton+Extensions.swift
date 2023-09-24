@@ -10,7 +10,6 @@ import UIKit
 extension UIButton {
     convenience init(title: String, textColor: UIColor = .whiteYP, backgroundColor: UIColor = .blackYP) {
         self.init(type: .system)
-        translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = backgroundColor
         setTitle(title, for: .normal)
         setTitleColor(textColor, for: .normal)

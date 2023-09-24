@@ -5,6 +5,7 @@
 //  Created by Вадим Шишков on 29.08.2023.
 //
 
+import SnapKit
 import UIKit
 
 protocol TrackerSetupViewControllerDelegate: AnyObject {
@@ -16,13 +17,13 @@ final class TrackerSetupViewController: UIViewController {
     
     weak var delegate: TrackerSetupViewControllerDelegate?
     
-    private let categoryStore = TrackerCategoryStore()
     private var isTracker: Bool
     private let emoji = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     private var selectedColor = ""
     private var selectedEmoji = ""
-    private var categoryTitle = "тест"
+    private var categoryTitle = ""
     private var schedule: Set<WeekDay> = []
+    private var tableViewTopLabel: Constraint?
     
     private var emojiIsSet: Bool = false {
         didSet {
@@ -42,24 +43,18 @@ final class TrackerSetupViewController: UIViewController {
         }
     }
     
-    private let constraintLabel = UILabel(
+    private let warningLabel = UILabel(
         text: "Ограничение 38 символов",
         textColor: .redYP,
         font: .systemFont(ofSize: 17, weight: .regular)
     )
     
-    private let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.showsHorizontalScrollIndicator = false
-        return scrollView
-    }()
-    
+    private let scrollView = UIScrollView()
     private var topLabel = UILabel(text: "", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
+    private let createButton = UIButton(title: "Создать", backgroundColor: .grayYP)
     
     private let textField: UITextField = {
         let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Введите название трекера"
         textField.clearButtonMode = .always
         textField.backgroundColor = .backgroundYP
@@ -72,7 +67,6 @@ final class TrackerSetupViewController: UIViewController {
     
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
         tableView.rowHeight = 75
         tableView.backgroundColor = .whiteYP
@@ -82,18 +76,10 @@ final class TrackerSetupViewController: UIViewController {
     
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.contentInset = UIEdgeInsets(top: 24, left: 18, bottom: 24, right: 18)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 19, bottom: 24, right: 19)
         collectionView.isScrollEnabled = false
         collectionView.allowsMultipleSelection = true
         return collectionView
-    }()
-    
-    private let createButton: UIButton = {
-        let button = UIButton(title: "Создать", backgroundColor: .grayYP)
-        button.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
-        button.isEnabled = false
-        return button
     }()
     
     private let cancelButton: UIButton = {
@@ -116,84 +102,8 @@ final class TrackerSetupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        setupConstraints()
+        setupLayout()
         if !isTracker { schedule = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday] }
-    }
-    
-    private func setupViews() {
-        view.backgroundColor = .whiteYP
-        constraintLabel.isHidden = true
-        self.hideKeyboardWhenTappedAround()
-        
-        topLabel.text = isTracker ? "Новая привычка" : "Новое нерегулярное событие"
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(TrackerSetupTableViewCell.self, forCellReuseIdentifier: "cell")
-        
-        textField.delegate = self
-        textField.becomeFirstResponder()
-        
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(TrackerSetupEmojiCell.self, forCellWithReuseIdentifier: TrackerSetupEmojiCell.identifier)
-        collectionView.register(TrackerSetupColorCell.self, forCellWithReuseIdentifier: TrackerSetupColorCell.identifier)
-        collectionView.register(
-            TrackerSetupSupView.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: TrackerSetupSupView.identifier
-        )
-    }
-    
-    private func setupConstraints() {
-        view.addSubview(topLabel)
-        view.addSubview(scrollView)
-        scrollView.addSubview(textField)
-        scrollView.addSubview(constraintLabel)
-        scrollView.addSubview(tableView)
-        scrollView.addSubview(collectionView)
-        scrollView.addSubview(cancelButton)
-        scrollView.addSubview(createButton)
-        
-        NSLayoutConstraint.activate([
-            topLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 27),
-            topLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            scrollView.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 14),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
-            
-            textField.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: 24),
-            textField.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 16),
-            textField.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -16),
-            textField.heightAnchor.constraint(equalToConstant: 75),
-            
-            constraintLabel.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 8),
-            constraintLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            tableView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 62),
-            tableView.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
-            tableView.heightAnchor.constraint(equalToConstant: isTracker ? 150 : 75),
-            
-            collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: 500),
-            
-            cancelButton.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 16),
-            cancelButton.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
-            cancelButton.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -16),
-            cancelButton.heightAnchor.constraint(equalToConstant: 60),
-            
-            createButton.centerYAnchor.constraint(equalTo: cancelButton.centerYAnchor),
-            createButton.heightAnchor.constraint(equalTo: cancelButton.heightAnchor),
-            createButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor),
-            createButton.leadingAnchor.constraint(equalTo: cancelButton.trailingAnchor, constant: 8),
-            createButton.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20)
-        ])
     }
     
     @objc private func cancelButtonTapped() {
@@ -209,8 +119,8 @@ final class TrackerSetupViewController: UIViewController {
             schedule: schedule
         )
         do {
-            try categoryStore.add(categoryTitle) // FIXME: - убрать
-            delegate?.didCreate(tracker, with: categoryTitle)
+            try TrackerCategoryStore().add("TEST")
+            delegate?.didCreate(tracker, with: "TEST")
         } catch {
             assertionFailure("Failure with adding tracker")
         }
@@ -223,6 +133,127 @@ final class TrackerSetupViewController: UIViewController {
             !text.isEmpty && emojiIsSet && colorIsSet
         }
         createButton.backgroundColor = createButton.isEnabled ? .blackYP : .grayYP
+    }
+    
+    private func setupViews() {
+        view.backgroundColor = .whiteYP
+        warningLabel.isHidden = true
+        self.hideKeyboardWhenTappedAround()
+        
+        topLabel.text = isTracker ? "Новая привычка" : "Новое нерегулярное событие"
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(TrackerSetupTableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        textField.delegate = self
+        
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(TrackerSetupEmojiCell.self, forCellWithReuseIdentifier: TrackerSetupEmojiCell.identifier)
+        collectionView.register(TrackerSetupColorCell.self, forCellWithReuseIdentifier: TrackerSetupColorCell.identifier)
+        collectionView.register(
+            TrackerSetupSupView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: TrackerSetupSupView.identifier
+        )
+        
+        createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+        createButton.isEnabled = false
+    }
+    
+    private func setupLayout() {
+        view.addSubview(topLabel)
+        view.addSubview(scrollView)
+        scrollView.addSubview(textField)
+        scrollView.addSubview(warningLabel)
+        scrollView.addSubview(tableView)
+        scrollView.addSubview(collectionView)
+        scrollView.addSubview(cancelButton)
+        scrollView.addSubview(createButton)
+        
+        topLabel.snp.makeConstraints { make in
+            make.top.equalTo(27)
+            make.centerX.equalToSuperview()
+        }
+        
+        scrollView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(topLabel.snp.bottom).offset(14)
+        }
+        
+        scrollView.contentLayoutGuide.snp.makeConstraints { make in
+            make.width.equalTo(scrollView)
+        }
+        
+        textField.snp.makeConstraints { make in
+            make.leading.equalTo(16)
+            make.trailing.equalTo(-16)
+            make.top.equalTo(24)
+            make.height.equalTo(75)
+        }
+        
+        warningLabel.snp.makeConstraints { make in
+            make.top.equalTo(textField.snp.bottom).offset(8)
+            make.centerX.equalToSuperview()
+        }
+        
+        tableView.snp.makeConstraints { make in
+            tableViewTopLabel = make.top.equalTo(textField.snp.bottom).offset(24).constraint
+            make.leading.trailing.equalTo(textField)
+            make.height.equalTo(isTracker ? 150 : 75)
+        }
+        
+        collectionView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(tableView.snp.bottom)
+            make.height.equalTo(492)
+        }
+        
+        cancelButton.snp.makeConstraints { make in
+            make.top.equalTo(collectionView.snp.bottom).offset(16)
+            make.leading.equalTo(20)
+            make.bottom.equalToSuperview()
+            make.height.equalTo(60)
+        }
+        
+        createButton.snp.makeConstraints { make in
+            make.centerY.size.equalTo(cancelButton)
+            make.leading.equalTo(cancelButton.snp.trailing).offset(8)
+            make.trailing.equalTo(-20)
+        }
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension TrackerSetupViewController: UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        guard let range = Range(range, in: currentText) else { return false }
+        let updatedText = currentText.replacingCharacters(in: range, with: string)
+        checkCreateButtonActivation(updatedText)
+        if updatedText.count <= 38 {
+            warningLabel.isHidden = true
+            tableViewTopLabel?.update(offset: 24)
+            return true
+        } else {
+            warningLabel.isHidden = false
+            tableViewTopLabel?.update(offset: 62)
+            return false
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.endEditing(true)
+    }
+    
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        checkCreateButtonActivation("")
+        warningLabel.isHidden = true
+        tableViewTopLabel?.update(offset: 24)
+        return true
     }
 }
 
@@ -265,61 +296,16 @@ extension TrackerSetupViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 
 extension TrackerSetupViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.row == 0 {
-            
+            let vc = TrackerCategoryView()
+            present(vc, animated: true)
         } else {
             let vc = TrackerScheduleViewController(delegate: self, schedule: schedule)
             present(vc, animated: true)
         }
-    }
-}
-
-// MARK: - ScheduleViewControllerDelegate
-
-extension TrackerSetupViewController: TrackerScheduleViewControllerDelegate {
-    func didSelectedDays(in schedule: Set<WeekDay>) {
-        self.schedule = schedule
-        
-        let selectedDays = schedule
-            .sorted(by: {$0.rawValue < $1.rawValue})
-            .map { WeekDay.shortName(for: $0.rawValue)}
-        
-        scheduleIsSet = selectedDays.isEmpty ? false : true
-        
-        let indexPath = IndexPath(row: 1, section: 0)
-        let cell = tableView.cellForRow(at: indexPath)
-        cell?.detailTextLabel?.text = selectedDays.count < 7 ? selectedDays.joined(separator: ", ") : "Каждый день"
-        dismiss(animated: true)
-    }
-}
-
-// MARK: - UITextFieldDelegate
-
-extension TrackerSetupViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let currentText = textField.text ?? ""
-        guard let range = Range(range, in: currentText) else { return false }
-        let updatedText = currentText.replacingCharacters(in: range, with: string)
-        checkCreateButtonActivation(updatedText)
-        if updatedText.count <= 38 {
-            constraintLabel.isHidden = true
-            return true
-        } else {
-            constraintLabel.isHidden = false
-            return false
-        }
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        view.endEditing(true)
-    }
-    
-    func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        checkCreateButtonActivation("")
-        constraintLabel.isHidden = true
-        return true
     }
 }
 
@@ -369,6 +355,7 @@ extension TrackerSetupViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegateFlowLayout
 
 extension TrackerSetupViewController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: 52, height: 52)
     }
@@ -390,7 +377,6 @@ extension TrackerSetupViewController: UICollectionViewDelegateFlowLayout {
 
 extension TrackerSetupViewController {
   
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let indexes = collectionView.indexPathsForSelectedItems {
             indexes.filter { $0.section == indexPath.section && $0 != indexPath }.forEach { i in
@@ -423,3 +409,22 @@ extension TrackerSetupViewController {
     }
 }
 
+// MARK: - ScheduleViewControllerDelegate
+
+extension TrackerSetupViewController: TrackerScheduleViewControllerDelegate {
+    
+    func didSelectedDays(in schedule: Set<WeekDay>) {
+        self.schedule = schedule
+        
+        let selectedDays = schedule
+            .sorted(by: {$0.rawValue < $1.rawValue})
+            .map { WeekDay.shortName(for: $0.rawValue)}
+        
+        scheduleIsSet = selectedDays.isEmpty ? false : true
+        
+        let indexPath = IndexPath(row: 1, section: 0)
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.detailTextLabel?.text = selectedDays.count < 7 ? selectedDays.joined(separator: ", ") : "Каждый день"
+        dismiss(animated: true)
+    }
+}

@@ -5,6 +5,7 @@
 //  Created by Вадим Шишков on 28.08.2023.
 //
 
+import SnapKit
 import UIKit
 
 protocol TrackersCollectionViewCellDelegate: AnyObject {
@@ -13,84 +14,31 @@ protocol TrackersCollectionViewCellDelegate: AnyObject {
 }
 
 final class TrackersCollectionViewCell: UICollectionViewCell {
+    
     static let identifier = "TrackersCollectionViewCell"
     weak var delegate: TrackersCollectionViewCellDelegate?
     
-    private var tracker: Tracker!
+    private var tracker: Tracker?
     private var isDone = false
+    private let cardView = UIView()
+    private let quantityView = UIView()
+    private let emojiBackground = UIView()
+    private let pinView: UIImageView = UIImageView(image: UIImage(named: "pin symbol"))
+    private let emoji = UILabel()
+    private let trackerName = UILabel(text: "", textColor: .white, font: .systemFont(ofSize: 12, weight: .medium))
+    private let daysCount = UILabel(text: "", textColor: .blackYP, font: .systemFont(ofSize: 12, weight: .medium))
+    private let plusButton = UIButton()
+    
     private var completedDays = 0 {
         didSet {
-            dayLabel.text = "\(completedDays) \(correctStringForNumber(completedDays))"
+            daysCount.text = "\(completedDays) \(correctStringForNumber(completedDays))"
         }
     }
-    
-    private let cardView: UIView = {
-        let view = UIView(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .blueYP
-        view.layer.cornerRadius = 16
-        return view
-    }()
-    
-    private let quantityView: UIView = {
-        let view = UIView(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
-        return view
-    }()
-    
-    private let emojiBackground: UIView = {
-        let view = UIView(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 12
-        view.backgroundColor = .white
-        view.alpha = 0.3
-        return view
-    }()
-    
-    private let emojiLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textAlignment = .center
-        return label
-    }()
-    
-    private let pinImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "pin symbol"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .whiteYP
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.numberOfLines = 0
-        return label
-    }()
-    
-    private let dayLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .blackYP
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        return label
-    }()
-    
-    private let plusButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(recordButtonTapped), for: .touchUpInside)
-        button.layer.cornerRadius = 17
-        return button
-    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
-        setupConstraints()
+        setupLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -101,73 +49,16 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         self.tracker = tracker
         self.isDone = isDone
         self.completedDays = completedDays
-        titleLabel.text = tracker.name
-        emojiLabel.text = tracker.emoji
+        trackerName.text = tracker.name
+        emoji.text = tracker.emoji
         cardView.backgroundColor = UIColor(named: tracker.color)
         setupButton()
     }
-    
-    private func setupViews() {
-        pinImageView.isHidden = true
-        dayLabel.text = "\(completedDays) \(correctStringForNumber(completedDays))"
-    }
-    
-    private func setupConstraints() {
-        contentView.addSubview(cardView)
-        contentView.addSubview(quantityView)
-        
-        cardView.addSubview(emojiBackground)
-        cardView.addSubview(emojiLabel)
-        cardView.addSubview(pinImageView)
-        cardView.addSubview(titleLabel)
-        
-        quantityView.addSubview(dayLabel)
-        quantityView.addSubview(plusButton)
-        
-        NSLayoutConstraint.activate([
-            cardView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            cardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            
-            quantityView.topAnchor.constraint(equalTo: cardView.bottomAnchor),
-            quantityView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor),
-            quantityView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor),
-            quantityView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            
-            emojiBackground.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
-            emojiBackground.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 12),
-            emojiBackground.heightAnchor.constraint(equalToConstant: 24),
-            emojiBackground.widthAnchor.constraint(equalToConstant: 24),
-            
-            emojiLabel.centerXAnchor.constraint(equalTo: emojiBackground.centerXAnchor),
-            emojiLabel.centerYAnchor.constraint(equalTo: emojiBackground.centerYAnchor),
-            
-            pinImageView.centerYAnchor.constraint(equalTo: emojiBackground.centerYAnchor),
-            pinImageView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -4),
-            pinImageView.heightAnchor.constraint(equalTo: emojiBackground.heightAnchor),
-            pinImageView.widthAnchor.constraint(equalTo: emojiBackground.widthAnchor),
-            
-            titleLabel.leadingAnchor.constraint(equalTo: emojiBackground.leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12),
-            titleLabel.topAnchor.constraint(equalTo: emojiBackground.bottomAnchor, constant: 8),
-            titleLabel.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -12),
-            
-            dayLabel.leadingAnchor.constraint(equalTo: quantityView.leadingAnchor, constant: 12),
-            dayLabel.topAnchor.constraint(equalTo: cardView.bottomAnchor, constant: 16),
-            dayLabel.bottomAnchor.constraint(equalTo: quantityView.bottomAnchor, constant: -24),
-            dayLabel.heightAnchor.constraint(equalToConstant: 18),
-            
-            plusButton.centerYAnchor.constraint(equalTo: dayLabel.centerYAnchor),
-            plusButton.trailingAnchor.constraint(equalTo: quantityView.trailingAnchor, constant: -12),
-            plusButton.heightAnchor.constraint(equalToConstant: 34),
-            plusButton.widthAnchor.constraint(equalToConstant: 34)
-        ])
-    }
-    
+      
     @objc private func recordButtonTapped() {
         guard let delegate = delegate else { return }
         if isDone {
-            if delegate.recordWillRemove(with: tracker.uuid) {
+            if delegate.recordWillRemove(with: tracker?.uuid ?? UUID()) {
                 plusButton.setImage(UIImage(named: "add day button"), for: .normal)
                 plusButton.alpha = 1.0
                 plusButton.backgroundColor = .clear
@@ -175,10 +66,10 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
                 isDone.toggle()
             }
         } else {
-            if delegate.recordWillAdd(with: tracker.uuid) {
+            if delegate.recordWillAdd(with: tracker?.uuid ?? UUID()) {
                 plusButton.setImage(UIImage(named: "done"), for: .normal)
                 plusButton.alpha = 0.3
-                plusButton.backgroundColor = UIColor(named: tracker.color)
+                plusButton.backgroundColor = UIColor(named: tracker?.color ?? "Black")
                 completedDays += 1
                 isDone.toggle()
             }
@@ -204,13 +95,91 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         if isDone {
             plusButton.setImage(UIImage(named: "done"), for: .normal)
             plusButton.alpha = 0.3
-            plusButton.backgroundColor = UIColor(named: tracker.color)
-            plusButton.tintColor = UIColor(named: tracker.color)
+            plusButton.backgroundColor = UIColor(named: tracker?.color ?? "Black")
+            plusButton.tintColor = UIColor(named: tracker?.color ?? "Black")
         } else {
             plusButton.setImage(UIImage(named: "add day button"), for: .normal)
             plusButton.alpha = 1.0
             plusButton.backgroundColor = .whiteYP
-            plusButton.tintColor = UIColor(named: tracker.color)
+            plusButton.tintColor = UIColor(named: tracker?.color ?? "Black")
+        }
+    }
+    
+    private func setupViews() {
+        pinView.isHidden = true
+        
+        daysCount.text = "\(completedDays) \(correctStringForNumber(completedDays))"
+        
+        quantityView.backgroundColor = .clear
+        
+        cardView.backgroundColor = .blueYP
+        cardView.layer.cornerRadius = 16
+        
+        emojiBackground.layer.cornerRadius = 12
+        emojiBackground.backgroundColor = .white
+        emojiBackground.alpha = 0.3
+        
+        emoji.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        emoji.textAlignment = .center
+        
+        trackerName.numberOfLines = 0
+        
+        plusButton.addTarget(self, action: #selector(recordButtonTapped), for: .touchUpInside)
+        plusButton.layer.cornerRadius = 17
+    }
+    
+    private func setupLayout() {
+        contentView.addSubview(cardView)
+        contentView.addSubview(quantityView)
+        
+        cardView.addSubview(emojiBackground)
+        cardView.addSubview(emoji)
+        cardView.addSubview(pinView)
+        cardView.addSubview(trackerName)
+        
+        quantityView.addSubview(daysCount)
+        quantityView.addSubview(plusButton)
+        
+        cardView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+        }
+        
+        quantityView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(cardView.snp.bottom)
+        }
+        
+        emojiBackground.snp.makeConstraints { make in
+            make.leading.top.equalTo(12)
+            make.size.equalTo(CGSize(width: 24, height: 24))
+        }
+        
+        emoji.snp.makeConstraints { make in
+            make.center.equalTo(emojiBackground)
+        }
+            
+        pinView.snp.makeConstraints { make in
+            make.size.centerY.equalTo(emojiBackground)
+            make.trailing.equalTo(-4)
+        }
+
+        trackerName.snp.makeConstraints { make in
+            make.leading.equalTo(emojiBackground)
+            make.trailing.bottom.equalTo(-12)
+            make.top.equalTo(emojiBackground.snp.bottom).offset(8)
+        }
+        
+        daysCount.snp.makeConstraints { make in
+            make.leading.equalTo(12)
+            make.top.equalTo(16)
+            make.bottom.equalTo(-24)
+            make.height.equalTo(18)
+        }
+            
+        plusButton.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: 34, height: 34))
+            make.centerY.equalTo(daysCount)
+            make.trailing.equalTo(-12)
         }
     }
 }

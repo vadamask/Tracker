@@ -5,43 +5,29 @@
 //  Created by Вадим Шишков on 07.09.2023.
 //
 
+import SnapKit
 import UIKit
 
 final class TrackerSetupColorCell: UICollectionViewCell {
+    
     static let identifier = "ColorCell"
-    
-    private let view: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let backView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.opacity = 0.3
-        view.layer.borderWidth = 3
-        view.layer.cornerRadius = 8
-        view.isHidden = true
-        return view
-    }()
-    
+    private let colorView = UIView()
+    private let background = UIView()
+     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.addSubview(backView)
-        contentView.addSubview(view)
-        NSLayoutConstraint.activate([
-            backView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            backView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            backView.widthAnchor.constraint(equalTo: widthAnchor),
-            backView.heightAnchor.constraint(equalTo: heightAnchor),
-            
-            view.centerXAnchor.constraint(equalTo: centerXAnchor),
-            view.centerYAnchor.constraint(equalTo: centerYAnchor),
-            view.widthAnchor.constraint(equalToConstant: 40),
-            view.heightAnchor.constraint(equalToConstant: 40)
-        ])
         
+        contentView.addSubview(background)
+        contentView.addSubview(colorView)
+        
+        background.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.size.equalToSuperview()
+        }
+        colorView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.size.equalTo(CGSize(width: 40, height: 40))
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -49,12 +35,17 @@ final class TrackerSetupColorCell: UICollectionViewCell {
     }
     
     func configure(with index: Int) {
-        view.backgroundColor = UIColor(named: "Color selection \(index)")
-        view.layer.cornerRadius = 8
-        backView.layer.borderColor = UIColor(named: "Color selection \(index)")?.cgColor
+        colorView.backgroundColor = UIColor(named: "Color selection \(index)")
+        colorView.layer.cornerRadius = 8
+        
+        background.layer.borderColor = UIColor(named: "Color selection \(index)")?.cgColor
+        background.layer.opacity = 0.3
+        background.layer.borderWidth = 3
+        background.layer.cornerRadius = 8
+        background.isHidden = true
     }
     
     func itemDidSelect(_ isSelect: Bool) {
-        backView.isHidden = isSelect ? false : true
+        background.isHidden = isSelect ? false : true
     }
 }

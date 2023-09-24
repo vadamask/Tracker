@@ -7,8 +7,8 @@
 
 import UIKit
 
-
 final class TrackerSetupTableViewCell: UITableViewCell {
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         backgroundColor = .backgroundYP

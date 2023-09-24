@@ -5,6 +5,7 @@
 //  Created by Вадим Шишков on 27.08.2023.
 //
 
+import SnapKit
 import UIKit
 
 protocol TrackerTypeViewControllerDelegate: AnyObject {
@@ -17,48 +18,42 @@ final class TrackerTypeViewController: UIViewController {
     weak var delegate: TrackerTypeViewControllerDelegate?
     
     private let topLabel = UILabel(text: "Создание трекера", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
-    
-    private let trackerButton: UIButton = {
-        let button = UIButton(title: "Привычка")
-        button.addTarget(self, action: #selector(trackerButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    private let eventButton: UIButton = {
-        let button = UIButton(title: "Нерегулярное событие")
-        button.addTarget(self, action: #selector(eventButtonTapped), for: .touchUpInside)
-        return button
-    }()
+    private let trackerButton = UIButton(title: "Привычка")
+    private let eventButton = UIButton(title: "Нерегулярное событие")
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        setupConstraints()
+        setupLayout()
     }
     
     private func setupViews() {
         view.backgroundColor = .whiteYP
+        trackerButton.addTarget(self, action: #selector(trackerButtonTapped), for: .touchUpInside)
+        eventButton.addTarget(self, action: #selector(eventButtonTapped), for: .touchUpInside)
     }
     
-    private func setupConstraints() {
+    private func setupLayout() {
         view.addSubview(trackerButton)
         view.addSubview(eventButton)
         view.addSubview(topLabel)
         
-        NSLayoutConstraint.activate([
-            trackerButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
-            trackerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            trackerButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            trackerButton.heightAnchor.constraint(equalToConstant: 60),
-            
-            eventButton.leadingAnchor.constraint(equalTo: trackerButton.leadingAnchor),
-            eventButton.trailingAnchor.constraint(equalTo: trackerButton.trailingAnchor),
-            eventButton.topAnchor.constraint(equalTo: trackerButton.bottomAnchor, constant: 16),
-            eventButton.heightAnchor.constraint(equalTo: trackerButton.heightAnchor),
-            
-            topLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 27),
-            topLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
+        topLabel.snp.makeConstraints { make in
+            make.top.equalTo(27)
+            make.centerX.equalToSuperview()
+        }
+        
+        trackerButton.snp.makeConstraints { make in
+            make.leading.equalTo(20)
+            make.trailing.equalTo(-20)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(60)
+        }
+        
+        eventButton.snp.makeConstraints { make in
+            make.leading.trailing.height.equalTo(trackerButton)
+            make.top.equalTo(trackerButton.snp.bottom).offset(16)
+        }
     }
     
     @objc private func trackerButtonTapped(sender: Any) {
@@ -84,6 +79,4 @@ extension TrackerTypeViewController: TrackerSetupViewControllerDelegate {
     func didCreate(_ tracker: Tracker, with title: String) {
         delegate?.didCreate(tracker, with: title)
     }
-    
-    
 }

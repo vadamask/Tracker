@@ -5,6 +5,7 @@
 //  Created by Вадим Шишков on 29.08.2023.
 //
 
+import SnapKit
 import UIKit
 
 protocol TrackerScheduleViewControllerDelegate: AnyObject {
@@ -17,23 +18,8 @@ final class TrackerScheduleViewController: UIViewController {
     
     private var schedule: Set<WeekDay>
     private let topLabel = UILabel(text: "Расписание", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
-    
-    private let scheduleTableView: UITableView = {
-        let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
-        tableView.rowHeight = 75
-        tableView.backgroundColor = .whiteYP
-        tableView.allowsSelection = false
-        tableView.layer.cornerRadius = 16
-        return tableView
-    }()
-    
-    private let doneButton: UIButton = {
-        let button = UIButton(title: "Готово")
-        button.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
-        return button
-    }()
+    private let doneButton = UIButton(title: "Готово")
+    private let tableView = UITableView()
     
     init(delegate: TrackerScheduleViewControllerDelegate?, schedule: Set<WeekDay>) {
         self.delegate = delegate
@@ -48,38 +34,51 @@ final class TrackerScheduleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        setupConstraints()
-    }
-    
-    private func setupViews() {
-        view.backgroundColor = .whiteYP
-        scheduleTableView.dataSource = self
-        scheduleTableView.register(TrackerScheduleTableViewCell.self, forCellReuseIdentifier: "cell")
-    }
-    
-    private func setupConstraints() {
-        view.addSubview(topLabel)
-        view.addSubview(scheduleTableView)
-        view.addSubview(doneButton)
-        
-        NSLayoutConstraint.activate([
-            topLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 27),
-            topLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            scheduleTableView.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 30),
-            scheduleTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            scheduleTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            
-            doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            doneButton.heightAnchor.constraint(equalToConstant: 60),
-            doneButton.topAnchor.constraint(equalTo: scheduleTableView.bottomAnchor, constant: 47)
-        ])
+        setupLayout()
     }
     
     @objc private func doneButtonTapped() {
         delegate?.didSelectedDays(in: schedule)
+    }
+    
+    private func setupViews() {
+        view.backgroundColor = .whiteYP
+        
+        tableView.dataSource = self
+        tableView.register(TrackerScheduleTableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+        
+        tableView.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
+        tableView.rowHeight = 75
+        tableView.backgroundColor = .whiteYP
+        tableView.allowsSelection = false
+        tableView.layer.cornerRadius = 16
+    }
+    
+    private func setupLayout() {
+        view.addSubview(topLabel)
+        view.addSubview(tableView)
+        view.addSubview(doneButton)
+        
+        topLabel.snp.makeConstraints { make in
+            make.top.equalTo(27)
+            make.centerX.equalToSuperview()
+        }
+        
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(topLabel.snp.bottom).offset(30)
+            make.leading.equalTo(16)
+            make.trailing.equalTo(-16)
+        }
+        
+        doneButton.snp.makeConstraints { make in
+            make.top.equalTo(tableView.snp.bottom).offset(47)
+            make.leading.equalTo(20)
+            make.trailing.equalTo(-20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
+            make.height.equalTo(60)
+        }
     }
 }
 

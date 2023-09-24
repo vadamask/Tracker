@@ -5,23 +5,23 @@
 //  Created by Вадим Шишков on 07.09.2023.
 //
 
+import SnapKit
 import UIKit
 
 final class TrackerSetupSupView: UICollectionReusableView {
+    
     static let identifier = "header"
-    
-    private let label: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
-        return label
-    }()
-    
+    private let label = UILabel()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         addSubview(label)
-        label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -24).isActive = true
+        
+        label.snp.makeConstraints { make in
+            make.leading.equalTo(10)
+            make.bottom.equalTo(-24)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -30,5 +30,6 @@ final class TrackerSetupSupView: UICollectionReusableView {
     
     func configure(with section: Int) {
         label.text = section == 0 ? "Emoji" : "Цвет"
+        label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
     }
 }

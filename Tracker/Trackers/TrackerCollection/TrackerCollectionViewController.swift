@@ -5,45 +5,33 @@
 //  Created by Вадим Шишков on 27.08.2023.
 //
 
+import SnapKit
 import UIKit
 
 final class TrackerCollectionViewController: UIViewController {
     
     private var trackerStore = TrackerStore()
     private let recordStore = TrackerRecordStore()
+
+    private let params: GeometricParameters
+    private let placeholder = UIImageView(image: UIImage(named: "empty list"))
+    private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private let placeholderLabel = UILabel(
+        text: "Что будем отслеживать?",
+        textColor: .blackYP,
+        font: .systemFont(ofSize: 12, weight: .medium)
+    )
+    
     private var currentDate = Date() {
         didSet {
             trackerStore.filterTrackers(at: currentDate)
         }
     }
-
-    private let params: GeometricParameters
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MM yyyy"
         return formatter
-    }()
-    
-    private let placeholder: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "empty list")
-        return imageView
-    }()
-    
-    private let collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-        collectionView.backgroundColor = .whiteYP
-        return collectionView
-    }()
-    
-    private let label: UILabel = {
-        let label = UILabel()
-        label.text = "Что будем отслеживать?"
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .blackYP
-        label.textAlignment = .center
-        return label
     }()
     
     private let searchField: UISearchTextField = {
@@ -69,7 +57,7 @@ final class TrackerCollectionViewController: UIViewController {
         trackerStore.delegate = self
         
         setupNavigationItem()
-        setupCollectionView()
+        setupViews()
         setupLayout()
         checkPlaceholder()
     }
@@ -87,7 +75,6 @@ final class TrackerCollectionViewController: UIViewController {
         navigationItem.leftBarButtonItem = leftItem
         
         let datePicker = UIDatePicker()
-        datePicker.widthAnchor.constraint(equalToConstant: 100).isActive = true
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(datePickerDidChanged(sender:)), for: .valueChanged)
@@ -102,11 +89,12 @@ final class TrackerCollectionViewController: UIViewController {
         navigationItem.searchController = searchController
     }
     
-    private func setupCollectionView() {
+    private func setupViews() {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.backgroundColor = .whiteYP
         collectionView.register(
             TrackersCollectionViewCell.self,
             forCellWithReuseIdentifier: TrackersCollectionViewCell.identifier
@@ -116,6 +104,8 @@ final class TrackerCollectionViewController: UIViewController {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: TrackerCategoryHeader.identifier
         )
+        
+        placeholderLabel.textAlignment = .center
     }
     
     @objc private func addNewTracker() {
@@ -131,43 +121,33 @@ final class TrackerCollectionViewController: UIViewController {
     private func checkPlaceholder() {
         if trackerStore.numberOfSections() == 0 && navigationItem.leftBarButtonItem!.isEnabled {
             placeholder.image = UIImage(named: "empty list")
-            label.text = "Что будем отслеживать?"
+            placeholderLabel.text = "Что будем отслеживать?"
         } else {
             placeholder.image = UIImage(named: "empty search result")
-            label.text = "Ничего не найдено"
+            placeholderLabel.text = "Ничего не найдено"
         }
         placeholder.isHidden = trackerStore.numberOfSections() != 0
-        label.isHidden = placeholder.isHidden
+        placeholderLabel.isHidden = placeholder.isHidden
     }
     
     private func setupLayout() {
         view.addSubview(collectionView)
         collectionView.addSubview(placeholder)
-        collectionView.addSubview(label)
+        collectionView.addSubview(placeholderLabel)
+    
+        collectionView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         
-        placeholder.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        label.translatesAutoresizingMaskIntoConstraints = false
-        searchField.translatesAutoresizingMaskIntoConstraints = false
+        placeholder.snp.makeConstraints { make in
+            make.center.equalTo(view)
+            make.size.equalTo(CGSize(width: 80, height: 80))
+        }
         
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-        
-        NSLayoutConstraint.activate([
-            placeholder.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            placeholder.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            placeholder.heightAnchor.constraint(equalToConstant: 80),
-            placeholder.widthAnchor.constraint(equalToConstant: 80)
-        ])
-        
-        NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: placeholder.bottomAnchor, constant: 8),
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
+        placeholderLabel.snp.makeConstraints { make in
+            make.top.equalTo(placeholder.snp.bottom).offset(8)
+            make.centerX.equalTo(view)
+        }
     }
 }
 

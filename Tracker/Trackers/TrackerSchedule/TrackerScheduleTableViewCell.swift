@@ -14,22 +14,21 @@ protocol TrackerScheduleTableViewCellDelegate: AnyObject {
 final class TrackerScheduleTableViewCell: UITableViewCell {
     
     weak var delegate: TrackerScheduleTableViewCellDelegate?
-    private var row: Int!
-
-    private let switcher: UISwitch = {
-        let switcher = UISwitch()
-        switcher.onTintColor = .blueYP
-        switcher.addTarget(self, action: #selector(switchTapped), for: .touchUpInside)
-        return switcher
-    }()
+    private var row: Int?
+    private let switcher = UISwitch()
     
     func configure(at row: Int, isOn: Bool) {
         self.row = row
         switcher.isOn = isOn
+        switcher.onTintColor = .blueYP
+        switcher.addTarget(self, action: #selector(switchTapped), for: .touchUpInside)
         self.accessoryView = switcher
+        
         textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         textLabel?.textColor = .blackYP
+        
         backgroundColor = .backgroundYP
+        
         if row == 6 {
             separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 400)
             layer.cornerRadius = 16
@@ -38,6 +37,6 @@ final class TrackerScheduleTableViewCell: UITableViewCell {
     }
     
     @objc private func switchTapped() {
-        delegate?.switchDidTapped(switcher.isOn, at: row)
+        delegate?.switchDidTapped(switcher.isOn, at: row ?? 0)
     }
 }

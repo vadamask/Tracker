@@ -5,25 +5,22 @@
 //  Created by Вадим Шишков on 07.09.2023.
 //
 
+import SnapKit
 import UIKit
 
 final class TrackerSetupEmojiCell: UICollectionViewCell {
-    static let identifier = "EmojiCell"
     
-    private let label: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 32, weight: .bold)
-        return label
-    }()
+    static let identifier = "EmojiCell"
+    private let label = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         contentView.addSubview(label)
-        label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        layer.cornerRadius = 16
+        
+        label.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -32,5 +29,7 @@ final class TrackerSetupEmojiCell: UICollectionViewCell {
     
     func configure(with emoji: String) {
         label.text = emoji
+        label.font = UIFont.systemFont(ofSize: 32, weight: .bold)
+        layer.cornerRadius = 16
     }
 }

@@ -5,50 +5,39 @@
 //  Created by Вадим Шишков on 27.08.2023.
 //
 
+import SnapKit
 import UIKit
 
 final class StatisticsViewController: UIViewController {
     
-    private let placeholder: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "empty statistics"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private let label: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Анализировать пока нечего"
-        label.textColor = .blackYP
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textAlignment = .center
-        return label
-    }()
+    private let placeholder = UIImageView(image: UIImage(named: "empty statistics"))
+    private let label = UILabel(text: "Анализировать пока нечего", textColor: .blackYP, font: .systemFont(ofSize: 12, weight: .medium))
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        setupConstraints()
+        setupLayout()
     }
     
     private func setupViews() {
         view.backgroundColor = .whiteYP
         navigationItem.title = "Статистика"
-        
+        label.textAlignment = .center
     }
     
-    private func setupConstraints() {
+    private func setupLayout() {
         view.addSubview(placeholder)
         view.addSubview(label)
         
-        NSLayoutConstraint.activate([
-            placeholder.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            placeholder.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            placeholder.heightAnchor.constraint(equalToConstant: 80),
-            placeholder.widthAnchor.constraint(equalToConstant: 80),
-            label.topAnchor.constraint(equalTo: placeholder.bottomAnchor, constant: 8),
-            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
-        ])
+        placeholder.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.size.equalTo(CGSize(width: 80, height: 80))
+        }
+        
+        label.snp.makeConstraints { make in
+            make.top.equalTo(placeholder.snp.bottom).offset(8)
+            make.leading.equalTo(16)
+            make.trailing.equalTo(-16)
+        }
     }
 }
