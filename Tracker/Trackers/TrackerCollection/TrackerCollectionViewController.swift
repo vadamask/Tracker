@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class TrackersCollectionViewController: UIViewController {
+final class TrackerCollectionViewController: UIViewController {
     
     private var trackerStore = TrackerStore()
     private let recordStore = TrackerRecordStore()
@@ -173,7 +173,7 @@ final class TrackersCollectionViewController: UIViewController {
 
 // MARK: - UICollectionViewDataSource
 
-extension TrackersCollectionViewController: UICollectionViewDataSource {
+extension TrackerCollectionViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         trackerStore.numberOfSections() ?? .zero
     }
@@ -217,7 +217,7 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewFlowLayout
 
-extension TrackersCollectionViewController: UICollectionViewDelegateFlowLayout {
+extension TrackerCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         params.cellSpacing
     }
@@ -243,7 +243,7 @@ extension TrackersCollectionViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - UISearchBarDelegate
 
-extension TrackersCollectionViewController: UISearchBarDelegate {
+extension TrackerCollectionViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
             trackerStore.filterTrackers(at: currentDate)
@@ -267,7 +267,7 @@ extension TrackersCollectionViewController: UISearchBarDelegate {
 
 // MARK: - TrackersCollectionViewCellDelegate
 
-extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
+extension TrackerCollectionViewController: TrackersCollectionViewCellDelegate {
     func recordWillAdd(with uuid: UUID) -> Bool {
         if currentDate < Date() {
             do {
@@ -294,7 +294,7 @@ extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
 
 // MARK: - TrackerTypeViewControllerDelegate
 
-extension TrackersCollectionViewController: TrackerTypeViewControllerDelegate {
+extension TrackerCollectionViewController: TrackerTypeViewControllerDelegate {
     func didTapCancelButton() {
         dismiss(animated: true)
     }
@@ -313,7 +313,7 @@ extension TrackersCollectionViewController: TrackerTypeViewControllerDelegate {
 
 // MARK: - TrackerStoreDelegate
 
-extension TrackersCollectionViewController: TrackerStoreDelegate {
+extension TrackerCollectionViewController: TrackerStoreDelegate {
     func didUpdate(_ trackerStoreUpdate: TrackerStoreUpdate) {
         collectionView.performBatchUpdates {
             collectionView.insertItems(at: trackerStoreUpdate.insertedItems)
