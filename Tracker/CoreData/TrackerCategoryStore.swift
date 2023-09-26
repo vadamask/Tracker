@@ -22,14 +22,27 @@ final class TrackerCategoryStore {
         self.init(context: context)
     }
     
-    func add(_ title: String) throws {
+    func addTitle(_ title: String) throws {
         let request = TrackerCategoryCoreData.fetchRequest()
         request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryCoreData.title), title)
+        
         let categories = try context.fetch(request)
+        
         if categories.isEmpty {
             let categoryEntity = TrackerCategoryCoreData(context: context)
             categoryEntity.title = title
             try context.save()
+        } else {
+            throw StoreError.tryAddSameCategory
         }
+    }
+    
+    func getCategories() throws -> [CategoryCellViewModel] {
+        let request = TrackerCategoryCoreData.fetchRequest()
+        let categories = try context.fetch(request)
+        return categories
+            .compactMap { $0.title }
+            .sorted()
+            .map { CategoryCellViewModel(title: $0) }
     }
 }

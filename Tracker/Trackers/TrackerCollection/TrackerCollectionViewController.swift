@@ -24,7 +24,11 @@ final class TrackerCollectionViewController: UIViewController {
     
     private var currentDate = Date() {
         didSet {
-            trackerStore.filterTrackers(at: currentDate)
+            do {
+                try trackerStore.filterTrackers(at: currentDate)
+            } catch {
+                print(error.localizedDescription)
+            }
         }
     }
     
@@ -226,16 +230,28 @@ extension TrackerCollectionViewController: UICollectionViewDelegateFlowLayout {
 extension TrackerCollectionViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            trackerStore.filterTrackers(at: currentDate)
+            do {
+                try trackerStore.filterTrackers(at: currentDate)
+            } catch {
+                print(error.localizedDescription)
+            }
         } else {
-            trackerStore.searchTrackers(with: searchText, at: currentDate)
+            do {
+                try trackerStore.searchTrackers(with: searchText, at: currentDate)
+            } catch {
+                print(error.localizedDescription)
+            }
         }
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         navigationItem.rightBarButtonItem?.isEnabled = true
         navigationItem.leftBarButtonItem?.isEnabled = true
-        trackerStore.filterTrackers(at: currentDate)
+        do {
+            try trackerStore.filterTrackers(at: currentDate)
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -283,7 +299,7 @@ extension TrackerCollectionViewController: TrackerTypeViewControllerDelegate {
         dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
             do {
-                try trackerStore.add(tracker, with: title)
+                try trackerStore.addTracker(tracker, with: title)
             } catch {
                 print(error.localizedDescription)
             }

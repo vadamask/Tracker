@@ -35,6 +35,7 @@ final class TrackerStore: NSObject {
     }
     
     convenience override init() {
+        
         guard let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
             fatalError("Failed with context")
         }
@@ -52,15 +53,21 @@ final class TrackerStore: NSObject {
             cacheName: nil
         )
         controller.delegate = self
-        try? controller.performFetch()
+        
+        do {
+            try controller.performFetch()
+        } catch {
+            print(error.localizedDescription)
+        }
+        
         fetchedResultsController = controller
     }
     
-    func add(_ tracker: Tracker, with categoryTitle: String) throws {
+    func addTracker(_ tracker: Tracker, with categoryTitle: String) throws {
         let request = TrackerCategoryCoreData.fetchRequest()
         request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryCoreData.title), categoryTitle)
         let categories = try context.fetch(request)
-        guard !categories.isEmpty else { return }
+        guard !categories.isEmpty else { throw StoreError.categoriesIsEmpty }
         
         let object = TrackerCoreData(context: context)
         object.uuid = tracker.uuid.uuidString
@@ -70,6 +77,31 @@ final class TrackerStore: NSObject {
         object.schedule = tracker.schedule.map {String($0.rawValue)}.joined(separator: ",")
         object.category = categories[0]
         try context.save()
+    }
+    
+    func filterTrackers(at date: Date) throws {
+        let weekday = weekday(for: date)
+        let datePredicate = NSPredicate(format: "%K CONTAINS %@", #keyPath(TrackerCoreData.schedule), weekday)
+        
+        fetchedResultsController?.fetchRequest.predicate = datePredicate
+        try fetchedResultsController?.performFetch()
+        
+        delegate?.didFetchedObjects()
+    }
+    
+    func searchTrackers(with prefix: String, at date: Date) throws {
+        let weekday = weekday(for: date)
+        
+        let prefixPredicate = NSPredicate(format: "%K BEGINSWITH[c] %@", #keyPath(TrackerCoreData.name), prefix)
+        let datePredicate = NSPredicate(format: "%K CONTAINS %@", #keyPath(TrackerCoreData.schedule), weekday)
+        
+        fetchedResultsController?.fetchRequest.predicate = NSCompoundPredicate(
+            type: .and,
+            subpredicates: [prefixPredicate, datePredicate]
+        )
+        
+        try fetchedResultsController?.performFetch()
+        delegate?.didFetchedObjects()
     }
     
     func numberOfSections() -> Int? {
@@ -101,31 +133,6 @@ final class TrackerStore: NSObject {
             )
         }
         return (false, 0)
-    }
-    
-    func filterTrackers(at date: Date) {
-        let weekday = weekday(for: date)
-        let datePredicate = NSPredicate(format: "%K CONTAINS %@", #keyPath(TrackerCoreData.schedule), weekday)
-        fetchedResultsController?.fetchRequest.predicate = datePredicate
-        do {
-            try fetchedResultsController?.performFetch()
-            delegate?.didFetchedObjects()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
-    func searchTrackers(with prefix: String, at date: Date) {
-        let weekday = weekday(for: date)
-        let prefixPredicate = NSPredicate(format: "%K BEGINSWITH[c] %@", #keyPath(TrackerCoreData.name), prefix)
-        let datePredicate = NSPredicate(format: "%K CONTAINS %@", #keyPath(TrackerCoreData.schedule), weekday)
-        fetchedResultsController?.fetchRequest.predicate = NSCompoundPredicate(type: .and, subpredicates: [prefixPredicate, datePredicate])
-        do {
-            try fetchedResultsController?.performFetch()
-            delegate?.didFetchedObjects()
-        } catch {
-            print(error.localizedDescription)
-        }
     }
     
     private func convertToTracker(_ object: TrackerCoreData) -> Tracker {
