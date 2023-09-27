@@ -9,7 +9,7 @@ import Foundation
 
 final class CategoryListModel {
     
-    private let categoryStore = TrackerCategoryStore()
+    private let categoryStore = TrackerCategoryStore.shared
     
     func getCategories() -> [CategoryCellViewModel] {
         do {
@@ -19,9 +19,5 @@ final class CategoryListModel {
             print(error.localizedDescription)
             return []
         }
-    }
-    
-    func addCategory(with title: String) throws {
-        try categoryStore.addTitle(title)
     }
 }

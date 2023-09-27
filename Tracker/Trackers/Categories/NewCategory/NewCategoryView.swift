@@ -9,7 +9,7 @@ import UIKit
 
 final class NewCategoryView: UIViewController {
     
-    @Observable var categoryTitle: String?
+    var completion: ((String) -> Void)?
     
     private let viewModel = NewCategoryViewModel(model: NewCategoryModel())
     private let createButton = UIButton(title: "Готово", backgroundColor: .grayYP)
@@ -40,6 +40,7 @@ final class NewCategoryView: UIViewController {
     }
     
     private func bind() {
+        
         viewModel.$isAllowed.bind { [weak self] isAllowed in
             if isAllowed {
                 self?.createButton.isEnabled = true
@@ -49,10 +50,24 @@ final class NewCategoryView: UIViewController {
                 self?.createButton.backgroundColor = .grayYP
             }
         }
+        
+        viewModel.$isSameCategory.bind { [weak self] isSame in
+            guard let isSame = isSame else { return }
+            
+            if isSame {
+                let alertController = UIAlertController(title: "Ошибка", message: "Такое название уже есть", preferredStyle: .alert)
+                let action = UIAlertAction(title: "Ок", style: .default)
+                alertController.addAction(action)
+                self?.present(alertController, animated: true)
+            } else {
+                self?.dismiss(animated: true)
+            }
+        }
     }
     
     @objc private func doneButtonTapped() {
-        categoryTitle = textField.text
+        guard let title = textField.text else { return }
+        viewModel.addCategory(with: title)
     }
     
     @objc private func textDidChanged() {

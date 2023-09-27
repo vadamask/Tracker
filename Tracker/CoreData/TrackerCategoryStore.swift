@@ -8,18 +8,47 @@
 import CoreData
 import UIKit
 
-final class TrackerCategoryStore {
-    private let context: NSManagedObjectContext
+protocol TrackerCategoryStoreDelegate: AnyObject {
+    func didUpdate()
+}
+
+final class TrackerCategoryStore: NSObject {
     
-    init(context: NSManagedObjectContext) {
+    static let shared = TrackerCategoryStore()
+    weak var delegate: TrackerCategoryStoreDelegate?
+    
+    private let context: NSManagedObjectContext
+    private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>?
+    
+    private init(context: NSManagedObjectContext) {
         self.context = context
     }
     
-    convenience init() {
+    private convenience override init() {
         guard let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
             fatalError("Failed with context")
         }
         self.init(context: context)
+        
+        let request = TrackerCategoryCoreData.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        let controller = NSFetchedResultsController(
+            fetchRequest: request,
+            managedObjectContext: context,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        
+        controller.delegate = self
+        
+        do {
+            try controller.performFetch()
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        fetchedResultsController = controller
     }
     
     func addTitle(_ title: String) throws {
@@ -38,11 +67,17 @@ final class TrackerCategoryStore {
     }
     
     func getCategories() throws -> [CategoryCellViewModel] {
-        let request = TrackerCategoryCoreData.fetchRequest()
-        let categories = try context.fetch(request)
-        return categories
-            .compactMap { $0.title }
-            .sorted()
-            .map { CategoryCellViewModel(title: $0) }
+        guard let objects = fetchedResultsController?.fetchedObjects else { return [] }
+        return objects
+            .compactMap { CategoryCellViewModel(title: $0.title ?? "") }
+    }
+}
+
+// MARK: - NSFetchedResultsControllerDelegate
+
+extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        delegate?.didUpdate()
     }
 }

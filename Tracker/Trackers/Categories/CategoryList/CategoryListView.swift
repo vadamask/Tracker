@@ -10,11 +10,13 @@ import UIKit
 
 final class CategoryListView: UIViewController {
     
+    var completion: ((String) -> Void)?
+    
     private var viewModel = CategoryListViewModel(model: CategoryListModel())
     
     private let placeholder = UIImageView(image: UIImage(named: "empty list"))
     private let addButton = UIButton(title: "Добавить категорию")
-    private let tableView = UITableView()
+    private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     
     private let topLabel = UILabel(
         text: "Категория",
@@ -39,6 +41,7 @@ final class CategoryListView: UIViewController {
 
         viewModel.$categories.bind { [weak self] categories in
             self?.tableView.reloadData()
+            
             guard let categories = categories else { return }
             
             if categories.isEmpty {
@@ -50,32 +53,26 @@ final class CategoryListView: UIViewController {
             }
         }
         
-        viewModel.$isSameCategory.bind { [weak self] isSame in
-            guard let isSame = isSame else { return }
-            
-            if isSame {
-                let alertController = UIAlertController(title: "Ошибка", message: "Такое название уже есть", preferredStyle: .alert)
-                let action = UIAlertAction(title: "Ок", style: .default)
-                alertController.addAction(action)
-                self?.presentedViewController?.present(alertController, animated: true)
-            }
-        }
-        
         viewModel.getCategories()
     }
     
     @objc private func addButtonTapped() {
-        let vc = NewCategoryView()
-        vc.$categoryTitle.bind { [weak self] title in
-            guard let title = title else { return }
-            self?.viewModel.addCategory(with: title)
+        guard let categories = viewModel.categories else { return }
+        
+        if categories.isEmpty {
             
-            guard let isSameCategory = self?.viewModel.isSameCategory else { return }
-            if !isSameCategory {
-                self?.dismiss(animated: true)
+            let vc = NewCategoryView()
+            present(vc, animated: true)
+            
+        } else {
+            
+            if let _ = categories.firstIndex(where: {$0.selected}) {
+                dismiss(animated: true)
+            } else {
+                let vc = NewCategoryView()
+                present(vc, animated: true)
             }
         }
-        present(vc, animated: true)
     }
     
     private func setupViews() {
@@ -85,7 +82,7 @@ final class CategoryListView: UIViewController {
         tableView.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
         tableView.rowHeight = 75
         tableView.backgroundColor = .whiteYP
-        tableView.allowsSelection = false
+        tableView.allowsMultipleSelection = false
         tableView.layer.cornerRadius = 16
         
         placeholderLabel.numberOfLines = 2
@@ -126,10 +123,9 @@ final class CategoryListView: UIViewController {
         }
         
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(topLabel.snp.bottom).offset(38)
-            make.leading.equalTo(16)
-            make.trailing.equalTo(-16)
-            make.bottom.equalTo(addButton.snp.top).offset(-38)
+            make.top.equalTo(topLabel.snp.bottom).offset(20)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(addButton.snp.top).offset(-20)
         }
     }
 }
@@ -138,6 +134,24 @@ final class CategoryListView: UIViewController {
 
 extension CategoryListView: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if let categories = viewModel.categories,
+           let index = categories.firstIndex(where: {$0.selected}) {
+            
+            if index == indexPath.row {
+                viewModel.categories?[indexPath.row].selected.toggle()
+                completion?("")
+            } else {
+                viewModel.categories?.forEach {$0.selected = false}
+                viewModel.categories?[indexPath.row].selected.toggle()
+                completion?(viewModel.categories?[indexPath.row].title ?? "")
+            }
+        } else {
+            viewModel.categories?[indexPath.row].selected.toggle()
+            completion?(viewModel.categories?[indexPath.row].title ?? "")
+        }
+    }
 }
 
 // MARK: - UITableViewDataSource

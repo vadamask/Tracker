@@ -8,6 +8,8 @@
 import Foundation
 
 final class NewCategoryModel {
+    
+    private let categoryStore = TrackerCategoryStore.shared
        
     func validateText(_ text: String?) -> Bool {
         guard let text = text else { return false }
@@ -17,5 +19,9 @@ final class NewCategoryModel {
         } else {
             return true
         }
+    }
+    
+    func addCategory(with title: String) throws {
+        try categoryStore.addTitle(title)
     }
 }

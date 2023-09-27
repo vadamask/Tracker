@@ -10,6 +10,8 @@ import Foundation
 final class NewCategoryViewModel {
     
     @Observable var isAllowed: Bool = false
+    @Observable var isSameCategory: Bool?
+    
     private let model: NewCategoryModel
     
     init(model: NewCategoryModel) {
@@ -18,5 +20,16 @@ final class NewCategoryViewModel {
     
     func didChange(text: String?) {
         isAllowed = model.validateText(text)
+    }
+    
+    func addCategory(with title: String) {
+        do {
+            try model.addCategory(with: title)
+            isSameCategory = false
+        } catch StoreError.tryAddSameCategory {
+            isSameCategory = true
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 }

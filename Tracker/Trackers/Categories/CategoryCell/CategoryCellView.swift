@@ -18,9 +18,18 @@ final class CategoryCellView: UITableViewCell {
             textLabel?.textColor = .blackYP
             
             backgroundColor = .backgroundYP
+            selectionStyle = .none
         
             viewModel?.$title.bind(action: { [weak self] title in
                 self?.textLabel?.text = title
+            })
+            
+            viewModel?.$selected.bind(action: { [weak self] selected in
+                if selected {
+                    self?.accessoryType = .checkmark
+                } else {
+                    self?.accessoryType = .none
+                }
             })
         }
     }
