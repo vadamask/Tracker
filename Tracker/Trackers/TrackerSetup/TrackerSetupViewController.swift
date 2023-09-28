@@ -21,7 +21,7 @@ final class TrackerSetupViewController: UIViewController {
     private let emoji = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     private var selectedColor = ""
     private var selectedEmoji = ""
-    private var categoryTitle = ""
+    private var selectedTitle = ""
     private var schedule: Set<WeekDay> = []
     private var tableViewTopLabel: Constraint?
     
@@ -38,6 +38,12 @@ final class TrackerSetupViewController: UIViewController {
     }
     
     private var scheduleIsSet = false {
+        didSet {
+            checkCreateButtonActivation(textField.text)
+        }
+    }
+    
+    private var categoryIsSet: Bool = false {
         didSet {
             checkCreateButtonActivation(textField.text)
         }
@@ -118,18 +124,14 @@ final class TrackerSetupViewController: UIViewController {
             emoji: selectedEmoji,
             schedule: schedule
         )
-        do {
-            try TrackerCategoryStore().add("TEST")
-            delegate?.didCreate(tracker, with: "TEST")
-        } catch {
-            assertionFailure("Failure with adding tracker")
-        }
+        
+        delegate?.didCreate(tracker, with: selectedTitle)
     }
     
     private func checkCreateButtonActivation(_ text: String?) {
         if let text = text {
             createButton.isEnabled = isTracker ?
-            !text.isEmpty && scheduleIsSet && emojiIsSet && colorIsSet :
+            !text.isEmpty && scheduleIsSet && emojiIsSet && colorIsSet && categoryIsSet:
             !text.isEmpty && emojiIsSet && colorIsSet
         }
         createButton.backgroundColor = createButton.isEnabled ? .blackYP : .grayYP
@@ -300,10 +302,34 @@ extension TrackerSetupViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.row == 0 {
-            let vc = TrackerCategoryView()
+            let vc = CategoryListView()
+            
+            vc.completion = { [weak self] title in
+                self?.selectedTitle = title
+                let indexPath = IndexPath(row: 0, section: 0)
+                let cell = tableView.cellForRow(at: indexPath)
+                cell?.detailTextLabel?.text = title
+                
+                self?.categoryIsSet = true
+            }
+            
             present(vc, animated: true)
         } else {
-            let vc = TrackerScheduleViewController(delegate: self, schedule: schedule)
+            let vc = ScheduleView(schedule: schedule)
+            
+            vc.completion = { [weak self] schedule in
+                
+                self?.schedule = schedule
+                let selectedDays = schedule
+                    .sorted(by: {$0.rawValue < $1.rawValue})
+                    .map { WeekDay.shortName(for: $0.rawValue)}
+                
+                self?.scheduleIsSet = selectedDays.isEmpty ? false : true
+                
+                let indexPath = IndexPath(row: 1, section: 0)
+                let cell = tableView.cellForRow(at: indexPath)
+                cell?.detailTextLabel?.text = selectedDays.count < 7 ? selectedDays.joined(separator: ", ") : "Каждый день"
+            }
             present(vc, animated: true)
         }
     }
@@ -406,25 +432,5 @@ extension TrackerSetupViewController {
             cell.itemDidSelect(false)
             colorIsSet = false
         }
-    }
-}
-
-// MARK: - ScheduleViewControllerDelegate
-
-extension TrackerSetupViewController: TrackerScheduleViewControllerDelegate {
-    
-    func didSelectedDays(in schedule: Set<WeekDay>) {
-        self.schedule = schedule
-        
-        let selectedDays = schedule
-            .sorted(by: {$0.rawValue < $1.rawValue})
-            .map { WeekDay.shortName(for: $0.rawValue)}
-        
-        scheduleIsSet = selectedDays.isEmpty ? false : true
-        
-        let indexPath = IndexPath(row: 1, section: 0)
-        let cell = tableView.cellForRow(at: indexPath)
-        cell?.detailTextLabel?.text = selectedDays.count < 7 ? selectedDays.joined(separator: ", ") : "Каждый день"
-        dismiss(animated: true)
     }
 }

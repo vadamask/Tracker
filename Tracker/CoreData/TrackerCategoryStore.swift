@@ -8,16 +8,11 @@
 import CoreData
 import UIKit
 
-protocol TrackerCategoryStoreDelegate: AnyObject {
-    func didUpdate()
-}
-
 final class TrackerCategoryStore: NSObject {
     
     static let shared = TrackerCategoryStore()
-    weak var delegate: TrackerCategoryStoreDelegate?
+    let context: NSManagedObjectContext
     
-    private let context: NSManagedObjectContext
     private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>?
     
     private init(context: NSManagedObjectContext) {
@@ -29,26 +24,6 @@ final class TrackerCategoryStore: NSObject {
             fatalError("Failed with context")
         }
         self.init(context: context)
-        
-        let request = TrackerCategoryCoreData.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        
-        let controller = NSFetchedResultsController(
-            fetchRequest: request,
-            managedObjectContext: context,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        
-        controller.delegate = self
-        
-        do {
-            try controller.performFetch()
-        } catch {
-            print(error.localizedDescription)
-        }
-        
-        fetchedResultsController = controller
     }
     
     func addTitle(_ title: String) throws {
@@ -66,18 +41,9 @@ final class TrackerCategoryStore: NSObject {
         }
     }
     
-    func getCategories() throws -> [CategoryCellViewModel] {
-        guard let objects = fetchedResultsController?.fetchedObjects else { return [] }
-        return objects
-            .compactMap { CategoryCellViewModel(title: $0.title ?? "") }
-    }
-}
-
-// MARK: - NSFetchedResultsControllerDelegate
-
-extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        delegate?.didUpdate()
+    func fetchObjects() throws -> [CategoryCellViewModel] {
+        let request = TrackerCategoryCoreData.fetchRequest()
+        let objects = try context.fetch(request)
+        return objects.compactMap { CategoryCellViewModel(title: $0.title ?? "") }
     }
 }

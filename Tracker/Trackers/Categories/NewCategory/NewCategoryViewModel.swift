@@ -18,18 +18,20 @@ final class NewCategoryViewModel {
         self.model = model
     }
     
-    func didChange(text: String?) {
+    func textDidChanged(_ text: String?) {
         isAllowed = model.validateText(text)
     }
     
-    func addCategory(with title: String) {
-        do {
-            try model.addCategory(with: title)
+    func doneButtonTapped(with title: String) {
+        switch model.addCategory(with: title) {
+        case .success(_):
             isSameCategory = false
-        } catch StoreError.tryAddSameCategory {
-            isSameCategory = true
-        } catch {
-            print(error.localizedDescription)
+        case .failure(let error):
+            if case StoreError.tryAddSameCategory = error {
+                isSameCategory = true
+            } else {
+                print(error.localizedDescription)
+            }
         }
     }
 }

@@ -11,13 +11,15 @@ final class CategoryListModel {
     
     private let categoryStore = TrackerCategoryStore.shared
     
-    func getCategories() -> [CategoryCellViewModel] {
+    func fetchObjects() -> [CategoryCellViewModel] {
         do {
-            let titles = try categoryStore.getCategories()
+            let titles = try categoryStore.fetchObjects()
             return titles
         } catch {
             print(error.localizedDescription)
             return []
         }
     }
+    
+    
 }

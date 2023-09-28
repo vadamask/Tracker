@@ -53,29 +53,21 @@ final class CategoryListView: UIViewController {
             }
         }
         
-        viewModel.getCategories()
+        viewModel.$selectedTitle.bind { [weak self] selectedTitle in
+            self?.completion?(selectedTitle ?? "")
+        }
+        
+        viewModel.fetchObjects()
     }
     
     @objc private func addButtonTapped() {
-        guard let categories = viewModel.categories else { return }
-        
-        if categories.isEmpty {
-            
-            let vc = NewCategoryView()
-            present(vc, animated: true)
-            
-        } else {
-            
-            if let _ = categories.firstIndex(where: {$0.selected}) {
-                dismiss(animated: true)
-            } else {
-                let vc = NewCategoryView()
-                present(vc, animated: true)
-            }
-        }
+        let vc = NewCategoryView()
+        present(vc, animated: true)
     }
     
     private func setupViews() {
+        view.backgroundColor = .whiteYP
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(CategoryCellView.self, forCellReuseIdentifier: CategoryCellView.identifier)
@@ -87,17 +79,17 @@ final class CategoryListView: UIViewController {
         
         placeholderLabel.numberOfLines = 2
         placeholderLabel.textAlignment = .center
-        view.backgroundColor = .whiteYP
+        
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
     }
     
     private func setupLayout() {
         view.addSubview(topLabel)
         view.addSubview(tableView)
-        tableView.addSubview(placeholder)
         view.addSubview(placeholderLabel)
         view.addSubview(addButton)
         
+        tableView.addSubview(placeholder)
         
         topLabel.snp.makeConstraints { make in
             make.top.equalTo(27)
@@ -135,22 +127,22 @@ final class CategoryListView: UIViewController {
 extension CategoryListView: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        if let categories = viewModel.categories,
-           let index = categories.firstIndex(where: {$0.selected}) {
-            
-            if index == indexPath.row {
-                viewModel.categories?[indexPath.row].selected.toggle()
-                completion?("")
-            } else {
-                viewModel.categories?.forEach {$0.selected = false}
-                viewModel.categories?[indexPath.row].selected.toggle()
-                completion?(viewModel.categories?[indexPath.row].title ?? "")
+        viewModel.didSelectRow(at: indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let config = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            let action = UIAction(title: "Редактировать") { _ in
+                ""
             }
-        } else {
-            viewModel.categories?[indexPath.row].selected.toggle()
-            completion?(viewModel.categories?[indexPath.row].title ?? "")
+            let action2 = UIAction(title: "Удалить", attributes: .destructive) { _ in
+                ""
+            }
+  
+            let menu = UIMenu(title: "", children: [action, action2])
+            return menu
         }
+        return config
     }
 }
 
@@ -159,16 +151,14 @@ extension CategoryListView: UITableViewDelegate {
 extension CategoryListView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.categories?.count ?? 0
+        viewModel.numberOfRows
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? CategoryCellView else {
             return UITableViewCell()
         }
-        cell.viewModel = viewModel.categories?[indexPath.row]
+        cell.viewModel = viewModel.viewModel(at: indexPath)
         return cell
     }
-    
-    
 }

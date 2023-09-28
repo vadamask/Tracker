@@ -13,25 +13,32 @@ final class CategoryCellView: UITableViewCell {
     
     var viewModel: CategoryCellViewModel? {
         didSet {
-            textLabel?.text = viewModel?.title
-            textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-            textLabel?.textColor = .blackYP
-            
-            backgroundColor = .backgroundYP
-            selectionStyle = .none
-        
-            viewModel?.$title.bind(action: { [weak self] title in
-                self?.textLabel?.text = title
-            })
-            
-            viewModel?.$selected.bind(action: { [weak self] selected in
-                if selected {
-                    self?.accessoryType = .checkmark
-                } else {
-                    self?.accessoryType = .none
-                }
-            })
+            setupView()
+            bind()
         }
     }
     
+    private func setupView() {
+        textLabel?.text = viewModel?.title
+        textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        textLabel?.textColor = .blackYP
+        
+        backgroundColor = .backgroundYP
+        
+        selectionStyle = .none
+    }
+    
+    private func bind() {
+        viewModel?.$title.bind(action: { [weak self] title in
+            self?.textLabel?.text = title
+        })
+        
+        viewModel?.$isSelected.bind(action: { [weak self] selected in
+            if selected {
+                self?.accessoryType = .checkmark
+            } else {
+                self?.accessoryType = .none
+            }
+        })
+    }
 }

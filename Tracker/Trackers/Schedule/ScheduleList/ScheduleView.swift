@@ -8,21 +8,18 @@
 import SnapKit
 import UIKit
 
-protocol TrackerScheduleViewControllerDelegate: AnyObject {
-    func didSelectedDays(in schedule: Set<WeekDay>)
-}
-
-final class TrackerScheduleViewController: UIViewController {
+final class ScheduleView: UIViewController {
     
-    weak var delegate: TrackerScheduleViewControllerDelegate?
+    var completion: ((Set<WeekDay>) -> Void)?
+    
+    private var viewModel = ScheduleViewModel(model: ScheduleModel())
     
     private var schedule: Set<WeekDay>
     private let topLabel = UILabel(text: "Расписание", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
     private let doneButton = UIButton(title: "Готово")
-    private let tableView = UITableView()
+    private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     
-    init(delegate: TrackerScheduleViewControllerDelegate?, schedule: Set<WeekDay>) {
-        self.delegate = delegate
+    init(schedule: Set<WeekDay>) {
         self.schedule = schedule
         super.init(nibName: nil, bundle: nil)
     }
@@ -33,19 +30,20 @@ final class TrackerScheduleViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.setSchedule(schedule)
         setupViews()
         setupLayout()
     }
     
     @objc private func doneButtonTapped() {
-        delegate?.didSelectedDays(in: schedule)
+        dismiss(animated: true)
     }
     
     private func setupViews() {
         view.backgroundColor = .whiteYP
         
         tableView.dataSource = self
-        tableView.register(TrackerScheduleTableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(ScheduleCellView.self, forCellReuseIdentifier: "cell")
         
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         
@@ -67,9 +65,9 @@ final class TrackerScheduleViewController: UIViewController {
         }
         
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(topLabel.snp.bottom).offset(30)
-            make.leading.equalTo(16)
-            make.trailing.equalTo(-16)
+            make.top.equalTo(topLabel.snp.bottom).offset(20)
+            make.leading.trailing.equalToSuperview()
+            
         }
         
         doneButton.snp.makeConstraints { make in
@@ -84,35 +82,19 @@ final class TrackerScheduleViewController: UIViewController {
 
 // MARK: - UITableViewDataSource
 
-extension TrackerScheduleViewController: UITableViewDataSource {
+extension ScheduleView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        7
+        viewModel.numberOfRows
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? TrackerScheduleTableViewCell {
-            cell.textLabel?.text = WeekDay.fullName(for: indexPath.row)
-            cell.delegate = self
-            if let day = WeekDay(rawValue: indexPath.row) {
-                cell.configure(at: indexPath.row, isOn: schedule.contains(day))
-            }
-            return cell
-        } else {
-            return UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? ScheduleCellView else { return UITableViewCell() }
+        cell.viewModel = viewModel.viewModel(at: indexPath)
+        cell.completion = { [weak self] in
+            self?.completion?(self?.viewModel.selectedDays ?? [])
         }
+        return cell
     }
 }
 
-// MARK: - ScheduleTableViewCellDelegate
 
-extension TrackerScheduleViewController: TrackerScheduleTableViewCellDelegate {
-    func switchDidTapped(_ isOn: Bool, at row: Int) {
-        if let day = WeekDay(rawValue: row) {
-            if isOn {
-                schedule.insert(day)
-            } else {
-                schedule.remove(day)
-            }
-        }
-    }
-}

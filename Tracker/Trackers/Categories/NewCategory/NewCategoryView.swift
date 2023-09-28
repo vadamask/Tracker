@@ -9,8 +9,6 @@ import UIKit
 
 final class NewCategoryView: UIViewController {
     
-    var completion: ((String) -> Void)?
-    
     private let viewModel = NewCategoryViewModel(model: NewCategoryModel())
     private let createButton = UIButton(title: "Готово", backgroundColor: .grayYP)
     
@@ -67,11 +65,11 @@ final class NewCategoryView: UIViewController {
     
     @objc private func doneButtonTapped() {
         guard let title = textField.text else { return }
-        viewModel.addCategory(with: title)
+        viewModel.doneButtonTapped(with: title)
     }
     
     @objc private func textDidChanged() {
-        viewModel.didChange(text: textField.text)
+        viewModel.textDidChanged(textField.text)
     }
     
     private func setupViews() {
@@ -115,7 +113,7 @@ final class NewCategoryView: UIViewController {
 extension NewCategoryView: UITextFieldDelegate {
 
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        viewModel.didChange(text: "")
+        viewModel.textDidChanged("")
         return true
     }
 }
