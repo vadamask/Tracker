@@ -136,12 +136,13 @@
 			isa = PBXGroup;
 			children = (
 				DD08E52E2A97B85300E8FEB8 /* Application */,
-				DDDF413B2AACA8E200F4A75F /* CoreData */,
 				DDBA49D72A9B2DCD00E1E0C9 /* Extensions */,
-				DD3941A62ABEF6FB0059233A /* Onboarding */,
-				DDBA49CF2A9B20EB00E1E0C9 /* Trackers */,
-				DDBA49D32A9B242600E1E0C9 /* Statistics */,
+				DD1D1AA72A9B815900BF2BCF /* Models */,
+				DD85F2242AC750430037D117 /* Modules */,
 				DD08E52F2A97B87500E8FEB8 /* Resources */,
+				DD85F2212AC74FD80037D117 /* Services */,
+				DDDF412D2AAB783300F4A75F /* Model.xcdatamodeld */,
+				DD8C52D72AC1F3DC007F3800 /* Observable.swift */,
 				DD08E51E2A97B3C300E8FEB8 /* TabBarController.swift */,
 			);
 			path = Tracker;
@@ -173,6 +174,7 @@
 				DD1D1AAA2A9B820100BF2BCF /* TrackerCategory.swift */,
 				DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */,
 				DD284A492AC4C5E3003C9BDD /* WeekDay.swift */,
+				DD284A3F2AC33D99003C9BDD /* StoreError.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -187,14 +189,14 @@
 			path = CategoryList;
 			sourceTree = "<group>";
 		};
-		DD284A3B2AC32F75003C9BDD /* NewCategory */ = {
+		DD284A3B2AC32F75003C9BDD /* NewCategoryScreen */ = {
 			isa = PBXGroup;
 			children = (
 				DD8C52DE2AC1FB57007F3800 /* NewCategoryView.swift */,
 				DD284A382AC21376003C9BDD /* NewCategoryViewModel.swift */,
 				DD284A3C2AC32FB3003C9BDD /* NewCategoryModel.swift */,
 			);
-			path = NewCategory;
+			path = NewCategoryScreen;
 			sourceTree = "<group>";
 		};
 		DD284A3E2AC33537003C9BDD /* CategoryCell */ = {
@@ -224,45 +226,55 @@
 			path = ScheduleCell;
 			sourceTree = "<group>";
 		};
-		DD32B8892AC072630082E91F /* Categories */ = {
+		DD32B8892AC072630082E91F /* CategoriesScreen */ = {
 			isa = PBXGroup;
 			children = (
 				DD284A3A2AC32F52003C9BDD /* CategoryList */,
 				DD284A3E2AC33537003C9BDD /* CategoryCell */,
-				DD284A3B2AC32F75003C9BDD /* NewCategory */,
 			);
-			path = Categories;
+			path = CategoriesScreen;
 			sourceTree = "<group>";
 		};
-		DD3941A62ABEF6FB0059233A /* Onboarding */ = {
+		DD3941A62ABEF6FB0059233A /* OnboardingScreen */ = {
 			isa = PBXGroup;
 			children = (
 				DD3941A42ABEE38A0059233A /* OnboardingViewController.swift */,
 				DD3941A72ABEF7520059233A /* PageViewController.swift */,
 			);
-			path = Onboarding;
+			path = OnboardingScreen;
 			sourceTree = "<group>";
 		};
-		DDBA49CF2A9B20EB00E1E0C9 /* Trackers */ = {
+		DD85F2212AC74FD80037D117 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				DD8C52D72AC1F3DC007F3800 /* Observable.swift */,
-				DD1D1AA72A9B815900BF2BCF /* Models */,
-				DDD982EF2A9FB4E600994B01 /* TrackerCollection */,
-				DDD982EE2A9FB4B500994B01 /* TrackerType */,
-				DDD982ED2A9FB4A100994B01 /* TrackerSetup */,
-				DDD982EC2A9FB48400994B01 /* Schedule */,
-				DD32B8892AC072630082E91F /* Categories */,
+				DDDF413C2AACA96100F4A75F /* TrackerStore.swift */,
+				DDDF413E2AACA97000F4A75F /* TrackerCategoryStore.swift */,
+				DDDF41402AACA97E00F4A75F /* TrackerRecordStore.swift */,
 			);
-			path = Trackers;
+			path = Services;
 			sourceTree = "<group>";
 		};
-		DDBA49D32A9B242600E1E0C9 /* Statistics */ = {
+		DD85F2242AC750430037D117 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				DD3941A62ABEF6FB0059233A /* OnboardingScreen */,
+				DDBA49D32A9B242600E1E0C9 /* StatisticsScreen */,
+				DDD982EF2A9FB4E600994B01 /* TrackersCollectionScreen */,
+				DDD982EE2A9FB4B500994B01 /* NewTrackerScreen */,
+				DDD982ED2A9FB4A100994B01 /* TrackerSetupScreen */,
+				DDD982EC2A9FB48400994B01 /* ScheduleScreen */,
+				DD32B8892AC072630082E91F /* CategoriesScreen */,
+				DD284A3B2AC32F75003C9BDD /* NewCategoryScreen */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		DDBA49D32A9B242600E1E0C9 /* StatisticsScreen */ = {
 			isa = PBXGroup;
 			children = (
 				DDBA49D42A9B248E00E1E0C9 /* StatisticsViewController.swift */,
 			);
-			path = Statistics;
+			path = StatisticsScreen;
 			sourceTree = "<group>";
 		};
 		DDBA49D72A9B2DCD00E1E0C9 /* Extensions */ = {
@@ -276,16 +288,16 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		DDD982EC2A9FB48400994B01 /* Schedule */ = {
+		DDD982EC2A9FB48400994B01 /* ScheduleScreen */ = {
 			isa = PBXGroup;
 			children = (
 				DD284A412AC4BAF9003C9BDD /* ScheduleList */,
 				DD284A422AC4BB18003C9BDD /* ScheduleCell */,
 			);
-			path = Schedule;
+			path = ScheduleScreen;
 			sourceTree = "<group>";
 		};
-		DDD982ED2A9FB4A100994B01 /* TrackerSetup */ = {
+		DDD982ED2A9FB4A100994B01 /* TrackerSetupScreen */ = {
 			isa = PBXGroup;
 			children = (
 				DD7574242A9E2DE800619147 /* TrackerSetupViewController.swift */,
@@ -294,37 +306,25 @@
 				DDDF412B2AAB3AB800F4A75F /* TrackerSetupColorCell.swift */,
 				DDDF41292AAB3AB100F4A75F /* TrackerSetupSupView.swift */,
 			);
-			path = TrackerSetup;
+			path = TrackerSetupScreen;
 			sourceTree = "<group>";
 		};
-		DDD982EE2A9FB4B500994B01 /* TrackerType */ = {
+		DDD982EE2A9FB4B500994B01 /* NewTrackerScreen */ = {
 			isa = PBXGroup;
 			children = (
 				DDFD06242A9BCE99005F3117 /* TrackerTypeViewController.swift */,
 			);
-			path = TrackerType;
+			path = NewTrackerScreen;
 			sourceTree = "<group>";
 		};
-		DDD982EF2A9FB4E600994B01 /* TrackerCollection */ = {
+		DDD982EF2A9FB4E600994B01 /* TrackersCollectionScreen */ = {
 			isa = PBXGroup;
 			children = (
 				DDBA49D12A9B242000E1E0C9 /* TrackerCollectionViewController.swift */,
 				DDFD06282A9CFB2E005F3117 /* TrackerCollectionViewCell.swift */,
 				DD8E80282AA262EC00790687 /* TrackerCategoryHeader.swift */,
 			);
-			path = TrackerCollection;
-			sourceTree = "<group>";
-		};
-		DDDF413B2AACA8E200F4A75F /* CoreData */ = {
-			isa = PBXGroup;
-			children = (
-				DDDF412D2AAB783300F4A75F /* Model.xcdatamodeld */,
-				DDDF413C2AACA96100F4A75F /* TrackerStore.swift */,
-				DDDF413E2AACA97000F4A75F /* TrackerCategoryStore.swift */,
-				DDDF41402AACA97E00F4A75F /* TrackerRecordStore.swift */,
-				DD284A3F2AC33D99003C9BDD /* StoreError.swift */,
-			);
-			path = CoreData;
+			path = TrackersCollectionScreen;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
