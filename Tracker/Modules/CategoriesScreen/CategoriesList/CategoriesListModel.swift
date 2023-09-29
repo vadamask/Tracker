@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class CategoryListModel {
+final class CategoriesListModel {
     
     private let categoryStore = TrackerCategoryStore.shared
     

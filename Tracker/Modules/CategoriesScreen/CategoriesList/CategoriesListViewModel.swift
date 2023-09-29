@@ -7,14 +7,14 @@
 
 import Foundation
 
-final class CategoryListViewModel {
+final class CategoriesListViewModel {
     
-    let model: CategoryListModel
+    let model: CategoriesListModel
     
     @Observable var categories: [CategoryCellViewModel]?
     @Observable var selectedTitle: String?
     
-    init(model: CategoryListModel) {
+    init(model: CategoriesListModel) {
         self.model = model
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateView),

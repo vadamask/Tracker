@@ -8,11 +8,11 @@
 import SnapKit
 import UIKit
 
-final class CategoryListView: UIViewController {
+final class CategoriesListView: UIViewController {
     
     var completion: ((String) -> Void)?
     
-    private var viewModel = CategoryListViewModel(model: CategoryListModel())
+    private var viewModel = CategoriesListViewModel(model: CategoriesListModel())
     
     private let placeholder = UIImageView(image: UIImage(named: "empty list"))
     private let addButton = UIButton(title: "Добавить категорию")
@@ -124,7 +124,7 @@ final class CategoryListView: UIViewController {
 
 // MARK: - UITableViewDelegate
 
-extension CategoryListView: UITableViewDelegate {
+extension CategoriesListView: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.didSelectRow(at: indexPath)
@@ -165,7 +165,7 @@ extension CategoryListView: UITableViewDelegate {
 
 // MARK: - UITableViewDataSource
 
-extension CategoryListView: UITableViewDataSource {
+extension CategoriesListView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.numberOfRows
