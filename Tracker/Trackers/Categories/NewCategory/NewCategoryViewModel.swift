@@ -22,8 +22,8 @@ final class NewCategoryViewModel {
         isAllowed = model.validateText(text)
     }
     
-    func doneButtonTapped(with title: String) {
-        switch model.addCategory(with: title) {
+    func updateCategory(_ oldTitle: String?, with newTitle: String) {
+        switch model.updateCategory(oldTitle, with: newTitle) {
         case .success(_):
             isSameCategory = false
         case .failure(let error):
@@ -35,3 +35,4 @@ final class NewCategoryViewModel {
         }
     }
 }
+

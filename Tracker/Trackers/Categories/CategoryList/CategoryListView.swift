@@ -132,14 +132,31 @@ extension CategoryListView: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let config = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-            let action = UIAction(title: "Редактировать") { _ in
-                ""
+            let editAction = UIAction(title: "Редактировать") { [weak self] _ in
+                let title = self?.viewModel.viewModel(at: indexPath)?.title ?? ""
+                let vc = NewCategoryView(oldTitle: title)
+                self?.present(vc, animated: true)
+                
             }
-            let action2 = UIAction(title: "Удалить", attributes: .destructive) { _ in
-                ""
+            let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+                
+                let alertController = UIAlertController(
+                    title: nil,
+                    message: "Эта категория точно не нужна?",
+                    preferredStyle: .actionSheet)
+                
+                let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
+                    self?.viewModel.deleteCategory(at: indexPath)
+                }
+                let cancelAction = UIAlertAction(title: "Отменить", style: .cancel) { [weak self] _ in
+                    self?.dismiss(animated: true)
+                }
+                alertController.addAction(deleteAction)
+                alertController.addAction(cancelAction)
+                self?.present(alertController, animated: true)
             }
   
-            let menu = UIMenu(title: "", children: [action, action2])
+            let menu = UIMenu(title: "", children: [editAction, deleteAction])
             return menu
         }
         return config

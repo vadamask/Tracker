@@ -16,14 +16,16 @@ final class NewCategoryModel {
         return text.isEmpty ? false : true
     }
     
-    func addCategory(with title: String) -> Result<Void, Error> {
-        do {
-            try categoryStore.addTitle(title)
-            return .success(())
-        } catch StoreError.tryAddSameCategory {
+    func updateCategory(_ oldTitle: String?, with newTitle: String) -> Result<Void, Error> {
+        if oldTitle == newTitle {
             return .failure(StoreError.tryAddSameCategory)
+        }
+        do {
+            try categoryStore.updateCategory(oldTitle, with: newTitle)
+            return .success(())
         } catch {
-            return .failure(error)
+            print(error.localizedDescription)
+            return.failure(error)
         }
     }
 }

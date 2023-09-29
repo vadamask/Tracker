@@ -9,14 +9,11 @@ import UIKit
 
 final class NewCategoryView: UIViewController {
     
+    private let oldTitle: String?
     private let viewModel = NewCategoryViewModel(model: NewCategoryModel())
     private let createButton = UIButton(title: "Готово", backgroundColor: .grayYP)
     
-    private let topLabel = UILabel(
-        text: "Новая категория",
-        textColor: .blackYP,
-        font: .systemFont(ofSize: 16, weight: .medium)
-    )
+    private let topLabel = UILabel()
     
     private let textField: UITextField = {
         let textField = UITextField()
@@ -35,6 +32,15 @@ final class NewCategoryView: UIViewController {
         setupViews()
         setupLayout()
         bind()
+    }
+    
+    init(oldTitle: String? = nil) {
+        self.oldTitle = oldTitle
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     private func bind() {
@@ -64,8 +70,8 @@ final class NewCategoryView: UIViewController {
     }
     
     @objc private func doneButtonTapped() {
-        guard let title = textField.text else { return }
-        viewModel.doneButtonTapped(with: title)
+        guard let newTitle = textField.text else { return }
+        viewModel.updateCategory(oldTitle, with: newTitle)
     }
     
     @objc private func textDidChanged() {
@@ -73,11 +79,16 @@ final class NewCategoryView: UIViewController {
     }
     
     private func setupViews() {
+        topLabel.text = oldTitle == nil ? "Новая категория" : "Редактирование категории"
+        topLabel.textColor = .blackYP
+        topLabel.font = .systemFont(ofSize: 16, weight: .medium)
+        
         view.backgroundColor = .whiteYP
         
         createButton.isEnabled = false
         createButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         
+        textField.text = oldTitle
         textField.delegate = self
         textField.addTarget(self, action: #selector(textDidChanged), for: .editingChanged)
     }

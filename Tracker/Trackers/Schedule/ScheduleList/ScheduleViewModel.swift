@@ -9,8 +9,6 @@ import Foundation
 
 final class ScheduleViewModel {
     
-    let model: ScheduleModel
-    
     var schedule: [ScheduleCellViewModel] = [
         ScheduleCellViewModel(day: .monday, isOn: false),
         ScheduleCellViewModel(day: .tuesday, isOn: false),
@@ -20,10 +18,6 @@ final class ScheduleViewModel {
         ScheduleCellViewModel(day: .saturday, isOn: false),
         ScheduleCellViewModel(day: .sunday, isOn: false)
     ]
-    
-    init(model: ScheduleModel) {
-        self.model = model
-    }
     
     var numberOfRows: Int {
         schedule.count

@@ -12,7 +12,7 @@ final class ScheduleView: UIViewController {
     
     var completion: ((Set<WeekDay>) -> Void)?
     
-    private var viewModel = ScheduleViewModel(model: ScheduleModel())
+    private var viewModel = ScheduleViewModel()
     
     private var schedule: Set<WeekDay>
     private let topLabel = UILabel(text: "Расписание", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
@@ -67,7 +67,6 @@ final class ScheduleView: UIViewController {
         tableView.snp.makeConstraints { make in
             make.top.equalTo(topLabel.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview()
-            
         }
         
         doneButton.snp.makeConstraints { make in

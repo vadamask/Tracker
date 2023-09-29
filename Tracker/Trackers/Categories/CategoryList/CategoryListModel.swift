@@ -21,5 +21,11 @@ final class CategoryListModel {
         }
     }
     
-    
+    func deleteCategory(with title: String) {
+        do {
+            try categoryStore.deleteCategory(with: title)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }

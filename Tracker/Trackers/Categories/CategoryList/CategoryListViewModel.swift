@@ -42,7 +42,7 @@ final class CategoryListViewModel {
         if let index = categories?.firstIndex(where: { $0.isSelected }) {
             if index == indexPath.row {
                 categories?[indexPath.row].isSelected.toggle()
-                selectedTitle = ""
+                selectedTitle = nil
             } else {
                 categories?.forEach { $0.isSelected = false }
                 categories?[indexPath.row].isSelected.toggle()
@@ -52,5 +52,14 @@ final class CategoryListViewModel {
             categories?[indexPath.row].isSelected.toggle()
             selectedTitle = categories?[indexPath.row].title
         }
+    }
+    
+    func deleteCategory(at indexPath: IndexPath) {
+        guard let title = categories?[indexPath.row].title else { return }
+        model.deleteCategory(with: title)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
