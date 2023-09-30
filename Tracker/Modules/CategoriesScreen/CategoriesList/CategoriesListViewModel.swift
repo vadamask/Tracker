@@ -11,23 +11,34 @@ final class CategoriesListViewModel {
     
     let model: CategoriesListModel
     
-    @Observable var categories: [CategoryCellViewModel]?
-    @Observable var selectedTitle: String?
+    @Observable var categories: [CategoryCellViewModel]
+    @Observable var selectedCategory: String?
     
-    init(model: CategoriesListModel) {
+    init(model: CategoriesListModel, selectedCategory: String?) {
         self.model = model
+        categories = model.fetchObjects()
+        
+        self.selectedCategory = selectedCategory
+        if let category = categories.first(where: {$0.title == selectedCategory}) {
+            category.isSelected = true
+        }
+        
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateView),
                                                name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
                                                object: TrackerCategoryStore.shared.context)
     }
     
+    var categoriesIsEmpty: Bool {
+        categories.isEmpty
+    }
+    
     var numberOfRows: Int {
-        categories?.count ?? 0
+        categories.count
     }
     
     func viewModel(at indexPath: IndexPath) -> CategoryCellViewModel? {
-        categories?[indexPath.row] 
+        categories[indexPath.row]
     }
     
     func fetchObjects() {
@@ -39,23 +50,23 @@ final class CategoriesListViewModel {
     }
     
     func didSelectRow(at indexPath: IndexPath) {
-        if let index = categories?.firstIndex(where: { $0.isSelected }) {
+        if let index = categories.firstIndex(where: { $0.isSelected }) {
             if index == indexPath.row {
-                categories?[indexPath.row].isSelected.toggle()
-                selectedTitle = nil
+                categories[indexPath.row].isSelected.toggle()
+                selectedCategory = nil
             } else {
-                categories?.forEach { $0.isSelected = false }
-                categories?[indexPath.row].isSelected.toggle()
-                selectedTitle = categories?[indexPath.row].title
+                categories.forEach { $0.isSelected = false }
+                categories[indexPath.row].isSelected.toggle()
+                selectedCategory = categories[indexPath.row].title
             }
         } else {
-            categories?[indexPath.row].isSelected.toggle()
-            selectedTitle = categories?[indexPath.row].title
+            categories[indexPath.row].isSelected.toggle()
+            selectedCategory = categories[indexPath.row].title
         }
     }
     
     func deleteCategory(at indexPath: IndexPath) {
-        guard let title = categories?[indexPath.row].title else { return }
+        let title = categories[indexPath.row].title
         model.deleteCategory(with: title)
     }
     

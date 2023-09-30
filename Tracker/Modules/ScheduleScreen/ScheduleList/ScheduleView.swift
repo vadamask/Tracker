@@ -12,15 +12,15 @@ final class ScheduleView: UIViewController {
     
     var completion: ((Set<WeekDay>) -> Void)?
     
-    private var viewModel = ScheduleViewModel()
+    private var viewModel: ScheduleViewModel
     
-    private var schedule: Set<WeekDay>
+    private var schedule: Set<WeekDay> = []
     private let topLabel = UILabel(text: "Расписание", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
     private let doneButton = UIButton(title: "Готово")
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     
-    init(schedule: Set<WeekDay>) {
-        self.schedule = schedule
+    init(viewModel: ScheduleViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -30,7 +30,6 @@ final class ScheduleView: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.setSchedule(schedule)
         setupViews()
         setupLayout()
     }

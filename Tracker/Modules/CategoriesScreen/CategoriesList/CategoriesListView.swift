@@ -10,9 +10,9 @@ import UIKit
 
 final class CategoriesListView: UIViewController {
     
-    var completion: ((String) -> Void)?
+    var completion: ((String?) -> Void)?
     
-    private var viewModel = CategoriesListViewModel(model: CategoriesListModel())
+    private var viewModel: CategoriesListViewModel
     
     private let placeholder = UIImageView(image: UIImage(named: "empty list"))
     private let addButton = UIButton(title: "Добавить категорию")
@@ -35,29 +35,38 @@ final class CategoriesListView: UIViewController {
         setupViews()
         setupLayout()
         bind()
+        checkPlaceholder()
+    }
+    
+    init(viewModel: CategoriesListViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     private func bind() {
 
         viewModel.$categories.bind { [weak self] categories in
             self?.tableView.reloadData()
-            
-            guard let categories = categories else { return }
-            
-            if categories.isEmpty {
-                self?.placeholder.isHidden = false
-                self?.placeholderLabel.isHidden = false
-            } else {
-                self?.placeholder.isHidden = true
-                self?.placeholderLabel.isHidden = true
-            }
+            self?.checkPlaceholder()
         }
         
-        viewModel.$selectedTitle.bind { [weak self] selectedTitle in
-            self?.completion?(selectedTitle ?? "")
+        viewModel.$selectedCategory.bind { [weak self] category in
+            self?.completion?(category)
         }
-        
-        viewModel.fetchObjects()
+    }
+    
+    private func checkPlaceholder() {
+        if viewModel.categoriesIsEmpty {
+            placeholder.isHidden = false
+            placeholderLabel.isHidden = false
+        } else {
+            placeholder.isHidden = true
+            placeholderLabel.isHidden = true
+        }
     }
     
     @objc private func addButtonTapped() {

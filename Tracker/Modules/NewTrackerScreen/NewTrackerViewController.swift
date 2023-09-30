@@ -10,7 +10,6 @@ import UIKit
 
 protocol TrackerTypeViewControllerDelegate: AnyObject {
     func didTapCancelButton()
-    func didCreate(_ tracker: Tracker, with title: String)
 }
 
 final class TrackerTypeViewController: UIViewController {
@@ -57,7 +56,7 @@ final class TrackerTypeViewController: UIViewController {
     }
     
     @objc private func trackerButtonTapped(sender: Any) {
-        let vc = TrackerSetupViewController(isTracker: true)
+        let vc = TrackerSetupViewController()
         vc.delegate = self
         present(vc, animated: true)
     }
@@ -74,9 +73,5 @@ final class TrackerTypeViewController: UIViewController {
 extension TrackerTypeViewController: TrackerSetupViewControllerDelegate {
     func didTapCancelButton() {
         delegate?.didTapCancelButton()
-    }
-    
-    func didCreate(_ tracker: Tracker, with title: String) {
-        delegate?.didCreate(tracker, with: title)
     }
 }

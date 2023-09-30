@@ -13,23 +13,15 @@ final class TrackerSetupEmojiCell: UICollectionViewCell {
     static let identifier = "EmojiCell"
     private let label = UILabel()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    func configure(with emoji: String) {
+        label.text = emoji
+        label.font = UIFont.systemFont(ofSize: 32, weight: .bold)
+        layer.cornerRadius = 16
         
         contentView.addSubview(label)
         
         label.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func configure(with emoji: String) {
-        label.text = emoji
-        label.font = UIFont.systemFont(ofSize: 32, weight: .bold)
-        layer.cornerRadius = 16
     }
 }

@@ -32,29 +32,25 @@ enum WeekDay: Int {
             return "Суббота"
         case .sunday:
             return "Воскресенье"
-        default:
-            return ""
         }
     }
     
-    static func shortName(for day: Int) -> String {
-        switch day {
-        case 0:
+    var shortName: String {
+        switch self {
+        case .monday:
             return "Пн"
-        case 1:
+        case .tuesday:
             return "Вт"
-        case 2:
+        case .wednesday:
             return "Ср"
-        case 3:
+        case .thursday:
             return "Чт"
-        case 4:
+        case .friday:
             return "Пт"
-        case 5:
+        case .saturday:
             return "Сб"
-        case 6:
+        case .sunday:
             return "Вс"
-        default:
-            return ""
         }
     }
 }

@@ -22,9 +22,14 @@ final class CategoryCellView: UITableViewCell {
         textLabel?.text = viewModel?.title
         textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         textLabel?.textColor = .blackYP
+        
         backgroundColor = .backgroundYP
         selectionStyle = .none
         accessoryType = .none
+        
+        if let isSelected = viewModel?.isSelected {
+            accessoryType = isSelected ? .checkmark : .none
+        }
     }
     
     private func bind() {

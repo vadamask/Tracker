@@ -294,17 +294,6 @@ extension TrackerCollectionViewController: TrackerTypeViewControllerDelegate {
     func didTapCancelButton() {
         dismiss(animated: true)
     }
-    
-    func didCreate(_ tracker: Tracker, with title: String) {
-        dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            do {
-                try trackerStore.addTracker(tracker, with: title)
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
 }
 
 // MARK: - TrackerStoreDelegate

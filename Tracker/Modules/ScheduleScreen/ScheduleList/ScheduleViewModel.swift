@@ -19,6 +19,13 @@ final class ScheduleViewModel {
         ScheduleCellViewModel(day: .sunday, isOn: false)
     ]
     
+    init(schedule: Set<WeekDay>) {
+        schedule.forEach { weekday in
+            let viewModel = self.schedule.first(where: {$0.day == weekday})
+            viewModel?.isOn = true
+        }
+    }
+    
     var numberOfRows: Int {
         schedule.count
     }
@@ -29,12 +36,5 @@ final class ScheduleViewModel {
     
     func viewModel(at indexPath: IndexPath) -> ScheduleCellViewModel {
         schedule[indexPath.row]
-    }
-    
-    func setSchedule(_ schedule: Set<WeekDay>) {
-        schedule.forEach { weekday in
-            let viewModel = self.schedule.first(where: {$0.day == weekday})
-            viewModel?.isOn = true
-        }
     }
 }

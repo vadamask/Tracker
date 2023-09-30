@@ -13,9 +13,16 @@ final class TrackerSetupColorCell: UICollectionViewCell {
     static let identifier = "ColorCell"
     private let colorView = UIView()
     private let background = UIView()
-     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    
+    func configure(with index: Int) {
+        colorView.backgroundColor = UIColor(named: "Color selection \(index)")
+        colorView.layer.cornerRadius = 8
+        
+        background.layer.borderColor = UIColor(named: "Color selection \(index)")?.cgColor
+        background.layer.opacity = 0.3
+        background.layer.borderWidth = 3
+        background.layer.cornerRadius = 8
+        background.isHidden = true
         
         contentView.addSubview(background)
         contentView.addSubview(colorView)
@@ -28,21 +35,6 @@ final class TrackerSetupColorCell: UICollectionViewCell {
             make.center.equalToSuperview()
             make.size.equalTo(CGSize(width: 40, height: 40))
         }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func configure(with index: Int) {
-        colorView.backgroundColor = UIColor(named: "Color selection \(index)")
-        colorView.layer.cornerRadius = 8
-        
-        background.layer.borderColor = UIColor(named: "Color selection \(index)")?.cgColor
-        background.layer.opacity = 0.3
-        background.layer.borderWidth = 3
-        background.layer.cornerRadius = 8
-        background.isHidden = true
     }
     
     func itemDidSelect(_ isSelect: Bool) {
