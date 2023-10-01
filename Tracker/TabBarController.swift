@@ -15,7 +15,7 @@ final class TabBarController: UITabBarController {
     }
     
     private func setupTabBar() {
-        let trackersVC = TrackersCollectionView(params: GeometricParameters(
+        let trackersVC = TrackersCollectionViewController(params: GeometricParameters(
             cellCount: 2,
             leftInset: 16,
             rightInset: 16,

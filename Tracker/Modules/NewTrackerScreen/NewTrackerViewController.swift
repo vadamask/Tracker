@@ -8,7 +8,7 @@
 import SnapKit
 import UIKit
 
-final class TrackerTypeViewController: UIViewController {
+final class NewTrackerViewController: UIViewController {
     
     private let topLabel = UILabel(text: "Создание трекера", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
     private let trackerButton = UIButton(title: "Привычка")

@@ -89,18 +89,6 @@ extension TrackerSetupViewModel {
         18
     }
     
-    var sizeForItemInCollectionView: CGSize {
-        CGSize(width: 52, height: 52)
-    }
-    
-    var minimumInteritemSpacingForSectionAt: CGFloat {
-        5
-    }
-    
-    var minimumLineSpacingForSectionAt: CGFloat {
-        0
-    }
-    
     func emojiForCollectionView(at indexPath: IndexPath) -> String {
         emojis[indexPath.row]
     }

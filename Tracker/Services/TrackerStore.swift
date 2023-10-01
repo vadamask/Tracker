@@ -63,23 +63,18 @@ final class TrackerStore: NSObject {
         fetchedResultsController = controller
     }
     
-    func addTracker(_ tracker: Tracker, with categoryTitle: String) throws {
-        let request = TrackerCategoryCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryCoreData.title), categoryTitle)
-        let categories = try context.fetch(request)
-        guard !categories.isEmpty else { throw StoreError.categoriesIsEmpty }
-        
-        let object = TrackerCoreData(context: context)
-        object.uuid = tracker.uuid.uuidString
-        object.color = tracker.color
-        object.emoji = tracker.emoji
-        object.name = tracker.name
-        object.schedule = tracker.schedule.map {String($0.rawValue)}.joined(separator: ",")
-        object.category = categories[0]
-        try context.save()
+    private func weekday(for selectedDate: Date) -> String {
+        var weekday = Calendar(identifier: .gregorian).component(.weekday, from: selectedDate)
+        weekday = weekday == 1 ? 6 : (weekday - 2)
+        return String(weekday)
     }
+}
+
+// MARK: - NSFetchedResultsController
+
+extension TrackerStore {
     
-    func filterTrackers(at date: Date) throws {
+    func fetchObjects(at date: Date) throws {
         let weekday = weekday(for: date)
         let datePredicate = NSPredicate(format: "%K CONTAINS %@", #keyPath(TrackerCoreData.schedule), weekday)
         
@@ -104,26 +99,6 @@ final class TrackerStore: NSObject {
         delegate?.didFetchedObjects()
     }
     
-    func numberOfSections() -> Int? {
-        fetchedResultsController?.sections?.count
-    }
-    
-    func titleForSection(at indexPath: IndexPath) -> String? {
-        return fetchedResultsController?.sections?[indexPath.section].name
-    }
-    
-    func numberOfItemsIn(_ section: Int) -> Int? {
-        fetchedResultsController?.sections?[section].numberOfObjects
-    }
-    
-    func cellForItem(at indexPath: IndexPath) -> Tracker? {
-        if let object = fetchedResultsController?.object(at: indexPath) {
-            return convertToTracker(object)
-        } else {
-            return nil
-        }
-    }
-    
     func detailsForCell(_ indexPath: IndexPath, at date: String) -> (isDone: Bool, completedDays: Int) {
         if let object = fetchedResultsController?.object(at: indexPath),
            let records = object.records as? Set<TrackerRecordCoreData> {
@@ -134,34 +109,12 @@ final class TrackerStore: NSObject {
         }
         return (false, 0)
     }
-    
-    private func convertToTracker(_ object: TrackerCoreData) -> Tracker {
-        guard
-            let id = object.uuid,
-            let name = object.name,
-            let color = object.color,
-            let emoji = object.emoji,
-            let rawValues = object.schedule
-        else { fatalError() }
-        
-        let schedule = rawValues.components(separatedBy: ",").compactMap { Int($0) }.compactMap { WeekDay(rawValue: $0)}
-        return Tracker(
-            uuid: UUID(uuidString: id) ?? UUID(),
-            name: name,
-            color: color,
-            emoji: emoji,
-            schedule: Set(schedule)
-        )
-    }
-    
-    private func weekday(for selectedDate: Date) -> String {
-        var weekday = Calendar(identifier: .gregorian).component(.weekday, from: selectedDate)
-        weekday = weekday == 1 ? 6 : (weekday - 2)
-        return String(weekday)
-    }
 }
 
+// MARK: - NSFetchedResultsControllerDelegate
+
 extension TrackerStore: NSFetchedResultsControllerDelegate {
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .insert:
@@ -199,5 +152,65 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
         deletedItems.removeAll()
         insertedSections.removeAll()
         deletedSections.removeAll()
+    }
+}
+
+// MARK: - CoreData
+
+extension TrackerStore {
+    
+    func addTracker(_ tracker: Tracker, with categoryTitle: String) throws {
+        let request = TrackerCategoryCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryCoreData.title), categoryTitle)
+        let categories = try context.fetch(request)
+        guard !categories.isEmpty else { throw StoreError.categoriesIsEmpty }
+        
+        let object = TrackerCoreData(context: context)
+        object.uuid = tracker.uuid.uuidString
+        object.color = tracker.color
+        object.emoji = tracker.emoji
+        object.name = tracker.name
+        object.schedule = tracker.schedule.map {String($0.rawValue)}.joined(separator: ",")
+        object.category = categories[0]
+        try context.save()
+    }
+}
+
+// MARK: - CollectionViewDataSource
+
+extension TrackerStore {
+    
+    var numberOfSections: Int {
+        fetchedResultsController?.sections?.count ?? .zero
+    }
+    
+    func numberOfItems(in section: Int) -> Int {
+        fetchedResultsController?.sections?[section].numberOfObjects ?? .zero
+    }
+    
+    func cellForItem(at indexPath: IndexPath) -> Tracker {
+        
+        if let object = fetchedResultsController?.object(at: indexPath),
+           let id = object.uuid,
+           let name = object.name,
+           let color = object.color,
+           let emoji = object.emoji,
+           let rawValues = object.schedule {
+            
+            let schedule = rawValues.components(separatedBy: ",").compactMap { Int($0) }.compactMap { WeekDay(rawValue: $0)}
+            return Tracker(
+                uuid: UUID(uuidString: id) ?? UUID(),
+                name: name,
+                color: color,
+                emoji: emoji,
+                schedule: Set(schedule)
+            )
+        } else {
+            fatalError("object doesn't exist")
+        }
+    }
+    
+    func titleForSection(at indexPath: IndexPath) -> String {
+        return fetchedResultsController?.sections?[indexPath.section].name ?? ""
     }
 }
