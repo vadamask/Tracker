@@ -8,13 +8,7 @@
 import SnapKit
 import UIKit
 
-protocol TrackerSetupViewControllerDelegate: AnyObject {
-    func didTapCancelButton()
-}
-
 final class TrackerSetupViewController: UIViewController {
-    
-    weak var delegate: TrackerSetupViewControllerDelegate?
     
     private let viewModel = TrackerSetupViewModel(model: TrackerSetupModel())
     private var isTracker: Bool
@@ -54,7 +48,7 @@ final class TrackerSetupViewController: UIViewController {
     }
     
     @objc private func cancelButtonTapped() {
-        delegate?.didTapCancelButton()
+        dismiss(animated: true)
     }
     
     @objc private func createButtonTapped() {

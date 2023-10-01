@@ -8,13 +8,7 @@
 import SnapKit
 import UIKit
 
-protocol TrackerTypeViewControllerDelegate: AnyObject {
-    func didTapCancelButton()
-}
-
 final class TrackerTypeViewController: UIViewController {
-    
-    weak var delegate: TrackerTypeViewControllerDelegate?
     
     private let topLabel = UILabel(text: "Создание трекера", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
     private let trackerButton = UIButton(title: "Привычка")
@@ -57,21 +51,11 @@ final class TrackerTypeViewController: UIViewController {
     
     @objc private func trackerButtonTapped(sender: Any) {
         let vc = TrackerSetupViewController()
-        vc.delegate = self
         present(vc, animated: true)
     }
     
     @objc private func eventButtonTapped() {
         let vc = TrackerSetupViewController(isTracker: false)
-        vc.delegate = self
         present(vc, animated: true)
-    }
-}
-
-// MARK: - TrackerSetupViewControllerDelegate
-
-extension TrackerTypeViewController: TrackerSetupViewControllerDelegate {
-    func didTapCancelButton() {
-        delegate?.didTapCancelButton()
     }
 }

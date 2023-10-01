@@ -13,8 +13,6 @@ final class TrackerCategoryStore: NSObject {
     static let shared = TrackerCategoryStore()
     let context: NSManagedObjectContext
     
-    private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>?
-    
     private init(context: NSManagedObjectContext) {
         self.context = context
     }
@@ -56,8 +54,9 @@ final class TrackerCategoryStore: NSObject {
     
     func fetchObjects() throws -> [CategoryCellViewModel] {
         let request = TrackerCategoryCoreData.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         let objects = try context.fetch(request)
-        return objects.compactMap { CategoryCellViewModel(title: $0.title ?? "") }.sorted { $0.title < $1.title }
+        return objects.compactMap { CategoryCellViewModel(title: $0.title ?? "") }
     }
     
     func deleteCategory(with title: String) throws {

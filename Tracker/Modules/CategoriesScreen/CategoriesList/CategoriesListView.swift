@@ -35,7 +35,7 @@ final class CategoriesListView: UIViewController {
         setupViews()
         setupLayout()
         bind()
-        checkPlaceholder()
+        checkEmptyState()
     }
     
     init(viewModel: CategoriesListViewModel) {
@@ -51,7 +51,7 @@ final class CategoriesListView: UIViewController {
 
         viewModel.$categories.bind { [weak self] categories in
             self?.tableView.reloadData()
-            self?.checkPlaceholder()
+            self?.checkEmptyState()
         }
         
         viewModel.$selectedCategory.bind { [weak self] category in
@@ -59,7 +59,7 @@ final class CategoriesListView: UIViewController {
         }
     }
     
-    private func checkPlaceholder() {
+    private func checkEmptyState() {
         if viewModel.categoriesIsEmpty {
             placeholder.isHidden = false
             placeholderLabel.isHidden = false

@@ -8,7 +8,7 @@
 import SnapKit
 import UIKit
 
-final class TrackerCategoryHeader: UICollectionReusableView {
+final class TrackerCollectionHeader: UICollectionReusableView {
     
     static let identifier = "header"
     private let label = UILabel(text: "", textColor: .blackYP, font: .systemFont(ofSize: 19, weight: .bold))

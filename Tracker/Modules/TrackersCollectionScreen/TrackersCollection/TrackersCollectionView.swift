@@ -8,7 +8,7 @@
 import SnapKit
 import UIKit
 
-final class TrackerCollectionViewController: UIViewController {
+final class TrackersCollectionView: UIViewController {
     
     private var trackerStore = TrackerStore()
     private let recordStore = TrackerRecordStore()
@@ -104,9 +104,9 @@ final class TrackerCollectionViewController: UIViewController {
             forCellWithReuseIdentifier: TrackersCollectionViewCell.identifier
         )
         collectionView.register(
-            TrackerCategoryHeader.self,
+            TrackerCollectionHeader.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: TrackerCategoryHeader.identifier
+            withReuseIdentifier: TrackerCollectionHeader.identifier
         )
         
         placeholderLabel.textAlignment = .center
@@ -114,7 +114,6 @@ final class TrackerCollectionViewController: UIViewController {
     
     @objc private func addNewTracker() {
         let typeVC = TrackerTypeViewController()
-        typeVC.delegate = self
         present(typeVC, animated: true)
     }
     
@@ -157,7 +156,7 @@ final class TrackerCollectionViewController: UIViewController {
 
 // MARK: - UICollectionViewDataSource
 
-extension TrackerCollectionViewController: UICollectionViewDataSource {
+extension TrackersCollectionView: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         trackerStore.numberOfSections() ?? .zero
     }
@@ -188,9 +187,9 @@ extension TrackerCollectionViewController: UICollectionViewDataSource {
         guard let title = trackerStore.titleForSection(at: indexPath) else { return UICollectionReusableView() }
         if let supView = collectionView.dequeueReusableSupplementaryView(
             ofKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: TrackerCategoryHeader.identifier,
+            withReuseIdentifier: TrackerCollectionHeader.identifier,
             for: indexPath
-        ) as? TrackerCategoryHeader {
+        ) as? TrackerCollectionHeader {
             supView.configure(with: title)
             return supView
         } else {
@@ -201,7 +200,7 @@ extension TrackerCollectionViewController: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewFlowLayout
 
-extension TrackerCollectionViewController: UICollectionViewDelegateFlowLayout {
+extension TrackersCollectionView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         params.cellSpacing
     }
@@ -227,7 +226,7 @@ extension TrackerCollectionViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - UISearchBarDelegate
 
-extension TrackerCollectionViewController: UISearchBarDelegate {
+extension TrackersCollectionView: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
             do {
@@ -263,7 +262,7 @@ extension TrackerCollectionViewController: UISearchBarDelegate {
 
 // MARK: - TrackersCollectionViewCellDelegate
 
-extension TrackerCollectionViewController: TrackersCollectionViewCellDelegate {
+extension TrackersCollectionView: TrackersCollectionViewCellDelegate {
     func recordWillAdd(with uuid: UUID) -> Bool {
         if currentDate < Date() {
             do {
@@ -288,17 +287,9 @@ extension TrackerCollectionViewController: TrackersCollectionViewCellDelegate {
     }
 }
 
-// MARK: - TrackerTypeViewControllerDelegate
-
-extension TrackerCollectionViewController: TrackerTypeViewControllerDelegate {
-    func didTapCancelButton() {
-        dismiss(animated: true)
-    }
-}
-
 // MARK: - TrackerStoreDelegate
 
-extension TrackerCollectionViewController: TrackerStoreDelegate {
+extension TrackersCollectionView: TrackerStoreDelegate {
     func didUpdate(_ trackerStoreUpdate: TrackerStoreUpdate) {
         collectionView.performBatchUpdates {
             collectionView.insertItems(at: trackerStoreUpdate.insertedItems)

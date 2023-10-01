@@ -13,7 +13,7 @@ protocol TrackersCollectionViewCellDelegate: AnyObject {
     func recordWillRemove(with uuid: UUID) -> Bool
 }
 
-final class TrackersCollectionViewCell: UICollectionViewCell {
+final class TrackersCollectionCellView: UICollectionViewCell {
     
     static let identifier = "TrackersCollectionViewCell"
     weak var delegate: TrackersCollectionViewCellDelegate?
