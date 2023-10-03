@@ -8,7 +8,7 @@
 import SnapKit
 import UIKit
 
-final class CategoriesListView: UIViewController {
+final class CategoriesListViewController: UIViewController {
     
     var completion: ((String?) -> Void)?
     
@@ -70,7 +70,7 @@ final class CategoriesListView: UIViewController {
     }
     
     @objc private func addButtonTapped() {
-        let vc = NewCategoryView()
+        let vc = NewCategoryViewController()
         present(vc, animated: true)
     }
     
@@ -79,7 +79,7 @@ final class CategoriesListView: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(CategoryCellView.self, forCellReuseIdentifier: CategoryCellView.identifier)
+        tableView.register(CategoryCell.self, forCellReuseIdentifier: CategoryCell.identifier)
         tableView.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
         tableView.rowHeight = 75
         tableView.backgroundColor = .whiteYP
@@ -133,7 +133,7 @@ final class CategoriesListView: UIViewController {
 
 // MARK: - UITableViewDelegate
 
-extension CategoriesListView: UITableViewDelegate {
+extension CategoriesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.didSelectRow(at: indexPath)
@@ -143,7 +143,7 @@ extension CategoriesListView: UITableViewDelegate {
         let config = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
             let editAction = UIAction(title: "Редактировать") { [weak self] _ in
                 let title = self?.viewModel.viewModel(at: indexPath)?.title ?? ""
-                let vc = NewCategoryView(oldTitle: title)
+                let vc = NewCategoryViewController(oldTitle: title)
                 self?.present(vc, animated: true)
                 
             }
@@ -174,14 +174,14 @@ extension CategoriesListView: UITableViewDelegate {
 
 // MARK: - UITableViewDataSource
 
-extension CategoriesListView: UITableViewDataSource {
+extension CategoriesListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.numberOfRows
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? CategoryCellView else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? CategoryCell else {
             return UITableViewCell()
         }
         cell.viewModel = viewModel.viewModel(at: indexPath)

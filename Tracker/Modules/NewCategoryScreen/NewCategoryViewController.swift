@@ -7,25 +7,13 @@
 
 import UIKit
 
-final class NewCategoryView: UIViewController {
+final class NewCategoryViewController: UIViewController {
     
     private let oldTitle: String?
     private let viewModel = NewCategoryViewModel(model: NewCategoryModel())
     private let createButton = UIButton(title: "Готово", backgroundColor: .grayYP)
-    
     private let topLabel = UILabel()
-    
-    private let textField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Введите название категории"
-        textField.clearButtonMode = .always
-        textField.backgroundColor = .backgroundYP
-        textField.layer.cornerRadius = 16
-        textField.leftViewMode = .always
-        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
-        textField.returnKeyType = .done
-        return textField
-    }()
+    private let textField = UITextField()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,6 +78,13 @@ final class NewCategoryView: UIViewController {
         
         textField.text = oldTitle
         textField.delegate = self
+        textField.placeholder = "Введите название категории"
+        textField.clearButtonMode = .always
+        textField.backgroundColor = .backgroundYP
+        textField.layer.cornerRadius = 16
+        textField.leftViewMode = .always
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
+        textField.returnKeyType = .done
         textField.addTarget(self, action: #selector(textDidChanged), for: .editingChanged)
     }
     
@@ -121,7 +116,7 @@ final class NewCategoryView: UIViewController {
 
 // MARK: - UITextFieldDelegate
 
-extension NewCategoryView: UITextFieldDelegate {
+extension NewCategoryViewController: UITextFieldDelegate {
 
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         viewModel.textDidChanged("")

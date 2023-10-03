@@ -13,6 +13,10 @@ final class TrackerCategoryStore: NSObject {
     static let shared = TrackerCategoryStore()
     let context: NSManagedObjectContext
     
+    private var addNotification = Notification(name: Notification.Name("Category added"))
+    private var changeNotification = Notification(name: Notification.Name("Category changed"))
+    private var deleteNotification = Notification(name: Notification.Name("Category deleted"))
+    
     private init(context: NSManagedObjectContext) {
         self.context = context
     }
@@ -36,7 +40,7 @@ final class TrackerCategoryStore: NSObject {
             let categories = try context.fetch(request)
             categories[0].title = newTitle
             try context.save()
-            
+            NotificationCenter.default.post(changeNotification)
         } else {
             
             request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryCoreData.title), newTitle)
@@ -46,13 +50,14 @@ final class TrackerCategoryStore: NSObject {
                 let categoryEntity = TrackerCategoryCoreData(context: context)
                 categoryEntity.title = newTitle
                 try context.save()
+                NotificationCenter.default.post(addNotification)
             } else {
                 throw StoreError.tryAddSameCategory
             }
         }
     }
     
-    func fetchObjects() throws -> [CategoryCellViewModel] {
+    func fetchCategories() throws -> [CategoryCellViewModel] {
         let request = TrackerCategoryCoreData.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         let objects = try context.fetch(request)
@@ -65,5 +70,6 @@ final class TrackerCategoryStore: NSObject {
         let objects = try context.fetch(request)
         context.delete(objects[0])
         try context.save()
+        NotificationCenter.default.post(deleteNotification)
     }
 }

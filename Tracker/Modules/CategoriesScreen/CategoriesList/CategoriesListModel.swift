@@ -13,7 +13,7 @@ final class CategoriesListModel {
     
     func fetchObjects() -> [CategoryCellViewModel] {
         do {
-            let titles = try categoryStore.fetchObjects()
+            let titles = try categoryStore.fetchCategories()
             return titles
         } catch {
             print(error.localizedDescription)

@@ -8,7 +8,7 @@
 import SnapKit
 import UIKit
 
-final class TrackerSetupEmojiCell: UICollectionViewCell {
+final class EmojiCell: UICollectionViewCell {
     
     static let identifier = "EmojiCell"
     private let label = UILabel()

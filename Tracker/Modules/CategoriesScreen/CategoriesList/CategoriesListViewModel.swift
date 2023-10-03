@@ -11,7 +11,7 @@ final class CategoriesListViewModel {
     
     let model: CategoriesListModel
     
-    @Observable var categories: [CategoryCellViewModel]
+    @Observable var categories: [CategoryCellViewModel] = []
     @Observable var selectedCategory: String?
     
     init(model: CategoriesListModel, selectedCategory: String?) {
@@ -25,8 +25,16 @@ final class CategoriesListViewModel {
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateView),
-                                               name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
-                                               object: TrackerCategoryStore.shared.context)
+                                               name: Notification.Name("Category changed"),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateView),
+                                               name: Notification.Name("Category deleted"),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateView),
+                                               name: Notification.Name("Category added"),
+                                               object: nil)
     }
     
     var categoriesIsEmpty: Bool {
@@ -50,6 +58,7 @@ final class CategoriesListViewModel {
     }
     
     func didSelectRow(at indexPath: IndexPath) {
+        
         if let index = categories.firstIndex(where: { $0.isSelected }) {
             if index == indexPath.row {
                 categories[indexPath.row].isSelected.toggle()

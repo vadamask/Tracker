@@ -52,6 +52,7 @@ extension TrackerSetupViewModel {
 // MARK: - TableView
 
 extension TrackerSetupViewModel {
+    
     var numberOfRowsInTableView: Int {
         isTracker ? 2 : 1
     }

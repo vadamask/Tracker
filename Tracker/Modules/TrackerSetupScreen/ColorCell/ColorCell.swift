@@ -8,7 +8,7 @@
 import SnapKit
 import UIKit
 
-final class TrackerSetupColorCell: UICollectionViewCell {
+final class ColorCell: UICollectionViewCell {
     
     static let identifier = "ColorCell"
     private let colorView = UIView()

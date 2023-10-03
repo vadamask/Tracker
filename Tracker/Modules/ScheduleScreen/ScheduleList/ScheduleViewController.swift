@@ -8,7 +8,7 @@
 import SnapKit
 import UIKit
 
-final class ScheduleView: UIViewController {
+final class ScheduleViewController: UIViewController {
     
     var completion: ((Set<WeekDay>) -> Void)?
     
@@ -42,7 +42,7 @@ final class ScheduleView: UIViewController {
         view.backgroundColor = .whiteYP
         
         tableView.dataSource = self
-        tableView.register(ScheduleCellView.self, forCellReuseIdentifier: "cell")
+        tableView.register(ScheduleCell.self, forCellReuseIdentifier: "cell")
         
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         
@@ -80,13 +80,13 @@ final class ScheduleView: UIViewController {
 
 // MARK: - UITableViewDataSource
 
-extension ScheduleView: UITableViewDataSource {
+extension ScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.numberOfRows
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? ScheduleCellView else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? ScheduleCell else { return UITableViewCell() }
         cell.viewModel = viewModel.viewModel(at: indexPath)
         cell.completion = { [weak self] in
             self?.completion?(self?.viewModel.selectedDays ?? [])

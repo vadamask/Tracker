@@ -46,4 +46,14 @@ final class TrackerRecordStore {
         context.delete(records[0])
         try context.save()
     }
+    
+    func detailsFor(_ uuid: UUID, at date: String) throws -> (isDone: Bool, completedDays: Int) {
+        let request = TrackerRecordCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.uuid), uuid.uuidString)
+        let records = try context.fetch(request)
+        return (
+            records.contains(where: { $0.date == date }),
+            records.count
+        )
+    }
 }

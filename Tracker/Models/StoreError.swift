@@ -10,4 +10,5 @@ import Foundation
 enum StoreError: Error {
     case categoriesIsEmpty
     case tryAddSameCategory
+    case categoryNotExist
 }

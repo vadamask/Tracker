@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ScheduleCellView: UITableViewCell {
+final class ScheduleCell: UITableViewCell {
     var completion: (() -> Void)?
     var viewModel: ScheduleCellViewModel? {
         didSet {

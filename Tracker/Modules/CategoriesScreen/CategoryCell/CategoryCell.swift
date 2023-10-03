@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CategoryCellView: UITableViewCell {
+final class CategoryCell: UITableViewCell {
     
     static let identifier = "cell"
     

@@ -8,7 +8,13 @@
 import SnapKit
 import UIKit
 
+protocol TrackerSetupViewControllerDelegate: AnyObject {
+    func dismiss()
+}
+
 final class TrackerSetupViewController: UIViewController {
+    
+    weak var delegate: TrackerSetupViewControllerDelegate?
     
     private let viewModel = TrackerSetupViewModel(model: TrackerSetupModel())
     private var isTracker: Bool
@@ -48,11 +54,12 @@ final class TrackerSetupViewController: UIViewController {
     }
     
     @objc private func cancelButtonTapped() {
-        dismiss(animated: true)
+        delegate?.dismiss()
     }
     
     @objc private func createButtonTapped() {
         viewModel.createButtonTapped()
+        delegate?.dismiss()
     }
     
     private func bind() {
@@ -97,7 +104,7 @@ final class TrackerSetupViewController: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(TrackerSetupTableViewCell.self, forCellReuseIdentifier: TrackerSetupTableViewCell.identifier)
+        tableView.register(ScheduleCategoryCell.self, forCellReuseIdentifier: ScheduleCategoryCell.identifier)
         tableView.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
         tableView.rowHeight = 75
         tableView.backgroundColor = .whiteYP
@@ -105,11 +112,11 @@ final class TrackerSetupViewController: UIViewController {
         
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(TrackerSetupEmojiCell.self, forCellWithReuseIdentifier: TrackerSetupEmojiCell.identifier)
-        collectionView.register(TrackerSetupColorCell.self, forCellWithReuseIdentifier: TrackerSetupColorCell.identifier)
-        collectionView.register(TrackerSetupSupView.self,
+        collectionView.register(EmojiCell.self, forCellWithReuseIdentifier: EmojiCell.identifier)
+        collectionView.register(ColorCell.self, forCellWithReuseIdentifier: ColorCell.identifier)
+        collectionView.register(TrackerSetupCollectionViewHeader.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier: TrackerSetupSupView.identifier)
+                                withReuseIdentifier: TrackerSetupCollectionViewHeader.identifier)
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 19, bottom: 24, right: 19)
         collectionView.isScrollEnabled = false
         collectionView.allowsMultipleSelection = true
@@ -208,7 +215,7 @@ extension TrackerSetupViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TrackerSetupTableViewCell.identifier) as? TrackerSetupTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ScheduleCategoryCell.identifier) as? ScheduleCategoryCell else {
             return UITableViewCell()
         }
         cell.configure(with: indexPath.row, isTracker: isTracker)
@@ -225,7 +232,7 @@ extension TrackerSetupViewController: UITableViewDelegate {
         
         if indexPath.row == 0 {
             
-            let vc = CategoriesListView(
+            let vc = CategoriesListViewController(
                 viewModel: CategoriesListViewModel(model: CategoriesListModel(), selectedCategory: selectedCategory)
             )
             vc.completion = { [weak self] category in
@@ -244,7 +251,7 @@ extension TrackerSetupViewController: UITableViewDelegate {
             
         } else {
             
-            let vc = ScheduleView(viewModel: ScheduleViewModel(schedule: schedule))
+            let vc = ScheduleViewController(viewModel: ScheduleViewModel(schedule: schedule))
             
             vc.completion = { [weak self] schedule in
                 self?.schedule = schedule
@@ -259,7 +266,7 @@ extension TrackerSetupViewController: UITableViewDelegate {
                     .sorted(by: {$0.rawValue < $1.rawValue})
                     .map { $0.shortName }
                 
-                let cell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TrackerSetupTableViewCell
+                let cell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ScheduleCategoryCell
                 cell?.setDetailTextLabel(for: selectedDays)
             }
             present(vc, animated: true)
@@ -282,17 +289,17 @@ extension TrackerSetupViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
             guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: TrackerSetupEmojiCell.identifier,
+                withReuseIdentifier: EmojiCell.identifier,
                 for: indexPath
-            ) as? TrackerSetupEmojiCell else { return UICollectionViewCell() }
+            ) as? EmojiCell else { return UICollectionViewCell() }
             
             cell.configure(with: viewModel.emojiForCollectionView(at: indexPath))
             return cell
         } else {
             guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: TrackerSetupColorCell.identifier,
+                withReuseIdentifier: ColorCell.identifier,
                 for: indexPath
-            ) as? TrackerSetupColorCell  else { return UICollectionViewCell() }
+            ) as? ColorCell  else { return UICollectionViewCell() }
             
             cell.configure(with: indexPath.row)
             return cell
@@ -304,8 +311,8 @@ extension TrackerSetupViewController: UICollectionViewDataSource {
         guard let view = collectionView
             .dequeueReusableSupplementaryView(
                 ofKind: kind,
-                withReuseIdentifier: TrackerSetupSupView.identifier,
-                for: indexPath) as? TrackerSetupSupView else { return UICollectionReusableView() }
+                withReuseIdentifier: TrackerSetupCollectionViewHeader.identifier,
+                for: indexPath) as? TrackerSetupCollectionViewHeader else { return UICollectionReusableView() }
         
         view.configure(with: indexPath.section)
         return view
@@ -341,26 +348,26 @@ extension TrackerSetupViewController {
         if let indexes = collectionView.indexPathsForSelectedItems {
             indexes.filter { $0.section == indexPath.section && $0 != indexPath }.forEach { i in
                     collectionView.deselectItem(at: i, animated: false)
-                (collectionView.cellForItem(at: i) as? TrackerSetupEmojiCell)?.backgroundColor = .clear
-                (collectionView.cellForItem(at: i) as? TrackerSetupColorCell)?.itemDidSelect(false)
+                (collectionView.cellForItem(at: i) as? EmojiCell)?.backgroundColor = .clear
+                (collectionView.cellForItem(at: i) as? ColorCell)?.itemDidSelect(false)
             }
         }
-        if let cell = collectionView.cellForItem(at: indexPath) as? TrackerSetupEmojiCell {
+        if let cell = collectionView.cellForItem(at: indexPath) as? EmojiCell {
             cell.backgroundColor = .lightGrayYP
             viewModel.didSelectEmoji(at: indexPath)
         }
-        if let cell = collectionView.cellForItem(at: indexPath) as? TrackerSetupColorCell {
+        if let cell = collectionView.cellForItem(at: indexPath) as? ColorCell {
             cell.itemDidSelect(true)
             viewModel.didSelectColor(at: indexPath)
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        if let cell = collectionView.cellForItem(at: indexPath) as? TrackerSetupEmojiCell {
+        if let cell = collectionView.cellForItem(at: indexPath) as? EmojiCell {
             cell.backgroundColor = .clear
             viewModel.didDeselectEmoji()
         }
-        if let cell = collectionView.cellForItem(at: indexPath) as? TrackerSetupColorCell {
+        if let cell = collectionView.cellForItem(at: indexPath) as? ColorCell {
             cell.itemDidSelect(false)
             viewModel.didDeselectColor()
         }

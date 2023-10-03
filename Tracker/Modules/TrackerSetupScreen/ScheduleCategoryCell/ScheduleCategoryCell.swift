@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class TrackerSetupTableViewCell: UITableViewCell {
+final class ScheduleCategoryCell: UITableViewCell {
     
     static let identifier = "TableViewCell"
     

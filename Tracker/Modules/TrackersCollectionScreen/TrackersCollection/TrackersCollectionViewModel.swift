@@ -9,35 +9,53 @@ import Foundation
 
 final class TrackersCollectionViewModel {
 
-    @Observable var stateChanged = false
-    @Observable var emptyState = false
-    @Observable var emptySearch = false
-    @Observable var updatedState: TrackerStoreUpdate?
-    
-    private var model: TrackersCollectionModel
-    
-    init() {
-        model = TrackersCollectionModel()
-        model.delegate = self
-    }
+    @Observable var categories: [TrackerCategory] = []
+    @Observable var searchIsEmpty = false
+
+    private var model = TrackersCollectionModel()
+    private var indexes: [IndexPath]?
     
     var stringSelectedDate: String {
-        model.stringSelectedDate
+        model.stringDate
+    }
+    
+    init() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateView),
+                                               name: Notification.Name(rawValue: "trackers changed"),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateView),
+                                               name: Notification.Name(rawValue: "Category deleted"),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateView),
+                                               name: Notification.Name(rawValue: "Category changed"),
+                                               object: nil)
+    }
+    
+    @objc private func updateView() {
+        fetchObjectsAtCurrentDate()
     }
     
     func fetchObjectsAtCurrentDate() {
-        model.fetchObjectsAtCurrentDate()
-        emptyState = model.emptyState
+        categories = model.fetchObjectsAtCurrentDate()
+    }
+    
+    func detailsFor(_ tracker: Tracker) -> (isDone: Bool, completedDays: Int) {
+        return model.detailsFor(tracker)
     }
     
     func dateDidChanged(_ date: Date) {
-        model.fetchObjects(at: date)
-        emptyState = model.emptyState
+        categories = model.fetchObjects(at: date)
     }
     
     func searchFieldDidChanged(_ searchText: String) {
-        model.searchObjects(with: searchText)
-        emptySearch = model.emptyState
+        let filteredCategories = categories.map {
+            TrackerCategory(title: $0.title, trackers: $0.trackers.filter { $0.name.hasPrefix(searchText) })
+        }.filter { !$0.trackers.isEmpty }
+        categories = filteredCategories
+        searchIsEmpty = filteredCategories.isEmpty ? true : false
     }
     
     func willAddRecord(with uuid: UUID) -> Bool {
@@ -47,41 +65,8 @@ final class TrackersCollectionViewModel {
     func willDeleteRecord(with uuid: UUID) -> Bool {
         model.willDeleteRecord(with: uuid)
     }
-}
-
-// MARK: - CollectionViewDataSource
-
-extension TrackersCollectionViewModel {
     
-    var numberOfSections: Int {
-        model.numberOfSections
-    }
-    
-    func numberOfItems(in section: Int) -> Int {
-        model.numberOfItems(in: section)
-    }
-    
-    func cellForItem(at indexPath: IndexPath) -> Tracker {
-        model.cellForItem(at: indexPath)
-    }
-    
-    func detailsForCell(_ indexPath: IndexPath, at date: String) -> (isDone: Bool, completedDays: Int) {
-        model.detailsForCell(indexPath, at: date)
-    }
-    
-    func titleForSection(at indexPath: IndexPath) -> String {
-        model.titleForSection(at: indexPath)
-    }
-}
-
-extension TrackersCollectionViewModel: TrackersCollectionModelDelegate {
-    
-    func didUpdate(_ trackerStoreUpdate: TrackerStoreUpdate) {
-        self.updatedState = trackerStoreUpdate
-        emptyState = model.emptyState
-    }
-    
-    func didFetchedObjects() {
-        stateChanged = true
+    deinit {
+       NotificationCenter.default.removeObserver(self)
     }
 }

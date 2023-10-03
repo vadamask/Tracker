@@ -36,15 +36,9 @@ final class TrackersCollectionViewController: UIViewController {
     }
     
     private func bind() {
-        
-        viewModel.$stateChanged.bind { [weak self] changed in
-            if changed {
-                self?.collectionView.reloadData()
-            }
-        }
-        
-        viewModel.$emptyState.bind { [weak self] emptyState in
-            if emptyState {
+
+        viewModel.$categories.bind { [weak self] categories in
+            if categories.isEmpty {
                 self?.placeholder.image = UIImage(named: "empty list")
                 self?.placeholderLabel.text = "Что будем отслеживать?"
                 self?.placeholder.isHidden = false
@@ -53,10 +47,11 @@ final class TrackersCollectionViewController: UIViewController {
                 self?.placeholder.isHidden = true
                 self?.placeholderLabel.isHidden = true
             }
+            self?.collectionView.reloadData()
         }
         
-        viewModel.$emptySearch.bind { [weak self] emptySearch in
-            if emptySearch {
+        viewModel.$searchIsEmpty.bind { [weak self] isEmpty in
+            if isEmpty {
                 self?.placeholder.image = UIImage(named: "empty search result")
                 self?.placeholderLabel.text = "Ничего не найдено"
                 self?.placeholder.isHidden = false
@@ -66,23 +61,11 @@ final class TrackersCollectionViewController: UIViewController {
                 self?.placeholderLabel.isHidden = true
             }
         }
-        
-        viewModel.$updatedState.bind { [weak self] indexes in
-            self?.dismiss(animated: true) {
-                guard let indexes = indexes else { return }
-                
-                self?.collectionView.performBatchUpdates {
-                    self?.collectionView.insertItems(at: indexes.insertedItems)
-                    self?.collectionView.deleteItems(at: indexes.deletedItems)
-                    self?.collectionView.insertSections(indexes.insertedSections)
-                    self?.collectionView.deleteSections(indexes.deletedSections)
-                }
-            }
-        }
     }
     
     @objc private func addNewTracker() {
         let vc = NewTrackerViewController()
+        vc.delegate = self
         present(vc, animated: true)
     }
     
@@ -130,11 +113,11 @@ final class TrackersCollectionViewController: UIViewController {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.backgroundColor = .whiteYP
-        collectionView.register(TrackersCollectionCellView.self,
-                                forCellWithReuseIdentifier: TrackersCollectionCellView.identifier)
-        collectionView.register(TrackerCollectionHeader.self,
+        collectionView.register(TrackersCollectionViewCell.self,
+                                forCellWithReuseIdentifier: TrackersCollectionViewCell.identifier)
+        collectionView.register(TrackerCollectionViewHeader.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier: TrackerCollectionHeader.identifier)
+                                withReuseIdentifier: TrackerCollectionViewHeader.identifier)
     }
     
     private func setupLayout() {
@@ -164,26 +147,24 @@ final class TrackersCollectionViewController: UIViewController {
 
 extension TrackersCollectionViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        viewModel.numberOfSections
+        viewModel.categories.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.numberOfItems(in: section)
+        viewModel.categories[section].trackers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let tracker = viewModel.cellForItem(at: indexPath)
-        
+    
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: TrackersCollectionCellView.identifier,
+            withReuseIdentifier: TrackersCollectionViewCell.identifier,
             for: indexPath
-        ) as? TrackersCollectionCellView else { return UICollectionViewCell() }
+        ) as? TrackersCollectionViewCell else { return UICollectionViewCell() }
             
         cell.delegate = self
         
-        let stringDate = viewModel.stringSelectedDate
-        let details = viewModel.detailsForCell(indexPath, at: stringDate)
+        let tracker = viewModel.categories[indexPath.section].trackers[indexPath.row]
+        let details = viewModel.detailsFor(tracker)
         
         cell.configure(with: tracker, isDone: details.isDone, completedDays: details.completedDays)
         return cell
@@ -191,13 +172,13 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
-        let title = viewModel.titleForSection(at: indexPath)
+        let title = viewModel.categories[indexPath.section].title
         
         if let supView = collectionView.dequeueReusableSupplementaryView(
             ofKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: TrackerCollectionHeader.identifier,
+            withReuseIdentifier: TrackerCollectionViewHeader.identifier,
             for: indexPath
-        ) as? TrackerCollectionHeader {
+        ) as? TrackerCollectionViewHeader {
             supView.configure(with: title)
             return supView
         } else {
@@ -239,6 +220,7 @@ extension TrackersCollectionViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
             viewModel.fetchObjectsAtCurrentDate()
+            
         } else {
             viewModel.searchFieldDidChanged(searchText)
         }
@@ -267,5 +249,11 @@ extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
     
     func willDeleteRecord(with uuid: UUID) -> Bool {
         viewModel.willDeleteRecord(with: uuid)
+    }
+}
+
+extension TrackersCollectionViewController: NewTrackerViewControllerDelegate {
+    func dismiss() {
+        dismiss(animated: true)
     }
 }
