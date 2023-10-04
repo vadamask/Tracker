@@ -25,7 +25,7 @@ final class NewCategoryModel {
             return .success(())
         } catch {
             print(error.localizedDescription)
-            return.failure(error)
+            return .failure(error)
         }
     }
 }

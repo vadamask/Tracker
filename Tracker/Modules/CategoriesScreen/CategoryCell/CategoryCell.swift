@@ -37,12 +37,8 @@ final class CategoryCell: UITableViewCell {
             self?.textLabel?.text = title
         })
         
-        viewModel?.$isSelected.bind(action: { [weak self] selected in
-            if selected {
-                self?.accessoryType = .checkmark
-            } else {
-                self?.accessoryType = .none
-            }
+        viewModel?.$isSelected.bind(action: { [weak self] isSelected in
+            self?.accessoryType = isSelected ? .checkmark : .none
         })
     }
 }

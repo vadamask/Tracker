@@ -18,11 +18,11 @@ final class TrackerSetupModel {
     private var emoji: String?
     
     var isAllSetup: Bool {
-        guard let _ = title,
-              let _ = category,
-              let _ = color,
-              let _ = emoji,
-              let _ = schedule else { return false }
+        guard title != nil,
+              category != nil,
+              color != nil,
+              emoji != nil,
+              schedule != nil else { return false }
         return true
     }
     

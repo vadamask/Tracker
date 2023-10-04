@@ -255,12 +255,7 @@ extension TrackerSetupViewController: UITableViewDelegate {
             
             vc.completion = { [weak self] schedule in
                 self?.schedule = schedule
-                
-                if schedule.isEmpty {
-                    self?.viewModel.didDeselectSchedule()
-                } else {
-                    self?.viewModel.didSelectSchedule(schedule)
-                }
+                schedule.isEmpty ? self?.viewModel.didDeselectSchedule() : self?.viewModel.didSelectSchedule(schedule)
                 
                 let selectedDays = schedule
                     .sorted(by: {$0.rawValue < $1.rawValue})
