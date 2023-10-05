@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Вадим Шишков on 05.10.2023.
+  
+*/
+
+onboarding.title1 = "Отслеживайте только то, что хотите";
+onboarding.title2 = "Даже если это не литры воды и йога";
+onboarding.button = "Вот это технологии!";

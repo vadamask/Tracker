@@ -10,10 +10,10 @@ import UIKit
 
 final class OnboardingViewController: UIViewController {
     
-    private let viewControllers: [UIViewController] = [
-        PageViewController(imageName: "first onboarding", textLabel: "Отслеживайте только то, что хотите"),
-        PageViewController(imageName: "second onboarding", textLabel: "Даже если это не литры воды и йога")
-    ]
+    private let textLabel1 = NSLocalizedString("onboarding.title1", comment: "Text on first page view controller")
+    private let textLabel2 = NSLocalizedString("onboarding.title2", comment: "Text on second page view controller")
+    
+    private var viewControllers: [UIViewController] = []
     
     private let pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
     
@@ -23,18 +23,26 @@ final class OnboardingViewController: UIViewController {
         control.numberOfPages = 2
         control.currentPageIndicatorTintColor = .blackYP
         control.pageIndicatorTintColor = .blackYP30
+        control.isEnabled = false
         return control
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
+        setupViewControllers()
         if let first = viewControllers.first {
             pageViewController.setViewControllers([first], direction: .forward, animated: true)
         }
         pageViewController.dataSource = self
         pageViewController.delegate = self
         setupLayout()
+    }
+    
+    private func setupViewControllers() {
+        let vc1 = PageViewController(imageName: "first onboarding", textLabel: textLabel1)
+        let vc2 = PageViewController(imageName: "second onboarding", textLabel: textLabel2)
+        viewControllers.append(contentsOf: [vc1, vc2])
     }
     
     private func setupLayout() {
