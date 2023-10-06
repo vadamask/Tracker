@@ -16,9 +16,9 @@ final class NewTrackerViewController: UIViewController {
     
     weak var delegate: NewTrackerViewControllerDelegate?
     
-    private let topLabel = UILabel(text: "Создание трекера", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
-    private let trackerButton = UIButton(title: "Привычка")
-    private let eventButton = UIButton(title: "Нерегулярное событие")
+    private let topLabel = UILabel()
+    private let trackerButton = UIButton()
+    private let eventButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,8 +28,22 @@ final class NewTrackerViewController: UIViewController {
     
     private func setupViews() {
         view.backgroundColor = .whiteYP
+        
+        topLabel.text = NSLocalizedString("newTracker.title", comment: "Top label on screen")
+        topLabel.textColor = .blackYP
+        topLabel.font = .systemFont(ofSize: 16, weight: .medium)
+        
         trackerButton.addTarget(self, action: #selector(trackerButtonTapped), for: .touchUpInside)
+        trackerButton.setTitle(NSLocalizedString("newTracker.trackerButton.title", comment: "Title for tracker button"), for: .normal)
+        trackerButton.setTitleColor(.whiteYP, for: .normal)
+        trackerButton.backgroundColor = .blackYP
+        trackerButton.layer.cornerRadius = 16
+        
         eventButton.addTarget(self, action: #selector(eventButtonTapped), for: .touchUpInside)
+        eventButton.setTitle(NSLocalizedString("newTracker.eventButton.title", comment: "Title for event button"), for: .normal)
+        eventButton.setTitleColor(.whiteYP, for: .normal)
+        eventButton.backgroundColor = .blackYP
+        eventButton.layer.cornerRadius = 16
     }
     
     private func setupLayout() {

@@ -11,7 +11,7 @@ import UIKit
 final class StatisticsViewController: UIViewController {
     
     private let placeholder = UIImageView(image: UIImage(named: "empty statistics"))
-    private let label = UILabel(text: "Анализировать пока нечего", textColor: .blackYP, font: .systemFont(ofSize: 12, weight: .medium))
+    private let label = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,8 +21,12 @@ final class StatisticsViewController: UIViewController {
     
     private func setupViews() {
         view.backgroundColor = .whiteYP
-        navigationItem.title = "Статистика"
+        navigationItem.title = NSLocalizedString("statistics.navigationTitle", comment: "Title for navigaton bar")
+        
         label.textAlignment = .center
+        label.text = NSLocalizedString("statistics.emptyState.title", comment: "Text on statistics screen where empty state")
+        label.textColor = .blackYP
+        label.font = .systemFont(ofSize: 12, weight: .medium)
     }
     
     private func setupLayout() {

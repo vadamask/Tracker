@@ -6,6 +6,18 @@
   
 */
 
-onboarding.title1 = "Отслеживайте только то, что хотите";
-onboarding.title2 = "Даже если это не литры воды и йога";
+onboarding.firstPage.title = "Отслеживайте только то, что хотите";
+onboarding.secondPage.title = "Даже если это не литры воды и йога";
 onboarding.button = "Вот это технологии!";
+
+statistics.emptyState.title = "Анализировать пока нечего";
+statistics.navigationTitle = "Статистика";
+
+collection.navigationTitle = "Трекеры";
+collection.emptyState.title = "Что будем отслеживать?";
+collection.emptySearch.title = "Ничего не найдено";
+collection.searchBar.placeholder = "Поиск";
+
+newTracker.title = "Создание трекера";
+newTracker.trackerButton.title = "Привычка";
+newTracker.eventButton.title = "Нерегулярное событие";

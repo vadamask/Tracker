@@ -28,13 +28,13 @@ final class TabBarController: UITabBarController {
         statisticsNavigationVC.navigationBar.prefersLargeTitles = true
         
         trackersVC.tabBarItem = UITabBarItem(
-            title: "Трекеры",
+            title: NSLocalizedString("collection.navigationTitle", comment: "Title for navigation bar"),
             image: UIImage(imageLiteralResourceName: "trackersItem"),
             selectedImage: nil
         )
         
         statisticsVC.tabBarItem = UITabBarItem(
-            title: "Статистика",
+            title: NSLocalizedString("statistics.navigationTitle", comment: "Title for navigaton bar"),
             image: UIImage(imageLiteralResourceName: "statsItem"),
             selectedImage: nil
         )

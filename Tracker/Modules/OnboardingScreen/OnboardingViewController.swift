@@ -10,8 +10,8 @@ import UIKit
 
 final class OnboardingViewController: UIViewController {
     
-    private let textLabel1 = NSLocalizedString("onboarding.title1", comment: "Text on first page view controller")
-    private let textLabel2 = NSLocalizedString("onboarding.title2", comment: "Text on second page view controller")
+    private let textLabel1 = NSLocalizedString("onboarding.firstPage.title", comment: "Text on first page view controller")
+    private let textLabel2 = NSLocalizedString("onboarding.secondPage.title", comment: "Text on second page view controller")
     
     private var viewControllers: [UIViewController] = []
     

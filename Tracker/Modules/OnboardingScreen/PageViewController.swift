@@ -11,9 +11,8 @@ import UIKit
 final class PageViewController: UIViewController {
     
     private let imageView = UIImageView()
-    private let label = UILabel(text: "", textColor: .blackYP, font: UIFont.systemFont(ofSize: 32, weight: .bold))
+    private let label = UILabel()
     private let button = UIButton()
-    private let buttonTitle = NSLocalizedString("onboarding.button", comment: "Text on button")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,8 +41,11 @@ final class PageViewController: UIViewController {
     private func setupViews() {
         label.numberOfLines = 0
         label.textAlignment = .center
+        label.textColor = .blackYP
+        label.font = .systemFont(ofSize: 32, weight: .bold)
+        
         button.addTarget(self, action: #selector(buttonDidTapped), for: .touchUpInside)
-        button.setTitle(buttonTitle, for: .normal)
+        button.setTitle(NSLocalizedString("onboarding.button", comment: "Text on button"), for: .normal)
         button.setTitleColor(.whiteYP, for: .normal)
         button.backgroundColor = .blackYP
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)

@@ -40,7 +40,7 @@ final class TrackersCollectionViewController: UIViewController {
         viewModel.$categories.bind { [weak self] categories in
             if categories.isEmpty {
                 self?.placeholder.image = UIImage(named: "empty list")
-                self?.placeholderLabel.text = "Что будем отслеживать?"
+                self?.placeholderLabel.text = NSLocalizedString("collection.emptyState.title", comment: "Text for empty state on main screen")
                 self?.placeholder.isHidden = false
                 self?.placeholderLabel.isHidden = false
             } else {
@@ -53,7 +53,7 @@ final class TrackersCollectionViewController: UIViewController {
         viewModel.$searchIsEmpty.bind { [weak self] isEmpty in
             if isEmpty {
                 self?.placeholder.image = UIImage(named: "empty search result")
-                self?.placeholderLabel.text = "Ничего не найдено"
+                self?.placeholderLabel.text = NSLocalizedString("collection.emptySearch.title", comment: "Text for empty search")
                 self?.placeholder.isHidden = false
                 self?.placeholderLabel.isHidden = false
             } else {
@@ -90,11 +90,11 @@ final class TrackersCollectionViewController: UIViewController {
         
         let searchController = UISearchController()
         searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchBar.placeholder = "Поиск"
+        searchController.searchBar.placeholder = NSLocalizedString("collection.searchBar.placeholder", comment: "Placeholder in search bar")
         searchController.searchBar.setValue("Отменить", forKey: "cancelButtonText")
         searchController.searchBar.delegate = self
         
-        navigationItem.title = "Трекеры"
+        navigationItem.title = NSLocalizedString("collection.navigationTitle", comment: "Title for navigation bar")
         navigationItem.leftBarButtonItem = leftItem
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
         navigationItem.searchController = searchController

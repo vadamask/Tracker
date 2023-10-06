@@ -6,6 +6,18 @@
   
 */
 
-onboarding.title1 = "Track only what you want";
-onboarding.title2 = "Even if it's not liters of water and yoga";
+onboarding.firstPage.title = "Track only what you want";
+onboarding.secondPage.title = "Even if it's not liters of water and yoga";
 onboarding.button = "These are technologies!";
+
+statistics.emptyState.title = "There is nothing to analyze yet";
+statistics.navigationTitle = "Statistics";
+
+collection.navigationTitle = "Trackers";
+collection.emptyState.title = "What will we track?";
+collection.emptySearch.title = "Nothing found";
+collection.searchBar.placeholder = "Search";
+
+newTracker.title = "Creating a tracker";
+newTracker.trackerButton.title = "Habit";
+newTracker.eventButton.title = "Irregular event";
