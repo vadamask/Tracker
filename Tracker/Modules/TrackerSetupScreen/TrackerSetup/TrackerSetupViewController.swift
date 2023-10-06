@@ -21,16 +21,14 @@ final class TrackerSetupViewController: UIViewController {
     private var schedule: Set<WeekDay> = []
     private var selectedCategory: String?
     
-    private var topLabel = UILabel(text: "", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
+    private var topLabel = UILabel()
     private let scrollView = UIScrollView()
     private let textField = UITextField()
     private let tableView = UITableView()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    private let createButton = UIButton(title: "Создать", backgroundColor: .grayYP)
-    private let cancelButton = UIButton(title: "Отменить", textColor: .redYP, backgroundColor: .clear)
-    private let warningLabel = UILabel(text: "Ограничение 38 символов",
-                                       textColor: .redYP,
-                                       font: .systemFont(ofSize: 17, weight: .regular))
+    private let createButton = UIButton()
+    private let cancelButton = UIButton()
+    private let warningLabel = UILabel()
     
     private var tableViewTopLabel: Constraint?
     
@@ -88,10 +86,15 @@ final class TrackerSetupViewController: UIViewController {
         view.backgroundColor = .whiteYP
         self.hideKeyboardWhenTappedAround()
         
-        topLabel.text = isTracker ? "Новая привычка" : "Новое нерегулярное событие"
+        topLabel.text = isTracker ?
+        NSLocalizedString("setupTracker.topLabel.trackerTitle", comment: "Top label at screen when tracker creating") :
+        NSLocalizedString("setupTracker.topLabel.eventTitle", comment: "Top label at screen when event creating")
+        
+        topLabel.textColor = .blackYP
+        topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
         textField.delegate = self
-        textField.placeholder = "Введите название трекера"
+        textField.placeholder = NSLocalizedString("setupTracker.textField.placeholder", comment: "Placeholder for text field")
         textField.clearButtonMode = .always
         textField.backgroundColor = .backgroundYP
         textField.layer.cornerRadius = 16
@@ -101,6 +104,9 @@ final class TrackerSetupViewController: UIViewController {
         textField.addTarget(self, action: #selector(textDidChanged), for: .editingChanged)
         
         warningLabel.isHidden = true
+        warningLabel.text = NSLocalizedString("setupTracker.warningLabel.title", comment: "Text for constraint label")
+        warningLabel.textColor = .redYP
+        warningLabel.font = .systemFont(ofSize: 17, weight: .regular)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -123,10 +129,17 @@ final class TrackerSetupViewController: UIViewController {
         
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         createButton.isEnabled = false
+        createButton.setTitle(NSLocalizedString("setupTracker.createButton.title", comment: "Title for create button"), for: .normal)
+        createButton.backgroundColor = .grayYP
+        createButton.layer.cornerRadius = 16
         
+        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        cancelButton.setTitle(NSLocalizedString("setupTracker.cancelButton.title", comment: "Title for cancel button"), for: .normal)
+        cancelButton.setTitleColor(.redYP, for: .normal)
+        cancelButton.backgroundColor = .clear
+        cancelButton.layer.cornerRadius = 16
         cancelButton.layer.borderColor = UIColor.redYP.cgColor
         cancelButton.layer.borderWidth = 1
-        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
     
     private func setupLayout() {

@@ -14,7 +14,10 @@ final class TrackerSetupCollectionViewHeader: UICollectionReusableView {
     private let label = UILabel()
 
     func configure(with section: Int) {
-        label.text = section == 0 ? "Emoji" : "Цвет"
+        label.text = section == 0 ?
+        NSLocalizedString("setupTracker.emoji.header", comment: "Emoji header") :
+        NSLocalizedString("setupTracker.color.header", comment: "Color header")
+        
         label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
         
         addSubview(label)

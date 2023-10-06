@@ -18,6 +18,17 @@ collection.emptyState.title = "What will we track?";
 collection.emptySearch.title = "Nothing found";
 collection.searchBar.placeholder = "Search";
 
-newTracker.title = "Creating a tracker";
+newTracker.topLabel = "Creating a tracker";
 newTracker.trackerButton.title = "Habit";
 newTracker.eventButton.title = "Irregular event";
+
+setupTracker.topLabel.trackerTitle = "New habit";
+setupTracker.topLabel.eventTitle = "New irregular event";
+setupTracker.textField.placeholder = "Enter tracker name";
+setupTracker.warningLabel.title = "Limit 38 characters";
+setupTracker.category.title = "Category";
+setupTracker.schedule.title = "Schedule";
+setupTracker.emoji.header = "Emoji";
+setupTracker.color.header = "Color";
+setupTracker.createButton.title = "Create";
+setupTracker.cancelButton.title = "Cancel";

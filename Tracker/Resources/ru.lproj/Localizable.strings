@@ -18,6 +18,17 @@ collection.emptyState.title = "Что будем отслеживать?";
 collection.emptySearch.title = "Ничего не найдено";
 collection.searchBar.placeholder = "Поиск";
 
-newTracker.title = "Создание трекера";
+newTracker.topLabel = "Создание трекера";
 newTracker.trackerButton.title = "Привычка";
 newTracker.eventButton.title = "Нерегулярное событие";
+
+setupTracker.topLabel.trackerTitle = "Новая привычка";
+setupTracker.topLabel.eventTitle = "Новое нерегулярное событие";
+setupTracker.textField.placeholder = "Введите название трекера";
+setupTracker.warningLabel.title = "Ограничение 38 символов";
+setupTracker.category.title = "Категория";
+setupTracker.schedule.title = "Расписание";
+setupTracker.emoji.header = "Emoji";
+setupTracker.color.header = "Цвет";
+setupTracker.createButton.title = "Создать";
+setupTracker.cancelButton.title = "Отменить";

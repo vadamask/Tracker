@@ -29,7 +29,7 @@ final class NewTrackerViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = .whiteYP
         
-        topLabel.text = NSLocalizedString("newTracker.title", comment: "Top label on screen")
+        topLabel.text = NSLocalizedString("newTracker.topLabel", comment: "Top label on screen")
         topLabel.textColor = .blackYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         

@@ -33,7 +33,7 @@ final class ScheduleCategoryCell: UITableViewCell {
         detailTextLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         
         if row == 0 {
-            textLabel?.text = "Категория"
+            textLabel?.text = NSLocalizedString("setupTracker.category.title", comment: "Category button")
             layer.maskedCorners = isTracker ?
             [.layerMinXMinYCorner, .layerMaxXMinYCorner] :
             [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
@@ -42,7 +42,7 @@ final class ScheduleCategoryCell: UITableViewCell {
                 separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 400)
             }
         } else {
-            textLabel?.text = "Расписание"
+            textLabel?.text = NSLocalizedString("setupTracker.schedule.title", comment: "Schedule button")
             layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
             separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 400)
         }
