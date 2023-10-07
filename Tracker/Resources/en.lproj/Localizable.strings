@@ -6,29 +6,66 @@
   
 */
 
-onboarding.firstPage.title = "Track only what you want";
-onboarding.secondPage.title = "Even if it's not liters of water and yoga";
-onboarding.button = "These are technologies!";
+"mondayFull" = "Monday";
+"tuesdayFull" = "Tuesday";
+"wednesdayFull" = "Wednesday";
+"thursdayFull" = "Thursday";
+"fridayFull" = "Friday";
+"saturdayFull" = "Saturday";
+"sundayFull" = "Sunday";
+"mondayShort" = "Mo";
+"tuesdayShort" = "Tu";
+"wednesdayShort" = "We";
+"thursdayShort" = "Th";
+"fridayShort" = "Fr";
+"saturdayShort" = "Sa";
+"sundayShort" = "Su";
+"everyday" = "Everyday";
 
-statistics.emptyState.title = "There is nothing to analyze yet";
-statistics.navigationTitle = "Statistics";
+"onboarding.firstPage.title" = "Track only what you want";
+"onboarding.secondPage.title" = "Even if it's not liters of water and yoga";
+"onboarding.button" = "These are technologies!";
 
-collection.navigationTitle = "Trackers";
-collection.emptyState.title = "What will we track?";
-collection.emptySearch.title = "Nothing found";
-collection.searchBar.placeholder = "Search";
+"statistics.emptyState.title" = "There is nothing to analyze yet";
+"statistics.navigationTitle" = "Statistics";
 
-newTracker.topLabel = "Creating a tracker";
-newTracker.trackerButton.title = "Habit";
-newTracker.eventButton.title = "Irregular event";
+"collection.navigationTitle" = "Trackers";
+"collection.emptyState.title" = "What will we track?";
+"collection.emptySearch.title" = "Nothing found";
+"collection.searchBar.placeholder" = "Search";
+"collection.searchBar.cancelButton" = "Cancel";
 
-setupTracker.topLabel.trackerTitle = "New habit";
-setupTracker.topLabel.eventTitle = "New irregular event";
-setupTracker.textField.placeholder = "Enter tracker name";
-setupTracker.warningLabel.title = "Limit 38 characters";
-setupTracker.category.title = "Category";
-setupTracker.schedule.title = "Schedule";
-setupTracker.emoji.header = "Emoji";
-setupTracker.color.header = "Color";
-setupTracker.createButton.title = "Create";
-setupTracker.cancelButton.title = "Cancel";
+"newTracker.topLabel" = "Creating a tracker";
+"newTracker.trackerButton.title" = "Habit";
+"newTracker.eventButton.title" = "Irregular event";
+
+"setupTracker.topLabel.trackerTitle" = "New habit";
+"setupTracker.topLabel.eventTitle" = "New irregular event";
+"setupTracker.textField.placeholder" = "Enter tracker name";
+"setupTracker.warningLabel.title" = "Limit 38 characters";
+"setupTracker.category.title" = "Category";
+"setupTracker.schedule.title" = "Schedule";
+"setupTracker.emoji.header" = "Emoji";
+"setupTracker.color.header" = "Color";
+"setupTracker.createButton.title" = "Create";
+"setupTracker.cancelButton.title" = "Cancel";
+
+"categoryScreen.topLabel" = "Category";
+"categoryScreen.emptyState.title" = "Habits and events can be combined by meaning";
+"categoryScreen.buttonTitle" = "Add category";
+"categoryScreen.editCategory" = "Edit";
+"categoryScreen.deleteCategory" = "Delete";
+"categoryScreen.alertController.title" = "Are you sure this category is not needed?";
+"categoryScreen.alertController.delete" = "Delete";
+"categoryScreen.alertController.cancel" = "Cancel";
+
+"newCategory.createButton" = "Done";
+"newCategory.alertController.title" = "Error";
+"newCategory.alertController.message" = "This name already exists";
+"newCategory.alertController.action" = "Ok";
+"newCategory.topLabelForNew" = "New category";
+"newCategory.topLabelForEdit" = "Editing the category";
+"newCategory.textField.placeholder" = "Enter category name";
+
+"schedule.topLabel" = "Schedule";
+"schedule.buttonTitle" = "Done";

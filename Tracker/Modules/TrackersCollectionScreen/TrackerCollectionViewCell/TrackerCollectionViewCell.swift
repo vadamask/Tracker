@@ -25,8 +25,8 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     private let emojiBackground = UIView()
     private let pinView: UIImageView = UIImageView(image: UIImage(named: "pin symbol"))
     private let emoji = UILabel()
-    private let trackerName = UILabel(text: "", textColor: .white, font: .systemFont(ofSize: 12, weight: .medium))
-    private let daysCount = UILabel(text: "", textColor: .blackYP, font: .systemFont(ofSize: 12, weight: .medium))
+    private let trackerName = UILabel()
+    private let daysCount = UILabel()
     private let plusButton = UIButton()
     
     private var completedDays = 0 {
@@ -49,7 +49,14 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         self.tracker = tracker
         self.isDone = isDone
         self.completedDays = completedDays
+        
         trackerName.text = tracker.name
+        trackerName.textColor = .whiteYP
+        trackerName.font = .systemFont(ofSize: 12, weight: .medium)
+        
+        daysCount.textColor = .blackYP
+        daysCount.font = .systemFont(ofSize: 12, weight: .medium)
+        
         emoji.text = tracker.emoji
         cardView.backgroundColor = UIColor(named: tracker.color)
         setupButton()

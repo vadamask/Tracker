@@ -11,7 +11,7 @@ final class NewCategoryViewController: UIViewController {
     
     private let oldTitle: String?
     private let viewModel = NewCategoryViewModel(model: NewCategoryModel())
-    private let createButton = UIButton(title: "Готово", backgroundColor: .grayYP)
+    private let createButton = UIButton()
     private let topLabel = UILabel()
     private let textField = UITextField()
     
@@ -47,8 +47,24 @@ final class NewCategoryViewController: UIViewController {
             guard let isSame = isSame else { return }
             
             if isSame {
-                let alertController = UIAlertController(title: "Ошибка", message: "Такое название уже есть", preferredStyle: .alert)
-                let action = UIAlertAction(title: "Ок", style: .default)
+                let alertController = UIAlertController(
+                    title: NSLocalizedString(
+                        "newCategory.alertController.title",
+                        comment: "Title for alert controller"
+                    ),
+                    message: NSLocalizedString(
+                        "newCategory.alertController.message",
+                        comment: "Message for alert controller"
+                    ),
+                    preferredStyle: .alert
+                )
+                let action = UIAlertAction(
+                    title: NSLocalizedString(
+                        "newCategory.alertController.action",
+                        comment: "Title for action button"
+                    ),
+                    style: .default
+                )
                 alertController.addAction(action)
                 self?.present(alertController, animated: true)
             } else {
@@ -67,18 +83,25 @@ final class NewCategoryViewController: UIViewController {
     }
     
     private func setupViews() {
-        topLabel.text = oldTitle == nil ? "Новая категория" : "Редактирование категории"
+        view.backgroundColor = .whiteYP
+        
+        topLabel.text = oldTitle == nil ?
+        NSLocalizedString("newCategory.topLabelForNew", comment: "Title for top label when new category is creating"):
+        NSLocalizedString("newCategory.topLabelForEdit", comment: "Title for top label when category is editing")
         topLabel.textColor = .blackYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
-        view.backgroundColor = .whiteYP
-        
         createButton.isEnabled = false
         createButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+        createButton.setTitle(NSLocalizedString("newCategory.createButton", comment: "Title for create button"), for: .normal)
+        createButton.setTitleColor(.whiteYP, for: .normal)
+        createButton.backgroundColor = .grayYP
+        createButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        createButton.layer.cornerRadius = 16
         
         textField.text = oldTitle
         textField.delegate = self
-        textField.placeholder = "Введите название категории"
+        textField.placeholder = NSLocalizedString("newCategory.textField.placeholder", comment: "Text in text field placeholder")
         textField.clearButtonMode = .always
         textField.backgroundColor = .backgroundYP
         textField.layer.cornerRadius = 16

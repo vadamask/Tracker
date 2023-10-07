@@ -49,6 +49,8 @@ final class ScheduleCategoryCell: UITableViewCell {
     }
     
     func setDetailTextLabel(for days: [String]) {
-        detailTextLabel?.text = days.count < 7 ? days.joined(separator: ", ") : "Каждый день"
+        detailTextLabel?.text = days.count < 7 ?
+        days.joined(separator: ", ") :
+        NSLocalizedString("everyday", comment: "")
     }
 }

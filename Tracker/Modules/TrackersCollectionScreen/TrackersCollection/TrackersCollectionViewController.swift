@@ -84,6 +84,7 @@ final class TrackersCollectionViewController: UIViewController {
         leftItem.tintColor = .blackYP
         
         let datePicker = UIDatePicker()
+        datePicker.locale = .current
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(datePickerDidChanged(sender:)), for: .valueChanged)
@@ -91,7 +92,13 @@ final class TrackersCollectionViewController: UIViewController {
         let searchController = UISearchController()
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.placeholder = NSLocalizedString("collection.searchBar.placeholder", comment: "Placeholder in search bar")
-        searchController.searchBar.setValue("Отменить", forKey: "cancelButtonText")
+        searchController.searchBar.setValue(
+            NSLocalizedString(
+                "collection.searchBar.cancelButton",
+                comment: "Title for cancel button in search bar"
+            ),
+            forKey: "cancelButtonText"
+        )
         searchController.searchBar.delegate = self
         
         navigationItem.title = NSLocalizedString("collection.navigationTitle", comment: "Title for navigation bar")

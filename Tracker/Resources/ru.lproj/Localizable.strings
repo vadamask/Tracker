@@ -6,29 +6,66 @@
   
 */
 
-onboarding.firstPage.title = "Отслеживайте только то, что хотите";
-onboarding.secondPage.title = "Даже если это не литры воды и йога";
-onboarding.button = "Вот это технологии!";
+"mondayFull" = "Понедельник";
+"tuesdayFull" = "Вторник";
+"wednesdayFull" = "Среда";
+"thursdayFull" = "Четверг";
+"fridayFull" = "Пятница";
+"saturdayFull" = "Суббота";
+"sundayFull" = "Воскресенье";
+"mondayShort" = "Пн";
+"tuesdayShort" = "Вт";
+"wednesdayShort" = "Ср";
+"thursdayShort" = "Чт";
+"fridayShort" = "Пт";
+"saturdayShort" = "Сб";
+"sundayShort" = "Вс";
+"everyday" = "Каждый день";
 
-statistics.emptyState.title = "Анализировать пока нечего";
-statistics.navigationTitle = "Статистика";
+"onboarding.firstPage.title" = "Отслеживайте только то, что хотите";
+"onboarding.secondPage.title" = "Даже если это не литры воды и йога";
+"onboarding.button" = "Вот это технологии!";
 
-collection.navigationTitle = "Трекеры";
-collection.emptyState.title = "Что будем отслеживать?";
-collection.emptySearch.title = "Ничего не найдено";
-collection.searchBar.placeholder = "Поиск";
+"statistics.emptyState.title" = "Анализировать пока нечего";
+"statistics.navigationTitle" = "Статистика";
 
-newTracker.topLabel = "Создание трекера";
-newTracker.trackerButton.title = "Привычка";
-newTracker.eventButton.title = "Нерегулярное событие";
+"collection.navigationTitle" = "Трекеры";
+"collection.emptyState.title" = "Что будем отслеживать?";
+"collection.emptySearch.title" = "Ничего не найдено";
+"collection.searchBar.placeholder" = "Поиск";
+"collection.searchBar.cancelButton" = "Отменить";
 
-setupTracker.topLabel.trackerTitle = "Новая привычка";
-setupTracker.topLabel.eventTitle = "Новое нерегулярное событие";
-setupTracker.textField.placeholder = "Введите название трекера";
-setupTracker.warningLabel.title = "Ограничение 38 символов";
-setupTracker.category.title = "Категория";
-setupTracker.schedule.title = "Расписание";
-setupTracker.emoji.header = "Emoji";
-setupTracker.color.header = "Цвет";
-setupTracker.createButton.title = "Создать";
-setupTracker.cancelButton.title = "Отменить";
+"newTracker.topLabel" = "Создание трекера";
+"newTracker.trackerButton.title" = "Привычка";
+"newTracker.eventButton.title" = "Нерегулярное событие";
+
+"setupTracker.topLabel.trackerTitle" = "Новая привычка";
+"setupTracker.topLabel.eventTitle" = "Новое нерегулярное событие";
+"setupTracker.textField.placeholder" = "Введите название трекера";
+"setupTracker.warningLabel.title" = "Ограничение 38 символов";
+"setupTracker.category.title" = "Категория";
+"setupTracker.schedule.title" = "Расписание";
+"setupTracker.emoji.header" = "Emoji";
+"setupTracker.color.header" = "Цвет";
+"setupTracker.createButton.title" = "Создать";
+"setupTracker.cancelButton.title" = "Отменить";
+
+"categoryScreen.topLabel" = "Категория";
+"categoryScreen.emptyState.title" = "Привычки и события можно объединить по смыслу";
+"categoryScreen.buttonTitle" = "Добавить категорию";
+"categoryScreen.editCategory" = "Редактировать";
+"categoryScreen.deleteCategory" = "Удалить";
+"categoryScreen.alertController.title" = "Эта категория точно не нужна?";
+"categoryScreen.alertController.delete" = "Удалить";
+"categoryScreen.alertController.cancel" = "Отменить";
+
+"newCategory.createButton" = "Готово";
+"newCategory.alertController.title" = "Ошибка";
+"newCategory.alertController.message" = "Такое название уже есть";
+"newCategory.alertController.action" = "Ок";
+"newCategory.topLabelForNew" = "Новая категория";
+"newCategory.topLabelForEdit" = "Редактирование категории";
+"newCategory.textField.placeholder" = "Введите название категории";
+
+"schedule.topLabel" = "Расписание";
+"schedule.buttonTitle" = "Готово";

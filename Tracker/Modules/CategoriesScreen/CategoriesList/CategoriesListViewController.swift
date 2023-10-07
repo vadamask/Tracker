@@ -15,20 +15,10 @@ final class CategoriesListViewController: UIViewController {
     private var viewModel: CategoriesListViewModel
     
     private let placeholder = UIImageView(image: UIImage(named: "empty list"))
-    private let addButton = UIButton(title: "Добавить категорию")
+    private let addButton = UIButton()
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
-    
-    private let topLabel = UILabel(
-        text: "Категория",
-        textColor: .blackYP,
-        font: .systemFont(ofSize: 16, weight: .medium)
-    )
-    
-    private let placeholderLabel = UILabel(
-        text: "Привычки и события можно\nобъединить по смыслу",
-        textColor: .blackYP,
-        font: .systemFont(ofSize: 12, weight: .medium)
-    )
+    private let topLabel = UILabel()
+    private let placeholderLabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -86,9 +76,21 @@ final class CategoriesListViewController: UIViewController {
         tableView.allowsMultipleSelection = false
         tableView.layer.cornerRadius = 16
         
+        placeholderLabel.text = NSLocalizedString("categoryScreen.emptyState.title", comment: "Title for empty state")
         placeholderLabel.numberOfLines = 2
         placeholderLabel.textAlignment = .center
+        placeholderLabel.textColor = .blackYP
+        placeholderLabel.font = .systemFont(ofSize: 12, weight: .medium)
         
+        topLabel.text = NSLocalizedString("categoryScreen.topLabel", comment: "Title for top label")
+        topLabel.textColor = .blackYP
+        topLabel.font = .systemFont(ofSize: 16, weight: .medium)
+        
+        addButton.setTitle(NSLocalizedString("categoryScreen.buttonTitle", comment: "Title for add button"), for: .normal)
+        addButton.setTitleColor(.whiteYP, for: .normal)
+        addButton.backgroundColor = .blackYP
+        addButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        addButton.layer.cornerRadius = 16
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
     }
     
@@ -147,27 +149,49 @@ extension CategoriesListViewController: UITableViewDelegate {
         
         let config = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
             
-            let editAction = UIAction(title: "Редактировать") { [weak self] _ in
+            let editAction = UIAction(
+                title: NSLocalizedString("categoryScreen.editCategory", comment: "Edit button in menu")
+            ) { [weak self] _ in
                 let title = self?.viewModel.viewModel(at: indexPath)?.title ?? ""
                 let vc = NewCategoryViewController(oldTitle: title)
                 self?.present(vc, animated: true)
             }
             
-            let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+            let deleteAction = UIAction(
+                title: NSLocalizedString(
+                    "categoryScreen.deleteCategory",
+                    comment: "Delete button in menu"
+                ),
+                attributes: .destructive
+            ) { [weak self] _ in
                 
                 let alertController = UIAlertController(
                     title: nil,
-                    message: "Эта категория точно не нужна?",
+                    message: NSLocalizedString(
+                        "categoryScreen.alertController.title",
+                        comment: "Title for alert controller"
+                    ),
                     preferredStyle: .actionSheet
                 )
                 
-                let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
+                let deleteAction = UIAlertAction(
+                    title: NSLocalizedString(
+                        "categoryScreen.alertController.delete",
+                        comment: "Delete button in alert controller"
+                    ),
+                    style: .destructive
+                ) { [weak self] _ in
                     self?.viewModel.deleteCategory(at: indexPath)
+                    self?.completion?("")
                 }
                 
-                let cancelAction = UIAlertAction(title: "Отменить", style: .cancel) { [weak self] _ in
-                    self?.dismiss(animated: true)
-                }
+                let cancelAction = UIAlertAction(
+                    title: NSLocalizedString(
+                        "categoryScreen.alertController.cancel",
+                        comment: "Cancel button in alert controller"
+                    ),
+                    style: .cancel
+                )
                 
                 alertController.addAction(deleteAction)
                 alertController.addAction(cancelAction)

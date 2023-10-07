@@ -19,38 +19,38 @@ enum WeekDay: Int {
     var fullName: String {
         switch self {
         case .monday:
-            return "Понедельник"
+            return NSLocalizedString("mondayFull", comment: "")
         case .tuesday:
-            return "Вторник"
+            return NSLocalizedString("tuesdayFull", comment: "")
         case .wednesday:
-            return "Среда"
+            return NSLocalizedString("wednesdayFull", comment: "")
         case .thursday:
-            return "Четверг"
+            return NSLocalizedString("thursdayFull", comment: "")
         case .friday:
-            return "Пятница"
+            return NSLocalizedString("fridayFull", comment: "")
         case .saturday:
-            return "Суббота"
+            return NSLocalizedString("saturdayFull", comment: "")
         case .sunday:
-            return "Воскресенье"
+            return NSLocalizedString("sundayFull", comment: "")
         }
     }
     
     var shortName: String {
         switch self {
         case .monday:
-            return "Пн"
+            return NSLocalizedString("mondayShort", comment: "")
         case .tuesday:
-            return "Вт"
+            return NSLocalizedString("tuesdayShort", comment: "")
         case .wednesday:
-            return "Ср"
+            return NSLocalizedString("wednesdayShort", comment: "")
         case .thursday:
-            return "Чт"
+            return NSLocalizedString("thursdayShort", comment: "")
         case .friday:
-            return "Пт"
+            return NSLocalizedString("fridayShort", comment: "")
         case .saturday:
-            return "Сб"
+            return NSLocalizedString("saturdayShort", comment: "")
         case .sunday:
-            return "Вс"
+            return NSLocalizedString("sundayShort", comment: "")
         }
     }
 }

@@ -15,8 +15,8 @@ final class ScheduleViewController: UIViewController {
     private var viewModel: ScheduleViewModel
     
     private var schedule: Set<WeekDay> = []
-    private let topLabel = UILabel(text: "Расписание", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
-    private let doneButton = UIButton(title: "Готово")
+    private let topLabel = UILabel()
+    private let doneButton = UIButton()
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     
     init(viewModel: ScheduleViewModel) {
@@ -41,10 +41,19 @@ final class ScheduleViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = .whiteYP
         
+        topLabel.text = NSLocalizedString("schedule.topLabel", comment: "Title for top label")
+        topLabel.textColor = .blackYP
+        topLabel.font = .systemFont(ofSize: 16, weight: .medium)
+        
         tableView.dataSource = self
         tableView.register(ScheduleCell.self, forCellReuseIdentifier: "cell")
         
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+        doneButton.setTitle(NSLocalizedString("schedule.buttonTitle", comment: "Title for button"), for: .normal)
+        doneButton.setTitleColor(.whiteYP, for: .normal)
+        doneButton.backgroundColor = .blackYP
+        doneButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        doneButton.layer.cornerRadius = 16
         
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         tableView.rowHeight = 75
