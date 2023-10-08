@@ -87,14 +87,14 @@ final class TrackerSetupViewController: UIViewController {
         self.hideKeyboardWhenTappedAround()
         
         topLabel.text = isTracker ?
-        NSLocalizedString("setupTracker.topLabel.trackerTitle", comment: "Top label at screen when tracker creating") :
-        NSLocalizedString("setupTracker.topLabel.eventTitle", comment: "Top label at screen when event creating")
+        L10n.Localizable.SetupTrackerScreen.TopLabel.trackerTitle :
+        L10n.Localizable.SetupTrackerScreen.TopLabel.eventTitle
         
         topLabel.textColor = .blackYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
         textField.delegate = self
-        textField.placeholder = NSLocalizedString("setupTracker.textField.placeholder", comment: "Placeholder for text field")
+        textField.placeholder = L10n.Localizable.SetupTrackerScreen.TextField.placeholder
         textField.clearButtonMode = .always
         textField.backgroundColor = .backgroundYP
         textField.layer.cornerRadius = 16
@@ -104,7 +104,7 @@ final class TrackerSetupViewController: UIViewController {
         textField.addTarget(self, action: #selector(textDidChanged), for: .editingChanged)
         
         warningLabel.isHidden = true
-        warningLabel.text = NSLocalizedString("setupTracker.warningLabel.title", comment: "Text for constraint label")
+        warningLabel.text = L10n.Localizable.SetupTrackerScreen.WarningLabel.title
         warningLabel.textColor = .redYP
         warningLabel.font = .systemFont(ofSize: 17, weight: .regular)
         
@@ -129,12 +129,12 @@ final class TrackerSetupViewController: UIViewController {
         
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         createButton.isEnabled = false
-        createButton.setTitle(NSLocalizedString("setupTracker.createButton.title", comment: "Title for create button"), for: .normal)
+        createButton.setTitle(L10n.Localizable.SetupTrackerScreen.CreateButton.title, for: .normal)
         createButton.backgroundColor = .grayYP
         createButton.layer.cornerRadius = 16
         
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
-        cancelButton.setTitle(NSLocalizedString("setupTracker.cancelButton.title", comment: "Title for cancel button"), for: .normal)
+        cancelButton.setTitle(L10n.Localizable.SetupTrackerScreen.CancelButton.title, for: .normal)
         cancelButton.setTitleColor(.redYP, for: .normal)
         cancelButton.backgroundColor = .clear
         cancelButton.layer.cornerRadius = 16

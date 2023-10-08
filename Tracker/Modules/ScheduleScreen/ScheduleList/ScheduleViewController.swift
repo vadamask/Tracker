@@ -41,7 +41,7 @@ final class ScheduleViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = .whiteYP
         
-        topLabel.text = NSLocalizedString("schedule.topLabel", comment: "Title for top label")
+        topLabel.text = L10n.Localizable.ScheduleScreen.TopLabel.title
         topLabel.textColor = .blackYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
@@ -49,7 +49,7 @@ final class ScheduleViewController: UIViewController {
         tableView.register(ScheduleCell.self, forCellReuseIdentifier: "cell")
         
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
-        doneButton.setTitle(NSLocalizedString("schedule.buttonTitle", comment: "Title for button"), for: .normal)
+        doneButton.setTitle(L10n.Localizable.ScheduleScreen.doneButtonTitle, for: .normal)
         doneButton.setTitleColor(.whiteYP, for: .normal)
         doneButton.backgroundColor = .blackYP
         doneButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)

@@ -31,13 +31,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     
     private var completedDays = 0 {
         didSet {
-            daysCount.text = String.localizedStringWithFormat(
-                NSLocalizedString(
-                    "numberOfDays",
-                    comment: "Number of completed days"
-                ),
-                completedDays
-            )
+            daysCount.text = L10n.Localizable.numberOfDays(completedDays)
         }
     }
     

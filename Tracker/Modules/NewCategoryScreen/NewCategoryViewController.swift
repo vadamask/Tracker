@@ -48,21 +48,12 @@ final class NewCategoryViewController: UIViewController {
             
             if isSame {
                 let alertController = UIAlertController(
-                    title: NSLocalizedString(
-                        "newCategory.alertController.title",
-                        comment: "Title for alert controller"
-                    ),
-                    message: NSLocalizedString(
-                        "newCategory.alertController.message",
-                        comment: "Message for alert controller"
-                    ),
+                    title: L10n.Localizable.NewCategoryScreen.AlertController.title,
+                    message: L10n.Localizable.NewCategoryScreen.AlertController.message,
                     preferredStyle: .alert
                 )
                 let action = UIAlertAction(
-                    title: NSLocalizedString(
-                        "newCategory.alertController.action",
-                        comment: "Title for action button"
-                    ),
+                    title: L10n.Localizable.NewCategoryScreen.AlertController.action,
                     style: .default
                 )
                 alertController.addAction(action)
@@ -86,14 +77,14 @@ final class NewCategoryViewController: UIViewController {
         view.backgroundColor = .whiteYP
         
         topLabel.text = oldTitle == nil ?
-        NSLocalizedString("newCategory.topLabelForNew", comment: "Title for top label when new category is creating"):
-        NSLocalizedString("newCategory.topLabelForEdit", comment: "Title for top label when category is editing")
+        L10n.Localizable.NewCategoryScreen.topLabelForNew :
+        L10n.Localizable.NewCategoryScreen.topLabelForEdit
         topLabel.textColor = .blackYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
         createButton.isEnabled = false
         createButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
-        createButton.setTitle(NSLocalizedString("newCategory.createButton", comment: "Title for create button"), for: .normal)
+        createButton.setTitle(L10n.Localizable.NewCategoryScreen.doneButtonTitle, for: .normal)
         createButton.setTitleColor(.whiteYP, for: .normal)
         createButton.backgroundColor = .grayYP
         createButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -101,7 +92,7 @@ final class NewCategoryViewController: UIViewController {
         
         textField.text = oldTitle
         textField.delegate = self
-        textField.placeholder = NSLocalizedString("newCategory.textField.placeholder", comment: "Text in text field placeholder")
+        textField.placeholder = L10n.Localizable.NewCategoryScreen.TextField.placeholder
         textField.clearButtonMode = .always
         textField.backgroundColor = .backgroundYP
         textField.layer.cornerRadius = 16

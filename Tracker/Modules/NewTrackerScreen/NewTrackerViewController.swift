@@ -29,18 +29,18 @@ final class NewTrackerViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = .whiteYP
         
-        topLabel.text = NSLocalizedString("newTracker.topLabel", comment: "Top label on screen")
+        topLabel.text = L10n.Localizable.NewTrackerScreen.TopLabel.title
         topLabel.textColor = .blackYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
         trackerButton.addTarget(self, action: #selector(trackerButtonTapped), for: .touchUpInside)
-        trackerButton.setTitle(NSLocalizedString("newTracker.trackerButton.title", comment: "Title for tracker button"), for: .normal)
+        trackerButton.setTitle(L10n.Localizable.NewTrackerScreen.TrackerButton.title, for: .normal)
         trackerButton.setTitleColor(.whiteYP, for: .normal)
         trackerButton.backgroundColor = .blackYP
         trackerButton.layer.cornerRadius = 16
         
         eventButton.addTarget(self, action: #selector(eventButtonTapped), for: .touchUpInside)
-        eventButton.setTitle(NSLocalizedString("newTracker.eventButton.title", comment: "Title for event button"), for: .normal)
+        eventButton.setTitle(L10n.Localizable.NewTrackerScreen.EventButton.title, for: .normal)
         eventButton.setTitleColor(.whiteYP, for: .normal)
         eventButton.backgroundColor = .blackYP
         eventButton.layer.cornerRadius = 16

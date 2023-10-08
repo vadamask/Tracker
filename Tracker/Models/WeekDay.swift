@@ -19,38 +19,38 @@ enum WeekDay: Int {
     var fullName: String {
         switch self {
         case .monday:
-            return NSLocalizedString("mondayFull", comment: "")
+            return L10n.Localizable.mondayFull
         case .tuesday:
-            return NSLocalizedString("tuesdayFull", comment: "")
+            return L10n.Localizable.tuesdayFull
         case .wednesday:
-            return NSLocalizedString("wednesdayFull", comment: "")
+            return L10n.Localizable.wednesdayFull
         case .thursday:
-            return NSLocalizedString("thursdayFull", comment: "")
+            return L10n.Localizable.thursdayFull
         case .friday:
-            return NSLocalizedString("fridayFull", comment: "")
+            return L10n.Localizable.fridayFull
         case .saturday:
-            return NSLocalizedString("saturdayFull", comment: "")
+            return L10n.Localizable.saturdayFull
         case .sunday:
-            return NSLocalizedString("sundayFull", comment: "")
+            return L10n.Localizable.sundayFull
         }
     }
     
     var shortName: String {
         switch self {
         case .monday:
-            return NSLocalizedString("mondayShort", comment: "")
+            return L10n.Localizable.mondayShort
         case .tuesday:
-            return NSLocalizedString("tuesdayShort", comment: "")
+            return L10n.Localizable.tuesdayShort
         case .wednesday:
-            return NSLocalizedString("wednesdayShort", comment: "")
+            return L10n.Localizable.wednesdayShort
         case .thursday:
-            return NSLocalizedString("thursdayShort", comment: "")
+            return L10n.Localizable.thursdayShort
         case .friday:
-            return NSLocalizedString("fridayShort", comment: "")
+            return L10n.Localizable.fridayShort
         case .saturday:
-            return NSLocalizedString("saturdayShort", comment: "")
+            return L10n.Localizable.saturdayShort
         case .sunday:
-            return NSLocalizedString("sundayShort", comment: "")
+            return L10n.Localizable.sundayShort
         }
     }
 }

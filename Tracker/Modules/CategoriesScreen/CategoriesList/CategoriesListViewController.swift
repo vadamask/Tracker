@@ -76,17 +76,17 @@ final class CategoriesListViewController: UIViewController {
         tableView.allowsMultipleSelection = false
         tableView.layer.cornerRadius = 16
         
-        placeholderLabel.text = NSLocalizedString("categoryScreen.emptyState.title", comment: "Title for empty state")
+        placeholderLabel.text = L10n.Localizable.CategoriesScreen.EmptyState.title
         placeholderLabel.numberOfLines = 2
         placeholderLabel.textAlignment = .center
         placeholderLabel.textColor = .blackYP
         placeholderLabel.font = .systemFont(ofSize: 12, weight: .medium)
         
-        topLabel.text = NSLocalizedString("categoryScreen.topLabel", comment: "Title for top label")
+        topLabel.text = L10n.Localizable.CategoriesScreen.TopLabel.title
         topLabel.textColor = .blackYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
-        addButton.setTitle(NSLocalizedString("categoryScreen.buttonTitle", comment: "Title for add button"), for: .normal)
+        addButton.setTitle(L10n.Localizable.CategoriesScreen.Button.addTitle, for: .normal)
         addButton.setTitleColor(.whiteYP, for: .normal)
         addButton.backgroundColor = .blackYP
         addButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -150,7 +150,7 @@ extension CategoriesListViewController: UITableViewDelegate {
         let config = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
             
             let editAction = UIAction(
-                title: NSLocalizedString("categoryScreen.editCategory", comment: "Edit button in menu")
+                title: L10n.Localizable.CategoriesScreen.editCategoryTitle
             ) { [weak self] _ in
                 let title = self?.viewModel.viewModel(at: indexPath)?.title ?? ""
                 let vc = NewCategoryViewController(oldTitle: title)
@@ -158,27 +158,18 @@ extension CategoriesListViewController: UITableViewDelegate {
             }
             
             let deleteAction = UIAction(
-                title: NSLocalizedString(
-                    "categoryScreen.deleteCategory",
-                    comment: "Delete button in menu"
-                ),
+                title: L10n.Localizable.CategoriesScreen.deleteCategoryTitle,
                 attributes: .destructive
             ) { [weak self] _ in
                 
                 let alertController = UIAlertController(
                     title: nil,
-                    message: NSLocalizedString(
-                        "categoryScreen.alertController.title",
-                        comment: "Title for alert controller"
-                    ),
+                    message: L10n.Localizable.CategoriesScreen.AlertController.message,
                     preferredStyle: .actionSheet
                 )
                 
                 let deleteAction = UIAlertAction(
-                    title: NSLocalizedString(
-                        "categoryScreen.alertController.delete",
-                        comment: "Delete button in alert controller"
-                    ),
+                    title: L10n.Localizable.CategoriesScreen.AlertController.delete,
                     style: .destructive
                 ) { [weak self] _ in
                     self?.viewModel.deleteCategory(at: indexPath)
@@ -186,10 +177,7 @@ extension CategoriesListViewController: UITableViewDelegate {
                 }
                 
                 let cancelAction = UIAlertAction(
-                    title: NSLocalizedString(
-                        "categoryScreen.alertController.cancel",
-                        comment: "Cancel button in alert controller"
-                    ),
+                    title: L10n.Localizable.CategoriesScreen.AlertController.cancel,
                     style: .cancel
                 )
                 

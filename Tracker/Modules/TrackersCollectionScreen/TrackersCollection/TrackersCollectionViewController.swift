@@ -40,7 +40,7 @@ final class TrackersCollectionViewController: UIViewController {
         viewModel.$categories.bind { [weak self] categories in
             if categories.isEmpty {
                 self?.placeholder.image = UIImage(named: "empty list")
-                self?.placeholderLabel.text = NSLocalizedString("collection.emptyState.title", comment: "Text for empty state on main screen")
+                self?.placeholderLabel.text = L10n.Localizable.CollectionScreen.EmptyState.title
                 self?.placeholder.isHidden = false
                 self?.placeholderLabel.isHidden = false
             } else {
@@ -53,7 +53,7 @@ final class TrackersCollectionViewController: UIViewController {
         viewModel.$searchIsEmpty.bind { [weak self] isEmpty in
             if isEmpty {
                 self?.placeholder.image = UIImage(named: "empty search result")
-                self?.placeholderLabel.text = NSLocalizedString("collection.emptySearch.title", comment: "Text for empty search")
+                self?.placeholderLabel.text = L10n.Localizable.CollectionScreen.EmptySearch.title
                 self?.placeholder.isHidden = false
                 self?.placeholderLabel.isHidden = false
             } else {
@@ -91,20 +91,14 @@ final class TrackersCollectionViewController: UIViewController {
         
         let searchController = UISearchController()
         searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchBar.placeholder = NSLocalizedString(
-            "collection.searchBar.placeholder",
-            comment: "Placeholder in search bar"
-        )
+        searchController.searchBar.placeholder = L10n.Localizable.CollectionScreen.SearchBar.placeholder
         searchController.searchBar.setValue(
-            NSLocalizedString(
-                "collection.searchBar.cancelButton",
-                comment: "Title for cancel button in search bar"
-            ),
+            L10n.Localizable.CollectionScreen.SearchBar.cancelButton,
             forKey: "cancelButtonText"
         )
         searchController.searchBar.delegate = self
         
-        navigationItem.title = NSLocalizedString("collection.navigationTitle", comment: "Title for navigation bar")
+        navigationItem.title = L10n.Localizable.CollectionScreen.NavigationItem.title
         navigationItem.leftBarButtonItem = leftItem
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
         navigationItem.searchController = searchController

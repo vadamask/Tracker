@@ -21,10 +21,10 @@ final class StatisticsViewController: UIViewController {
     
     private func setupViews() {
         view.backgroundColor = .whiteYP
-        navigationItem.title = NSLocalizedString("statistics.navigationTitle", comment: "Title for navigaton bar")
+        navigationItem.title = L10n.Localizable.StatisticsScreen.NavigationItem.title
         
         label.textAlignment = .center
-        label.text = NSLocalizedString("statistics.emptyState.title", comment: "Text on statistics screen where empty state")
+        label.text = L10n.Localizable.StatisticsScreen.EmptyState.title
         label.textColor = .blackYP
         label.font = .systemFont(ofSize: 12, weight: .medium)
     }

@@ -22,50 +22,53 @@
 "sundayShort" = "Su";
 "everyday" = "Everyday";
 
-"onboarding.firstPage.title" = "Track only what you want";
-"onboarding.secondPage.title" = "Even if it's not liters of water and yoga";
-"onboarding.button" = "These are technologies!";
+"tabBarItem.collection" = "Trackers";
+"tabBarItem.statistics" = "Statistics";
 
-"statistics.emptyState.title" = "There is nothing to analyze yet";
-"statistics.navigationTitle" = "Statistics";
+"onboardingScreen.firstPage.label.title" = "Track only what you want";
+"onboardingScreen.secondPage.label.title" = "Even if it's not liters of water and yoga";
+"onboardingScreen.button.title" = "These are technologies!";
 
-"collection.navigationTitle" = "Trackers";
-"collection.emptyState.title" = "What will we track?";
-"collection.emptySearch.title" = "Nothing found";
-"collection.searchBar.placeholder" = "Search";
-"collection.searchBar.cancelButton" = "Cancel";
+"statisticsScreen.emptyState.title" = "There is nothing to analyze yet";
+"statisticsScreen.navigationItem.title" = "Statistics";
 
-"newTracker.topLabel" = "Creating a tracker";
-"newTracker.trackerButton.title" = "Habit";
-"newTracker.eventButton.title" = "Irregular event";
+"collectionScreen.navigationItem.title" = "Trackers";
+"collectionScreen.emptyState.title" = "What will we track?";
+"collectionScreen.emptySearch.title" = "Nothing found";
+"collectionScreen.searchBar.placeholder" = "Search";
+"collectionScreen.searchBar.cancelButton" = "Cancel";
 
-"setupTracker.topLabel.trackerTitle" = "New habit";
-"setupTracker.topLabel.eventTitle" = "New irregular event";
-"setupTracker.textField.placeholder" = "Enter tracker name";
-"setupTracker.warningLabel.title" = "Limit 38 characters";
-"setupTracker.category.title" = "Category";
-"setupTracker.schedule.title" = "Schedule";
-"setupTracker.emoji.header" = "Emoji";
-"setupTracker.color.header" = "Color";
-"setupTracker.createButton.title" = "Create";
-"setupTracker.cancelButton.title" = "Cancel";
+"newTrackerScreen.topLabel.title" = "Creating a tracker";
+"newTrackerScreen.trackerButton.title" = "Habit";
+"newTrackerScreen.eventButton.title" = "Irregular event";
 
-"categoryScreen.topLabel" = "Category";
-"categoryScreen.emptyState.title" = "Habits and events can be combined by meaning";
-"categoryScreen.buttonTitle" = "Add category";
-"categoryScreen.editCategory" = "Edit";
-"categoryScreen.deleteCategory" = "Delete";
-"categoryScreen.alertController.title" = "Are you sure this category is not needed?";
-"categoryScreen.alertController.delete" = "Delete";
-"categoryScreen.alertController.cancel" = "Cancel";
+"setupTrackerScreen.topLabel.trackerTitle" = "New habit";
+"setupTrackerScreen.topLabel.eventTitle" = "New irregular event";
+"setupTrackerScreen.textField.placeholder" = "Enter tracker name";
+"setupTrackerScreen.warningLabel.title" = "Limit 38 characters";
+"setupTrackerScreen.category.title" = "Category";
+"setupTrackerScreen.schedule.title" = "Schedule";
+"setupTrackerScreen.emoji.header" = "Emoji";
+"setupTrackerScreen.color.header" = "Color";
+"setupTrackerScreen.createButton.title" = "Create";
+"setupTrackerScreen.cancelButton.title" = "Cancel";
 
-"newCategory.createButton" = "Done";
-"newCategory.alertController.title" = "Error";
-"newCategory.alertController.message" = "This name already exists";
-"newCategory.alertController.action" = "Ok";
-"newCategory.topLabelForNew" = "New category";
-"newCategory.topLabelForEdit" = "Editing the category";
-"newCategory.textField.placeholder" = "Enter category name";
+"categoriesScreen.topLabel.title" = "Category";
+"categoriesScreen.emptyState.title" = "Habits and events can be combined by meaning";
+"categoriesScreen.button.addTitle" = "Add category";
+"categoriesScreen.editCategoryTitle" = "Edit";
+"categoriesScreen.deleteCategoryTitle" = "Delete";
+"categoriesScreen.alertController.message" = "Are you sure this category is not needed?";
+"categoriesScreen.alertController.delete" = "Delete";
+"categoriesScreen.alertController.cancel" = "Cancel";
 
-"schedule.topLabel" = "Schedule";
-"schedule.buttonTitle" = "Done";
+"newCategoryScreen.doneButtonTitle" = "Done";
+"newCategoryScreen.alertController.title" = "Error";
+"newCategoryScreen.alertController.message" = "This name already exists";
+"newCategoryScreen.alertController.action" = "Ok";
+"newCategoryScreen.topLabelForNew" = "New category";
+"newCategoryScreen.topLabelForEdit" = "Editing the category";
+"newCategoryScreen.textField.placeholder" = "Enter category name";
+
+"scheduleScreen.topLabel.title" = "Schedule";
+"scheduleScreen.doneButtonTitle" = "Done";

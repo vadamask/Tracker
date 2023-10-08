@@ -10,9 +10,6 @@ import UIKit
 
 final class OnboardingViewController: UIViewController {
     
-    private let textLabel1 = NSLocalizedString("onboarding.firstPage.title", comment: "Text on first page view controller")
-    private let textLabel2 = NSLocalizedString("onboarding.secondPage.title", comment: "Text on second page view controller")
-    
     private var viewControllers: [UIViewController] = []
     
     private let pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
@@ -40,8 +37,8 @@ final class OnboardingViewController: UIViewController {
     }
     
     private func setupViewControllers() {
-        let vc1 = PageViewController(imageName: "first onboarding", textLabel: textLabel1)
-        let vc2 = PageViewController(imageName: "second onboarding", textLabel: textLabel2)
+        let vc1 = PageViewController(imageName: "first onboarding", textLabel: L10n.Localizable.OnboardingScreen.FirstPage.Label.title)
+        let vc2 = PageViewController(imageName: "second onboarding", textLabel: L10n.Localizable.OnboardingScreen.SecondPage.Label.title)
         viewControllers.append(contentsOf: [vc1, vc2])
     }
     

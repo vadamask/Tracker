@@ -33,7 +33,7 @@ final class ScheduleCategoryCell: UITableViewCell {
         detailTextLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         
         if row == 0 {
-            textLabel?.text = NSLocalizedString("setupTracker.category.title", comment: "Category button")
+            textLabel?.text = L10n.Localizable.SetupTrackerScreen.Category.title
             layer.maskedCorners = isTracker ?
             [.layerMinXMinYCorner, .layerMaxXMinYCorner] :
             [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
@@ -42,7 +42,7 @@ final class ScheduleCategoryCell: UITableViewCell {
                 separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 400)
             }
         } else {
-            textLabel?.text = NSLocalizedString("setupTracker.schedule.title", comment: "Schedule button")
+            textLabel?.text = L10n.Localizable.SetupTrackerScreen.Schedule.title
             layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
             separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 400)
         }
@@ -51,6 +51,6 @@ final class ScheduleCategoryCell: UITableViewCell {
     func setDetailTextLabel(for days: [String]) {
         detailTextLabel?.text = days.count < 7 ?
         days.joined(separator: ", ") :
-        NSLocalizedString("everyday", comment: "")
+        L10n.Localizable.everyday
     }
 }

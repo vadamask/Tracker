@@ -45,7 +45,7 @@ final class PageViewController: UIViewController {
         label.font = .systemFont(ofSize: 32, weight: .bold)
         
         button.addTarget(self, action: #selector(buttonDidTapped), for: .touchUpInside)
-        button.setTitle(NSLocalizedString("onboarding.button", comment: "Text on button"), for: .normal)
+        button.setTitle(L10n.Localizable.OnboardingScreen.Button.title, for: .normal)
         button.setTitleColor(.whiteYP, for: .normal)
         button.backgroundColor = .blackYP
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)

@@ -15,8 +15,8 @@ final class TrackerSetupCollectionViewHeader: UICollectionReusableView {
 
     func configure(with section: Int) {
         label.text = section == 0 ?
-        NSLocalizedString("setupTracker.emoji.header", comment: "Emoji header") :
-        NSLocalizedString("setupTracker.color.header", comment: "Color header")
+        L10n.Localizable.SetupTrackerScreen.Emoji.header :
+        L10n.Localizable.SetupTrackerScreen.Color.header
         
         label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
         

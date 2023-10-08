@@ -20,7 +20,7 @@ final class CategoryCell: UITableViewCell {
     
     private func setupView() {
         textLabel?.text = viewModel?.title
-        textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        textLabel?.font = .systemFont(ofSize: 17, weight: .regular)
         textLabel?.textColor = .blackYP
         
         backgroundColor = .backgroundYP

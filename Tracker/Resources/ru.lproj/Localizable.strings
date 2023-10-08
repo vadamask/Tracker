@@ -22,50 +22,53 @@
 "sundayShort" = "Вс";
 "everyday" = "Каждый день";
 
-"onboarding.firstPage.title" = "Отслеживайте только то, что хотите";
-"onboarding.secondPage.title" = "Даже если это не литры воды и йога";
-"onboarding.button" = "Вот это технологии!";
+"tabBarItem.collection" = "Трекеры";
+"tabBarItem.statistics" = "Статистика";
+ 
+"onboardingScreen.firstPage.label.title" = "Отслеживайте только то, что хотите";
+"onboardingScreen.secondPage.label.title" = "Даже если это не литры воды и йога";
+"onboardingScreen.button.title" = "Вот это технологии!";
 
-"statistics.emptyState.title" = "Анализировать пока нечего";
-"statistics.navigationTitle" = "Статистика";
+"statisticsScreen.emptyState.title" = "Анализировать пока нечего";
+"statisticsScreen.navigationItem.title" = "Статистика";
 
-"collection.navigationTitle" = "Трекеры";
-"collection.emptyState.title" = "Что будем отслеживать?";
-"collection.emptySearch.title" = "Ничего не найдено";
-"collection.searchBar.placeholder" = "Поиск";
-"collection.searchBar.cancelButton" = "Отменить";
+"collectionScreen.navigationItem.title" = "Трекеры";
+"collectionScreen.emptyState.title" = "Что будем отслеживать?";
+"collectionScreen.emptySearch.title" = "Ничего не найдено";
+"collectionScreen.searchBar.placeholder" = "Поиск";
+"collectionScreen.searchBar.cancelButton" = "Отменить";
 
-"newTracker.topLabel" = "Создание трекера";
-"newTracker.trackerButton.title" = "Привычка";
-"newTracker.eventButton.title" = "Нерегулярное событие";
+"newTrackerScreen.topLabel.title" = "Создание трекера";
+"newTrackerScreen.trackerButton.title" = "Привычка";
+"newTrackerScreen.eventButton.title" = "Нерегулярное событие";
 
-"setupTracker.topLabel.trackerTitle" = "Новая привычка";
-"setupTracker.topLabel.eventTitle" = "Новое нерегулярное событие";
-"setupTracker.textField.placeholder" = "Введите название трекера";
-"setupTracker.warningLabel.title" = "Ограничение 38 символов";
-"setupTracker.category.title" = "Категория";
-"setupTracker.schedule.title" = "Расписание";
-"setupTracker.emoji.header" = "Emoji";
-"setupTracker.color.header" = "Цвет";
-"setupTracker.createButton.title" = "Создать";
-"setupTracker.cancelButton.title" = "Отменить";
+"setupTrackerScreen.topLabel.trackerTitle" = "Новая привычка";
+"setupTrackerScreen.topLabel.eventTitle" = "Новое нерегулярное событие";
+"setupTrackerScreen.textField.placeholder" = "Введите название трекера";
+"setupTrackerScreen.warningLabel.title" = "Ограничение 38 символов";
+"setupTrackerScreen.category.title" = "Категория";
+"setupTrackerScreen.schedule.title" = "Расписание";
+"setupTrackerScreen.emoji.header" = "Emoji";
+"setupTrackerScreen.color.header" = "Цвет";
+"setupTrackerScreen.createButton.title" = "Создать";
+"setupTrackerScreen.cancelButton.title" = "Отменить";
 
-"categoryScreen.topLabel" = "Категория";
-"categoryScreen.emptyState.title" = "Привычки и события можно объединить по смыслу";
-"categoryScreen.buttonTitle" = "Добавить категорию";
-"categoryScreen.editCategory" = "Редактировать";
-"categoryScreen.deleteCategory" = "Удалить";
-"categoryScreen.alertController.title" = "Эта категория точно не нужна?";
-"categoryScreen.alertController.delete" = "Удалить";
-"categoryScreen.alertController.cancel" = "Отменить";
+"categoriesScreen.topLabel.title" = "Категория";
+"categoriesScreen.emptyState.title" = "Привычки и события можно объединить по смыслу";
+"categoriesScreen.button.addTitle" = "Добавить категорию";
+"categoriesScreen.editCategoryTitle" = "Редактировать";
+"categoriesScreen.deleteCategoryTitle" = "Удалить";
+"categoriesScreen.alertController.message" = "Эта категория точно не нужна?";
+"categoriesScreen.alertController.delete" = "Удалить";
+"categoriesScreen.alertController.cancel" = "Отменить";
 
-"newCategory.createButton" = "Готово";
-"newCategory.alertController.title" = "Ошибка";
-"newCategory.alertController.message" = "Такое название уже есть";
-"newCategory.alertController.action" = "Ок";
-"newCategory.topLabelForNew" = "Новая категория";
-"newCategory.topLabelForEdit" = "Редактирование категории";
-"newCategory.textField.placeholder" = "Введите название категории";
+"newCategoryScreen.doneButtonTitle" = "Готово";
+"newCategoryScreen.alertController.title" = "Ошибка";
+"newCategoryScreen.alertController.message" = "Такое название уже есть";
+"newCategoryScreen.alertController.action" = "Ок";
+"newCategoryScreen.topLabelForNew" = "Новая категория";
+"newCategoryScreen.topLabelForEdit" = "Редактирование категории";
+"newCategoryScreen.textField.placeholder" = "Введите название категории";
 
-"schedule.topLabel" = "Расписание";
-"schedule.buttonTitle" = "Готово";
+"scheduleScreen.topLabel.title" = "Расписание";
+"scheduleScreen.doneButtonTitle" = "Готово";
