@@ -38,6 +38,11 @@ final class TrackersCollectionViewModel {
         fetchObjectsAtCurrentDate()
     }
     
+    func deleteTracker(at indexPath: IndexPath) {
+        let uuid = categories[indexPath.section].trackers[indexPath.row].uuid
+        model.deleteTracker(with: uuid)
+    }
+    
     func fetchObjectsAtCurrentDate() {
         categories = model.fetchObjectsAtCurrentDate()
     }

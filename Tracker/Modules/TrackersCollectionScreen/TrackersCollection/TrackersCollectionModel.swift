@@ -80,6 +80,14 @@ final class TrackersCollectionModel {
         }
         return false
     }
+    
+    func deleteTracker(with uuid: UUID) {
+        do {
+            try trackerStore.deleteTracker(with: uuid.uuidString)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
 
 

@@ -37,6 +37,13 @@
 "collectionScreen.emptySearch.title" = "Ничего не найдено";
 "collectionScreen.searchBar.placeholder" = "Поиск";
 "collectionScreen.searchBar.cancelButton" = "Отменить";
+"collectionScreen.contextMenu.pinAction" = "Закрепить";
+"collectionScreen.contextMenu.unpinAction" = "Открепить";
+"collectionScreen.contextMenu.editAction" = "Редактировать";
+"collectionScreen.contextMenu.deleteAction" = "Удалить";
+"collectionScreen.alertController.message" = "Уверены, что хотите удалить трекер?";
+"collectionScreen.alertController.deleteAction" = "Удалить";
+"collectionScreen.alertController.cancelAction" = "Отменить";
 
 "newTrackerScreen.topLabel.title" = "Создание трекера";
 "newTrackerScreen.trackerButton.title" = "Привычка";

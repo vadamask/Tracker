@@ -62,6 +62,15 @@ final class TrackerStore: NSObject {
         NotificationCenter.default.post(notification)
     }
     
+    func deleteTracker(with uuid: String) throws {
+        let request = TrackerCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "%K == %@" , #keyPath(TrackerCoreData.uuid), uuid)
+        let trackers = try context.fetch(request)
+        context.delete(trackers[0])
+        try context.save()
+        NotificationCenter.default.post(notification)
+    }
+    
     private func convertToTracker(_ object: TrackerCoreData) -> Tracker {
         if let id = object.uuid,
            let name = object.name,

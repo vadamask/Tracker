@@ -20,7 +20,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     
     private var tracker: Tracker?
     private var isDone = false
-    private let cardView = UIView()
+    private(set) var cardView = UIView()
     private let quantityView = UIView()
     private let emojiBackground = UIView()
     private let pinView: UIImageView = UIImageView(image: UIImage(named: "pin symbol"))

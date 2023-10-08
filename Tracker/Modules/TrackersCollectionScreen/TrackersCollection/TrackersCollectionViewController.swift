@@ -150,15 +150,22 @@ final class TrackersCollectionViewController: UIViewController {
 // MARK: - UICollectionViewDataSource
 
 extension TrackersCollectionViewController: UICollectionViewDataSource {
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         viewModel.categories.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
         viewModel.categories[section].trackers.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
     
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: TrackersCollectionViewCell.identifier,
@@ -174,7 +181,11 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView {
         
         let title = viewModel.categories[indexPath.section].title
         
@@ -191,28 +202,104 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - UICollectionViewDelegate
+
+extension TrackersCollectionViewController {
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        contextMenuConfigurationForItemsAt indexPaths: [IndexPath],
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        
+        let indexPath = indexPaths[0]
+        
+        let pinAction = UIAction(title: L10n.Localizable.CollectionScreen.ContextMenu.pinAction) { [weak self] _ in
+            
+        }
+        
+        let editAction = UIAction(title: L10n.Localizable.CollectionScreen.ContextMenu.editAction) { [weak self] _ in
+            let cell = self?.viewModel.categories[indexPath.section].trackers[indexPath.row]
+            
+        }
+        
+        let deleteAction = UIAction(title: L10n.Localizable.CollectionScreen.ContextMenu.deleteAction, attributes: .destructive) { [weak self] _ in
+            let alertController = UIAlertController(
+                title: nil,
+                message: L10n.Localizable.CollectionScreen.AlertController.message,
+                preferredStyle: .actionSheet
+            )
+            let deleteAction = UIAlertAction(title: L10n.Localizable.CollectionScreen.AlertController.deleteAction, style: .destructive) { _ in
+                self?.viewModel.deleteTracker(at: indexPath)
+            }
+            let cancelAction = UIAlertAction(title: L10n.Localizable.CollectionScreen.AlertController.cancelAction, style: .cancel)
+            alertController.addAction(deleteAction)
+            alertController.addAction(cancelAction)
+            self?.present(alertController, animated: true)
+        }
+        
+        return UIContextMenuConfiguration(actionProvider: { _ in
+            UIMenu(children: [pinAction, editAction, deleteAction])
+        })
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        contextMenuConfiguration configuration: UIContextMenuConfiguration,
+        highlightPreviewForItemAt indexPath: IndexPath
+    ) -> UITargetedPreview? {
+        
+        if let cell = collectionView.cellForItem(at: indexPath) as? TrackersCollectionViewCell {
+            return UITargetedPreview(view: cell.cardView)
+        } else {
+            return nil
+        }
+    }
+}
+
 // MARK: - UICollectionViewFlowLayout
 
 extension TrackersCollectionViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumInteritemSpacingForSectionAt section: Int
+    ) -> CGFloat {
         params.cellSpacing
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumLineSpacingForSectionAt section: Int
+    ) -> CGFloat {
         0
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
         let availableWidth = collectionView.bounds.width - params.paddingWidth
         let cellWidth = availableWidth / CGFloat(params.cellCount)
         return CGSize(width: cellWidth, height: 148)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        insetForSectionAt section: Int
+    ) -> UIEdgeInsets {
         UIEdgeInsets(top: 24, left: params.leftInset, bottom: 24, right: params.rightInset)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        referenceSizeForHeaderInSection section: Int
+    ) -> CGSize {
         CGSize(width: 0, height: 18)
     }
 }

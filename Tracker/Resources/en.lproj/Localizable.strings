@@ -37,6 +37,13 @@
 "collectionScreen.emptySearch.title" = "Nothing found";
 "collectionScreen.searchBar.placeholder" = "Search";
 "collectionScreen.searchBar.cancelButton" = "Cancel";
+"collectionScreen.contextMenu.pinAction" = "Pin";
+"collectionScreen.contextMenu.unpinAction" = "Unpin";
+"collectionScreen.contextMenu.editAction" = "Edit";
+"collectionScreen.contextMenu.deleteAction" = "Delete";
+"collectionScreen.alertController.message" = "Are you sure you want to delete the tracker?";
+"collectionScreen.alertController.deleteAction" = "Delete";
+"collectionScreen.alertController.cancelAction" = "Cancel";
 
 "newTrackerScreen.topLabel.title" = "Creating a tracker";
 "newTrackerScreen.trackerButton.title" = "Habit";
