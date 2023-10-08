@@ -31,7 +31,13 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     
     private var completedDays = 0 {
         didSet {
-            daysCount.text = "\(completedDays) \(correctStringForNumber(completedDays))"
+            daysCount.text = String.localizedStringWithFormat(
+                NSLocalizedString(
+                    "numberOfDays",
+                    comment: "Number of completed days"
+                ),
+                completedDays
+            )
         }
     }
     
@@ -83,21 +89,6 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    private func correctStringForNumber(_ num: Int) -> String {
-        switch num % 10 {
-        case 1 where (num - 1) % 100 != 10:
-            return "день"
-        case 2 where (num - 2) % 100 != 10:
-            return "дня"
-        case 3 where (num - 3) % 100 != 10:
-            return "дня"
-        case 4 where (num - 4) % 100 != 10:
-            return "дня"
-        default:
-            return "дней"
-        }
-    }
-    
     private func setupButton() {
         if isDone {
             plusButton.setImage(UIImage(named: "done"), for: .normal)
@@ -114,8 +105,6 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     
     private func setupViews() {
         pinView.isHidden = true
-        
-        daysCount.text = "\(completedDays) \(correctStringForNumber(completedDays))"
         
         quantityView.backgroundColor = .clear
         

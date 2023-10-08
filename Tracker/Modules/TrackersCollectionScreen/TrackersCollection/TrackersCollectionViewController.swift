@@ -91,7 +91,10 @@ final class TrackersCollectionViewController: UIViewController {
         
         let searchController = UISearchController()
         searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchBar.placeholder = NSLocalizedString("collection.searchBar.placeholder", comment: "Placeholder in search bar")
+        searchController.searchBar.placeholder = NSLocalizedString(
+            "collection.searchBar.placeholder",
+            comment: "Placeholder in search bar"
+        )
         searchController.searchBar.setValue(
             NSLocalizedString(
                 "collection.searchBar.cancelButton",
