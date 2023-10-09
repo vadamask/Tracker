@@ -16,7 +16,7 @@ final class ScheduleViewController: UIViewController {
     
     private var schedule: Set<WeekDay> = []
     private let topLabel = UILabel()
-    private let doneButton = UIButton()
+    private let doneButton = UIButton(type: .system)
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     
     init(viewModel: ScheduleViewModel) {

@@ -44,6 +44,7 @@
 "collectionScreen.alertController.message" = "Are you sure you want to delete the tracker?";
 "collectionScreen.alertController.deleteAction" = "Delete";
 "collectionScreen.alertController.cancelAction" = "Cancel";
+"collectionScreen.filterButton" = "Filters";
 
 "newTrackerScreen.topLabel.title" = "Creating a tracker";
 "newTrackerScreen.trackerButton.title" = "Habit";

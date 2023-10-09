@@ -26,8 +26,8 @@ final class TrackerSetupViewController: UIViewController {
     private let textField = UITextField()
     private let tableView = UITableView()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    private let createButton = UIButton()
-    private let cancelButton = UIButton()
+    private let createButton = UIButton(type: .system)
+    private let cancelButton = UIButton(type: .system)
     private let warningLabel = UILabel()
     
     private var tableViewTopLabel: Constraint?
@@ -120,9 +120,11 @@ final class TrackerSetupViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.register(EmojiCell.self, forCellWithReuseIdentifier: EmojiCell.identifier)
         collectionView.register(ColorCell.self, forCellWithReuseIdentifier: ColorCell.identifier)
-        collectionView.register(TrackerSetupCollectionViewHeader.self,
-                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier: TrackerSetupCollectionViewHeader.identifier)
+        collectionView.register(
+            TrackerSetupCollectionViewHeader.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: TrackerSetupCollectionViewHeader.identifier
+        )
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 19, bottom: 24, right: 19)
         collectionView.isScrollEnabled = false
         collectionView.allowsMultipleSelection = true
@@ -130,9 +132,12 @@ final class TrackerSetupViewController: UIViewController {
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         createButton.isEnabled = false
         createButton.setTitle(L10n.Localizable.SetupTrackerScreen.CreateButton.title, for: .normal)
+        createButton.setTitleColor(.whiteYP, for: .normal)
+        createButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         createButton.backgroundColor = .grayYP
         createButton.layer.cornerRadius = 16
         
+        cancelButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         cancelButton.setTitle(L10n.Localizable.SetupTrackerScreen.CancelButton.title, for: .normal)
         cancelButton.setTitleColor(.redYP, for: .normal)

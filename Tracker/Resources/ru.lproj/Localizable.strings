@@ -44,6 +44,7 @@
 "collectionScreen.alertController.message" = "Уверены, что хотите удалить трекер?";
 "collectionScreen.alertController.deleteAction" = "Удалить";
 "collectionScreen.alertController.cancelAction" = "Отменить";
+"collectionScreen.filterButton" = "Фильтры";
 
 "newTrackerScreen.topLabel.title" = "Создание трекера";
 "newTrackerScreen.trackerButton.title" = "Привычка";

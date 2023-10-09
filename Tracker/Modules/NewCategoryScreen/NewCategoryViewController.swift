@@ -11,7 +11,7 @@ final class NewCategoryViewController: UIViewController {
     
     private let oldTitle: String?
     private let viewModel = NewCategoryViewModel(model: NewCategoryModel())
-    private let createButton = UIButton()
+    private let createButton = UIButton(type: .system)
     private let topLabel = UILabel()
     private let textField = UITextField()
     

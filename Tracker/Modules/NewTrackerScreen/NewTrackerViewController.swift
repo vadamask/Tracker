@@ -17,8 +17,8 @@ final class NewTrackerViewController: UIViewController {
     weak var delegate: NewTrackerViewControllerDelegate?
     
     private let topLabel = UILabel()
-    private let trackerButton = UIButton()
-    private let eventButton = UIButton()
+    private let trackerButton = UIButton(type: .system)
+    private let eventButton = UIButton(type: .system)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +35,7 @@ final class NewTrackerViewController: UIViewController {
         
         trackerButton.addTarget(self, action: #selector(trackerButtonTapped), for: .touchUpInside)
         trackerButton.setTitle(L10n.Localizable.NewTrackerScreen.TrackerButton.title, for: .normal)
+        trackerButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         trackerButton.setTitleColor(.whiteYP, for: .normal)
         trackerButton.backgroundColor = .blackYP
         trackerButton.layer.cornerRadius = 16
@@ -43,6 +44,7 @@ final class NewTrackerViewController: UIViewController {
         eventButton.setTitle(L10n.Localizable.NewTrackerScreen.EventButton.title, for: .normal)
         eventButton.setTitleColor(.whiteYP, for: .normal)
         eventButton.backgroundColor = .blackYP
+        eventButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         eventButton.layer.cornerRadius = 16
     }
     

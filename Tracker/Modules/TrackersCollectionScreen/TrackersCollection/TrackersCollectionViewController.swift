@@ -15,6 +15,7 @@ final class TrackersCollectionViewController: UIViewController {
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     private let placeholder = UIImageView(image: UIImage())
     private let placeholderLabel = UILabel()
+    private let filterButton = UIButton(type: .system)
     
     init(params: GeometricParameters) {
         self.params = params
@@ -43,9 +44,11 @@ final class TrackersCollectionViewController: UIViewController {
                 self?.placeholderLabel.text = L10n.Localizable.CollectionScreen.EmptyState.title
                 self?.placeholder.isHidden = false
                 self?.placeholderLabel.isHidden = false
+                self?.filterButton.isHidden = true
             } else {
                 self?.placeholder.isHidden = true
                 self?.placeholderLabel.isHidden = true
+                self?.filterButton.isHidden = false
             }
             self?.collectionView.reloadData()
         }
@@ -112,21 +115,32 @@ final class TrackersCollectionViewController: UIViewController {
         placeholderLabel.textColor = .blackYP
         placeholderLabel.font = .systemFont(ofSize: 12, weight: .medium)
         
+        filterButton.setTitle(L10n.Localizable.CollectionScreen.filterButton, for: .normal)
+        filterButton.backgroundColor = .blueYP
+        filterButton.titleLabel?.font = .systemFont(ofSize: 17, weight: .regular)
+        filterButton.setTitleColor(.whiteYP, for: .normal)
+        filterButton.layer.cornerRadius = 16
+        
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.backgroundColor = .whiteYP
-        collectionView.register(TrackersCollectionViewCell.self,
-                                forCellWithReuseIdentifier: TrackersCollectionViewCell.identifier)
-        collectionView.register(TrackerCollectionViewHeader.self,
-                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier: TrackerCollectionViewHeader.identifier)
+        collectionView.register(
+            TrackersCollectionViewCell.self,
+            forCellWithReuseIdentifier: TrackersCollectionViewCell.identifier
+        )
+        collectionView.register(
+            TrackerCollectionViewHeader.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: TrackerCollectionViewHeader.identifier
+        )
     }
     
     private func setupLayout() {
         
         view.addSubview(collectionView)
+        view.addSubview(filterButton)
         
         collectionView.addSubview(placeholder)
         collectionView.addSubview(placeholderLabel)
@@ -143,6 +157,12 @@ final class TrackersCollectionViewController: UIViewController {
         placeholderLabel.snp.makeConstraints { make in
             make.top.equalTo(placeholder.snp.bottom).offset(8)
             make.centerX.equalTo(view)
+        }
+        
+        filterButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
+            make.size.equalTo(CGSize(width: 114, height: 50))
         }
     }
 }
