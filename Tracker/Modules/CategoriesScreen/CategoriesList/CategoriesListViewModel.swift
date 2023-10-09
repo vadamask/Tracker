@@ -24,15 +24,15 @@ final class CategoriesListViewModel {
         }
         
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateView),
+                                               selector: #selector(fetchObjects),
                                                name: Notification.Name("Category changed"),
                                                object: nil)
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateView),
+                                               selector: #selector(fetchObjects),
                                                name: Notification.Name("Category deleted"),
                                                object: nil)
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateView),
+                                               selector: #selector(fetchObjects),
                                                name: Notification.Name("Category added"),
                                                object: nil)
     }
@@ -41,20 +41,8 @@ final class CategoriesListViewModel {
         categories.isEmpty
     }
     
-    var numberOfRows: Int {
-        categories.count
-    }
-    
-    func viewModel(at indexPath: IndexPath) -> CategoryCellViewModel? {
-        categories[indexPath.row]
-    }
-    
-    func fetchObjects() {
+    @objc func fetchObjects() {
         categories = model.fetchObjects()
-    }
-    
-    @objc func updateView() {
-        fetchObjects()
     }
     
     func didSelectRow(at indexPath: IndexPath) {

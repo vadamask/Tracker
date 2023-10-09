@@ -110,7 +110,6 @@ final class TrackerSetupViewController: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(ScheduleCategoryCell.self, forCellReuseIdentifier: ScheduleCategoryCell.identifier)
         tableView.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
         tableView.rowHeight = 75
         tableView.backgroundColor = .whiteYP
@@ -233,9 +232,7 @@ extension TrackerSetupViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ScheduleCategoryCell.identifier) as? ScheduleCategoryCell else {
-            return UITableViewCell()
-        }
+        let cell = ScheduleCategoryCell()
         cell.configure(with: indexPath.row, isTracker: isTracker)
         return cell
     }

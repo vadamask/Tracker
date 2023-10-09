@@ -9,8 +9,6 @@ import UIKit
 
 final class ScheduleCategoryCell: UITableViewCell {
     
-    static let identifier = "TableViewCell"
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     }

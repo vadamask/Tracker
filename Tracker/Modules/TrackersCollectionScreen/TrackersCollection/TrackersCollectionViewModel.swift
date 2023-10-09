@@ -21,21 +21,17 @@ final class TrackersCollectionViewModel {
     
     init() {
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateView),
+                                               selector: #selector(fetchTrackersAtCurrentDate),
                                                name: Notification.Name(rawValue: "trackers changed"),
                                                object: nil)
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateView),
+                                               selector: #selector(fetchTrackersAtCurrentDate),
                                                name: Notification.Name(rawValue: "Category deleted"),
                                                object: nil)
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateView),
+                                               selector: #selector(fetchTrackersAtCurrentDate),
                                                name: Notification.Name(rawValue: "Category changed"),
                                                object: nil)
-    }
-    
-    @objc private func updateView() {
-        fetchObjectsAtCurrentDate()
     }
     
     func deleteTracker(at indexPath: IndexPath) {
@@ -43,8 +39,8 @@ final class TrackersCollectionViewModel {
         model.deleteTracker(with: uuid)
     }
     
-    func fetchObjectsAtCurrentDate() {
-        categories = model.fetchObjectsAtCurrentDate()
+    @objc func fetchTrackersAtCurrentDate() {
+        categories = model.fetchTrackersAtCurrentDate()
     }
     
     func detailsFor(_ tracker: Tracker) -> (isDone: Bool, completedDays: Int) {
@@ -52,12 +48,23 @@ final class TrackersCollectionViewModel {
     }
     
     func dateDidChanged(_ date: Date) {
-        categories = model.fetchObjects(at: date)
+        categories = model.fetchTrackers(at: date)
+    }
+    
+    func fetchCompletedTrackers() {
+        categories = model.fetchCompletedTrackers()
+    }
+    
+    func fetchIncompleteTrackers() {
+        categories = model.fetchIncompleteTrackers()
     }
     
     func searchFieldDidChanged(_ searchText: String) {
         let filteredCategories = categories.map {
-            TrackerCategory(title: $0.title, trackers: $0.trackers.filter { $0.name.hasPrefix(searchText) })
+            TrackerCategory(
+                title: $0.title,
+                trackers: $0.trackers.filter { $0.name.lowercased().hasPrefix(searchText.lowercased()) }
+            )
         }.filter { !$0.trackers.isEmpty }
         categories = filteredCategories
         searchIsEmpty = filteredCategories.isEmpty ? true : false

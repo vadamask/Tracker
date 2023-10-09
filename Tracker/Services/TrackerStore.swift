@@ -33,7 +33,7 @@ final class TrackerStore: NSObject {
         
         objects.forEach { object in
             let tracker = convertToTracker(object)
-            if let arr = dict[object.category?.title ?? ""] {
+            if dict[object.category?.title ?? ""] != nil {
                 dict[object.category?.title ?? ""]?.append(tracker)
             } else {
                 dict.updateValue([tracker], forKey: object.category?.title ?? "")
@@ -41,7 +41,7 @@ final class TrackerStore: NSObject {
         }
             
         return dict
-            .map { TrackerCategory(title: $0.key, trackers: $0.value) }
+            .map { TrackerCategory(title: $0.key, trackers: $0.value.sorted(by: <)) }
             .sorted {$0.title < $1.title}
     }
     
@@ -69,6 +69,60 @@ final class TrackerStore: NSObject {
         context.delete(trackers[0])
         try context.save()
         NotificationCenter.default.post(notification)
+    }
+    
+    func fetchCompletedTrackers(today: String) throws -> [TrackerCategory] {
+        
+        let recordsRequest = TrackerRecordCoreData.fetchRequest()
+        recordsRequest.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.date), today)
+        let records = try context.fetch(recordsRequest)
+
+        let trackers = Set(records.map {$0.tracker})
+        
+        var dict: [String: [Tracker]] = [:]
+        
+        trackers.forEach { object in
+            let tracker = convertToTracker(object!)
+            if let arr = dict[object?.category?.title ?? ""] {
+                dict[object?.category?.title ?? ""]?.append(tracker)
+            } else {
+                dict.updateValue([tracker], forKey: object?.category?.title ?? "")
+            }
+        }
+            
+        return dict
+            .map { TrackerCategory(title: $0.key, trackers: $0.value) }
+            .sorted {$0.title < $1.title}
+    }
+    
+    func fetchIncompleteTrackers(at weekday: String,_ stringDate: String) throws -> [TrackerCategory] {
+        let recordsRequest = TrackerRecordCoreData.fetchRequest()
+        recordsRequest.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.date), stringDate)
+        let records = try context.fetch(recordsRequest)
+
+        let completedTrackers = Set(records.map {$0.tracker})
+        
+        let trackersRequest = TrackerCoreData.fetchRequest()
+        trackersRequest.predicate = NSPredicate(format: "%K CONTAINS %@", #keyPath(TrackerCoreData.schedule), weekday)
+        
+        let allTrackersAtToday = try context.fetch(trackersRequest)
+        
+        let incompleteTrackers = Set(allTrackersAtToday).subtracting(completedTrackers)
+        
+        var dict: [String: [Tracker]] = [:]
+        
+        incompleteTrackers.forEach { object in
+            let tracker = convertToTracker(object!)
+            if let arr = dict[object?.category?.title ?? ""] {
+                dict[object?.category?.title ?? ""]?.append(tracker)
+            } else {
+                dict.updateValue([tracker], forKey: object?.category?.title ?? "")
+            }
+        }
+            
+        return dict
+            .map { TrackerCategory(title: $0.key, trackers: $0.value) }
+            .sorted {$0.title < $1.title}
     }
     
     private func convertToTracker(_ object: TrackerCoreData) -> Tracker {

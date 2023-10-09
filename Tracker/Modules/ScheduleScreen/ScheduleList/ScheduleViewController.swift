@@ -45,9 +45,6 @@ final class ScheduleViewController: UIViewController {
         topLabel.textColor = .blackYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
-        tableView.dataSource = self
-        tableView.register(ScheduleCell.self, forCellReuseIdentifier: "cell")
-        
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         doneButton.setTitle(L10n.Localizable.ScheduleScreen.doneButtonTitle, for: .normal)
         doneButton.setTitleColor(.whiteYP, for: .normal)
@@ -55,11 +52,11 @@ final class ScheduleViewController: UIViewController {
         doneButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         doneButton.layer.cornerRadius = 16
         
+        tableView.dataSource = self
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         tableView.rowHeight = 75
         tableView.backgroundColor = .whiteYP
         tableView.allowsSelection = false
-        tableView.layer.cornerRadius = 16
     }
     
     private func setupLayout() {
@@ -95,7 +92,7 @@ extension ScheduleViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? ScheduleCell else { return UITableViewCell() }
+        let cell = ScheduleCell()
         cell.viewModel = viewModel.viewModel(at: indexPath)
         cell.completion = { [weak self] in
             self?.completion?(self?.viewModel.selectedDays ?? [])

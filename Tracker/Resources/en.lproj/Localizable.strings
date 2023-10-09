@@ -46,6 +46,12 @@
 "collectionScreen.alertController.cancelAction" = "Cancel";
 "collectionScreen.filterButton" = "Filters";
 
+"filtersScreen.topLabel.title" = "Filters";
+"filtersScreen.filter.all" = "All trackers";
+"filtersScreen.filter.today" = "Trackers for today";
+"filtersScreen.filter.completed" = "Completed";
+"filtersScreen.filter.incomplete" = "Incomplete";
+
 "newTrackerScreen.topLabel.title" = "Creating a tracker";
 "newTrackerScreen.trackerButton.title" = "Habit";
 "newTrackerScreen.eventButton.title" = "Irregular event";

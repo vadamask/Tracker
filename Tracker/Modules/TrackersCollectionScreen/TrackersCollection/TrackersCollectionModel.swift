@@ -30,7 +30,7 @@ final class TrackersCollectionModel {
         return String(weekday)
     }
     
-    func fetchObjectsAtCurrentDate() -> [TrackerCategory] {
+    func fetchTrackersAtCurrentDate() -> [TrackerCategory] {
         do {
             return try trackerStore.fetchCategoriesWithTrackers(at: weekday(for: currentDate))
         } catch {
@@ -39,10 +39,30 @@ final class TrackersCollectionModel {
         }
     }
     
-    func fetchObjects(at date: Date) -> [TrackerCategory] {
+    func fetchTrackers(at date: Date) -> [TrackerCategory] {
         currentDate = date
         do {
             return try trackerStore.fetchCategoriesWithTrackers(at: weekday(for: currentDate))
+        } catch {
+            print(error.localizedDescription)
+            return []
+        }
+    }
+    
+    func fetchCompletedTrackers() -> [TrackerCategory] {
+        let weekday = weekday(for: currentDate)
+        do {
+            return try trackerStore.fetchCompletedTrackers(today: stringDate)
+        } catch {
+            print(error.localizedDescription)
+            return []
+        }
+    }
+    
+    func fetchIncompleteTrackers() -> [TrackerCategory] {
+        let weekday = weekday(for: currentDate)
+        do {
+            return try trackerStore.fetchIncompleteTrackers(at: weekday, stringDate)
         } catch {
             print(error.localizedDescription)
             return []

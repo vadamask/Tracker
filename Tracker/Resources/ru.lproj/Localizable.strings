@@ -46,6 +46,12 @@
 "collectionScreen.alertController.cancelAction" = "Отменить";
 "collectionScreen.filterButton" = "Фильтры";
 
+"filtersScreen.topLabel.title" = "Фильтры";
+"filtersScreen.filter.all" = "Все трекеры";
+"filtersScreen.filter.today" = "Трекеры на сегодня";
+"filtersScreen.filter.completed" = "Завершенные";
+"filtersScreen.filter.incomplete" = "Незавершенные";
+
 "newTrackerScreen.topLabel.title" = "Создание трекера";
 "newTrackerScreen.trackerButton.title" = "Привычка";
 "newTrackerScreen.eventButton.title" = "Нерегулярное событие";

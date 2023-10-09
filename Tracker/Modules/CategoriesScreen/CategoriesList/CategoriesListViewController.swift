@@ -152,7 +152,7 @@ extension CategoriesListViewController: UITableViewDelegate {
             let editAction = UIAction(
                 title: L10n.Localizable.CategoriesScreen.editCategoryTitle
             ) { [weak self] _ in
-                let title = self?.viewModel.viewModel(at: indexPath)?.title ?? ""
+                let title = self?.viewModel.categories[indexPath.row].title ?? ""
                 let vc = NewCategoryViewController(oldTitle: title)
                 self?.present(vc, animated: true)
             }
@@ -197,14 +197,14 @@ extension CategoriesListViewController: UITableViewDelegate {
 extension CategoriesListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.numberOfRows
+        viewModel.categories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? CategoryCell else {
             return UITableViewCell()
         }
-        cell.viewModel = viewModel.viewModel(at: indexPath)
+        cell.viewModel = viewModel.categories[indexPath.row]
         return cell
     }
 }

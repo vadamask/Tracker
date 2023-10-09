@@ -7,7 +7,11 @@
 
 import Foundation
 
-struct Tracker {
+struct Tracker: Comparable {
+    static func < (lhs: Tracker, rhs: Tracker) -> Bool {
+        lhs.name < rhs.name
+    }
+    
     let uuid: UUID
     let name: String
     let color: String

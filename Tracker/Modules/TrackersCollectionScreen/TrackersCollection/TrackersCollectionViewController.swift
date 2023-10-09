@@ -12,6 +12,7 @@ final class TrackersCollectionViewController: UIViewController {
 
     private let viewModel = TrackersCollectionViewModel()
     private let params: GeometricParameters
+    private var filter: Filter?
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     private let placeholder = UIImageView(image: UIImage())
     private let placeholderLabel = UILabel()
@@ -33,7 +34,7 @@ final class TrackersCollectionViewController: UIViewController {
         setupViews()
         setupLayout()
         bind()
-        viewModel.fetchObjectsAtCurrentDate()
+        viewModel.fetchTrackersAtCurrentDate()
     }
     
     private func bind() {
@@ -74,6 +75,28 @@ final class TrackersCollectionViewController: UIViewController {
     
     @objc private func datePickerDidChanged(sender: UIDatePicker) {
         viewModel.dateDidChanged(sender.date)
+    }
+    
+    @objc private func filtersDidTapped() {
+        let vc = FiltersViewController(filter: filter)
+        vc.completion = { [weak self] filter in
+            self?.filter = filter
+            
+            switch filter {
+            case .all:
+                self?.viewModel.fetchTrackersAtCurrentDate()
+            case .today:
+                let datePicker = self?.navigationItem.rightBarButtonItem?.customView as? UIDatePicker
+                datePicker?.date = Date()
+                self?.viewModel.dateDidChanged(Date())
+            case .completed:
+                self?.viewModel.fetchCompletedTrackers()
+            case .incomplete:
+                self?.viewModel.fetchIncompleteTrackers()
+            }
+             
+        }
+        present(vc, animated: true)
     }
     
     private func setupNavigationItem() {
@@ -120,6 +143,7 @@ final class TrackersCollectionViewController: UIViewController {
         filterButton.titleLabel?.font = .systemFont(ofSize: 17, weight: .regular)
         filterButton.setTitleColor(.whiteYP, for: .normal)
         filterButton.layer.cornerRadius = 16
+        filterButton.addTarget(self, action: #selector(filtersDidTapped), for: .touchUpInside)
         
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -161,7 +185,7 @@ final class TrackersCollectionViewController: UIViewController {
         
         filterButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
             make.size.equalTo(CGSize(width: 114, height: 50))
         }
     }
@@ -232,7 +256,7 @@ extension TrackersCollectionViewController {
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
         
-        let indexPath = indexPaths[0]
+        guard let indexPath = indexPaths.first else { return nil }
         
         let pinAction = UIAction(title: L10n.Localizable.CollectionScreen.ContextMenu.pinAction) { [weak self] _ in
             
@@ -330,7 +354,7 @@ extension TrackersCollectionViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            viewModel.fetchObjectsAtCurrentDate()
+            viewModel.fetchTrackersAtCurrentDate()
             
         } else {
             viewModel.searchFieldDidChanged(searchText)
@@ -340,7 +364,7 @@ extension TrackersCollectionViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         navigationItem.rightBarButtonItem?.isEnabled = true
         navigationItem.leftBarButtonItem?.isEnabled = true
-        viewModel.fetchObjectsAtCurrentDate()
+        viewModel.fetchTrackersAtCurrentDate()
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {

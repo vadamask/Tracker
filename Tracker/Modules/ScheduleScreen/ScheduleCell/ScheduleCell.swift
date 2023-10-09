@@ -9,13 +9,13 @@ import UIKit
 
 final class ScheduleCell: UITableViewCell {
     var completion: (() -> Void)?
+    private let switcher = UISwitch()
+    
     var viewModel: ScheduleCellViewModel? {
         didSet {
             setupView()
         }
     }
-    
-    private let switcher = UISwitch()
     
     private func setupView() {
         textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
