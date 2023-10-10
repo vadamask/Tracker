@@ -15,8 +15,8 @@ final class TrackerSetupViewModel {
     private let model: TrackerSetupModel
     private var isTracker = true
     
-    private let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶",
-                         "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
+    let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶",
+                  "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     
     init(model: TrackerSetupModel) {
         self.model = model
@@ -24,6 +24,10 @@ final class TrackerSetupViewModel {
     
     func createButtonTapped() {
         model.addTracker()
+    }
+    
+    func saveButtonTapped(_ uuid: UUID) {
+        self.model.replaceTracker(with: uuid)
     }
     
     func eventIsSelected() {
@@ -53,10 +57,6 @@ extension TrackerSetupViewModel {
 
 extension TrackerSetupViewModel {
     
-    var numberOfRowsInTableView: Int {
-        isTracker ? 2 : 1
-    }
-    
     func didSelectCategory(_ category: String) {
         model.didSelectCategory(category)
         createButtonIsAllowed = model.isAllSetup
@@ -81,14 +81,6 @@ extension TrackerSetupViewModel {
 // MARK: - CollectionView
 
 extension TrackerSetupViewModel {
-    
-    var numberOfSectionsInCollectionView: Int {
-        2
-    }
-    
-    var numberOfRowsInCollectionView: Int {
-        18
-    }
     
     func emojiForCollectionView(at indexPath: IndexPath) -> String {
         emojis[indexPath.row]

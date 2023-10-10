@@ -72,7 +72,7 @@ final class NewTrackerViewController: UIViewController {
     }
     
     @objc private func trackerButtonTapped(sender: Any) {
-        let vc = TrackerSetupViewController()
+        let vc = TrackerSetupViewController(isTracker: true)
         vc.delegate = self
         present(vc, animated: true)
     }

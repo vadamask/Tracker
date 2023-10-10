@@ -22,7 +22,7 @@ final class TrackersCollectionViewModel {
     init() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(fetchTrackersAtCurrentDate),
-                                               name: Notification.Name(rawValue: "trackers changed"),
+                                               name: Notification.Name(rawValue: "Trackers changed"),
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(fetchTrackersAtCurrentDate),

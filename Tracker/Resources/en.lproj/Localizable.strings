@@ -58,6 +58,7 @@
 
 "setupTrackerScreen.topLabel.trackerTitle" = "New habit";
 "setupTrackerScreen.topLabel.eventTitle" = "New irregular event";
+"setupTrackerScreen.topLabel.editingMode" = "Habit editing";
 "setupTrackerScreen.textField.placeholder" = "Enter tracker name";
 "setupTrackerScreen.warningLabel.title" = "Limit 38 characters";
 "setupTrackerScreen.category.title" = "Category";
@@ -65,6 +66,7 @@
 "setupTrackerScreen.emoji.header" = "Emoji";
 "setupTrackerScreen.color.header" = "Color";
 "setupTrackerScreen.createButton.title" = "Create";
+"setupTrackerScreen.saveButton.title" = "Save";
 "setupTrackerScreen.cancelButton.title" = "Cancel";
 
 "categoriesScreen.topLabel.title" = "Category";

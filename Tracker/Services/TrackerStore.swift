@@ -11,7 +11,7 @@ import UIKit
 final class TrackerStore: NSObject {
     
     private let context: NSManagedObjectContext
-    private var notification = Notification(name: Notification.Name("trackers changed"))
+    private var notification = Notification(name: Notification.Name("Trackers changed"))
     
     init(context: NSManagedObjectContext) {
         self.context = context
@@ -42,7 +42,7 @@ final class TrackerStore: NSObject {
             
         return dict
             .map { TrackerCategory(title: $0.key, trackers: $0.value.sorted(by: <)) }
-            .sorted {$0.title < $1.title}
+            .sorted(by: <)
     }
     
     func addTracker(_ tracker: Tracker, with categoryTitle: String) throws {
@@ -58,6 +58,32 @@ final class TrackerStore: NSObject {
         object.name = tracker.name
         object.schedule = tracker.schedule.map {String($0.rawValue)}.joined(separator: ",")
         object.category = categories[0]
+        try context.save()
+        NotificationCenter.default.post(notification)
+    }
+    
+    func changeTracker(with model: TrackerCategory) throws {
+        let trackerRequest = TrackerCoreData.fetchRequest()
+        trackerRequest.predicate = NSPredicate(
+            format: "%K == %@",
+            #keyPath(TrackerCoreData.uuid),
+            model.trackers[0].uuid.uuidString
+        )
+        let trackerObject = try context.fetch(trackerRequest).first
+        
+        let categoryRequest = TrackerCategoryCoreData.fetchRequest()
+        categoryRequest.predicate = NSPredicate(
+            format: "%K == %@",
+            #keyPath(TrackerCategoryCoreData.title),
+            model.title
+        )
+        let categoryObject = try context.fetch(categoryRequest).first
+        
+        trackerObject?.name = model.trackers[0].name
+        trackerObject?.category = categoryObject
+        trackerObject?.color = model.trackers[0].color
+        trackerObject?.emoji = model.trackers[0].emoji
+        trackerObject?.schedule = model.trackers[0].schedule.map {String($0.rawValue)}.joined(separator: ",")
         try context.save()
         NotificationCenter.default.post(notification)
     }
@@ -91,8 +117,8 @@ final class TrackerStore: NSObject {
         }
             
         return dict
-            .map { TrackerCategory(title: $0.key, trackers: $0.value) }
-            .sorted {$0.title < $1.title}
+            .map { TrackerCategory(title: $0.key, trackers: $0.value.sorted(by: <)) }
+            .sorted(by: <)
     }
     
     func fetchIncompleteTrackers(at weekday: String,_ stringDate: String) throws -> [TrackerCategory] {
@@ -121,8 +147,8 @@ final class TrackerStore: NSObject {
         }
             
         return dict
-            .map { TrackerCategory(title: $0.key, trackers: $0.value) }
-            .sorted {$0.title < $1.title}
+            .map { TrackerCategory(title: $0.key, trackers: $0.value.sorted(by: <)) }
+            .sorted(by: <)
     }
     
     private func convertToTracker(_ object: TrackerCoreData) -> Tracker {

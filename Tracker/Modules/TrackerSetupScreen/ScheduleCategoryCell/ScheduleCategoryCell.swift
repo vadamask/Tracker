@@ -46,7 +46,11 @@ final class ScheduleCategoryCell: UITableViewCell {
         }
     }
     
-    func setDetailTextLabel(for days: [String]) {
+    func setDetailTextLabel(for schedule: Set<WeekDay>) {
+        let days = schedule
+            .sorted(by: {$0.rawValue < $1.rawValue})
+            .map { $0.shortName }
+        
         detailTextLabel?.text = days.count < 7 ?
         days.joined(separator: ", ") :
         L10n.Localizable.everyday

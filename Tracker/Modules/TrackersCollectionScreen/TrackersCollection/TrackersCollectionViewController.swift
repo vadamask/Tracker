@@ -262,21 +262,43 @@ extension TrackersCollectionViewController {
             
         }
         
-        let editAction = UIAction(title: L10n.Localizable.CollectionScreen.ContextMenu.editAction) { [weak self] _ in
-            let cell = self?.viewModel.categories[indexPath.section].trackers[indexPath.row]
+        let editAction = UIAction(
+            title: L10n.Localizable.CollectionScreen.ContextMenu.editAction
+        ) { [weak self] _ in
             
+            guard let categoryTitle = self?.viewModel.categories[indexPath.section].title,
+                  let tracker = self?.viewModel.categories[indexPath.section].trackers[indexPath.row],
+                  let completedDays = self?.viewModel.detailsFor(tracker).completedDays
+            else { return }
+            
+            let vc = TrackerSetupViewController(
+                isTracker: true,
+                model: (TrackerCategory(title: categoryTitle, trackers: [tracker]), completedDays)
+            )
+            vc.delegate = self
+            self?.present(vc,animated: true)
         }
         
-        let deleteAction = UIAction(title: L10n.Localizable.CollectionScreen.ContextMenu.deleteAction, attributes: .destructive) { [weak self] _ in
+        let deleteAction = UIAction(
+            title: L10n.Localizable.CollectionScreen.ContextMenu.deleteAction,
+            attributes: .destructive
+        ) { [weak self] _ in
+            
             let alertController = UIAlertController(
                 title: nil,
                 message: L10n.Localizable.CollectionScreen.AlertController.message,
                 preferredStyle: .actionSheet
             )
-            let deleteAction = UIAlertAction(title: L10n.Localizable.CollectionScreen.AlertController.deleteAction, style: .destructive) { _ in
+            let deleteAction = UIAlertAction(
+                title: L10n.Localizable.CollectionScreen.AlertController.deleteAction,
+                style: .destructive
+            ) { _ in
                 self?.viewModel.deleteTracker(at: indexPath)
             }
-            let cancelAction = UIAlertAction(title: L10n.Localizable.CollectionScreen.AlertController.cancelAction, style: .cancel)
+            let cancelAction = UIAlertAction(
+                title: L10n.Localizable.CollectionScreen.AlertController.cancelAction,
+                style: .cancel
+            )
             alertController.addAction(deleteAction)
             alertController.addAction(cancelAction)
             self?.present(alertController, animated: true)
@@ -291,6 +313,19 @@ extension TrackersCollectionViewController {
         _ collectionView: UICollectionView,
         contextMenuConfiguration configuration: UIContextMenuConfiguration,
         highlightPreviewForItemAt indexPath: IndexPath
+    ) -> UITargetedPreview? {
+        
+        if let cell = collectionView.cellForItem(at: indexPath) as? TrackersCollectionViewCell {
+            return UITargetedPreview(view: cell.cardView)
+        } else {
+            return nil
+        }
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        contextMenuConfiguration configuration: UIContextMenuConfiguration,
+        dismissalPreviewForItemAt indexPath: IndexPath
     ) -> UITargetedPreview? {
         
         if let cell = collectionView.cellForItem(at: indexPath) as? TrackersCollectionViewCell {
@@ -387,8 +422,12 @@ extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
     }
 }
 
-extension TrackersCollectionViewController: NewTrackerViewControllerDelegate {
+// MARK: - NewTrackerViewControllerDelegate & TrackerSetupViewControllerDelegate
+
+extension TrackersCollectionViewController: NewTrackerViewControllerDelegate & TrackerSetupViewControllerDelegate {
     func dismiss() {
         dismiss(animated: true)
     }
 }
+
+

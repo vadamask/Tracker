@@ -43,6 +43,23 @@ final class TrackerSetupModel {
         }
     }
     
+    func replaceTracker(with uuid: UUID) {
+        if isAllSetup {
+            let tracker = Tracker(
+                uuid: uuid,
+                name: title!,
+                color: color!,
+                emoji: emoji!,
+                schedule: schedule!
+            )
+            do {
+                try trackerStore.changeTracker(with: TrackerCategory(title: category!, trackers: [tracker]))
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     func textTooLong(_ text: String) -> Bool {
         text.count <= 38 ? false : true
     }

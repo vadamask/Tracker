@@ -17,11 +17,13 @@ final class TrackerSetupViewController: UIViewController {
     weak var delegate: TrackerSetupViewControllerDelegate?
     
     private let viewModel = TrackerSetupViewModel(model: TrackerSetupModel())
+    private var model: (TrackerCategory, Int)?
     private var isTracker: Bool
     private var schedule: Set<WeekDay> = []
     private var selectedCategory: String?
     
-    private var topLabel = UILabel()
+    private let topLabel = UILabel()
+    private let labelInEditingMode = UILabel()
     private let scrollView = UIScrollView()
     private let textField = UITextField()
     private let tableView = UITableView()
@@ -32,8 +34,9 @@ final class TrackerSetupViewController: UIViewController {
     
     private var tableViewTopLabel: Constraint?
     
-    init(isTracker: Bool = true) {
+    init(isTracker: Bool, model: (TrackerCategory, Int)? = nil) {
         self.isTracker = isTracker
+        self.model = model
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -46,8 +49,26 @@ final class TrackerSetupViewController: UIViewController {
         setupViews()
         setupLayout()
         bind()
+        configureScreen()
         if !isTracker {
             viewModel.eventIsSelected()
+        }
+    }
+    
+    private func configureScreen() {
+        if let model = model {
+            textField.text = model.0.trackers[0].name
+            viewModel.textDidChanged(model.0.trackers[0].name)
+            
+            selectedCategory = model.0.title
+            viewModel.didSelectCategory(model.0.title)
+            
+            schedule = model.0.trackers[0].schedule
+            viewModel.didSelectSchedule(schedule)
+            
+            labelInEditingMode.text = L10n.Localizable.numberOfDays(model.1)
+            labelInEditingMode.textColor = .blackYP
+            labelInEditingMode.font = .systemFont(ofSize: 32, weight: .bold)
         }
     }
     
@@ -56,7 +77,11 @@ final class TrackerSetupViewController: UIViewController {
     }
     
     @objc private func createButtonTapped() {
-        viewModel.createButtonTapped()
+        if model == nil {
+            viewModel.createButtonTapped()
+        } else {
+            viewModel.saveButtonTapped(model!.0.trackers[0].uuid)
+        }
         delegate?.dismiss()
     }
     
@@ -86,9 +111,13 @@ final class TrackerSetupViewController: UIViewController {
         view.backgroundColor = .whiteYP
         self.hideKeyboardWhenTappedAround()
         
-        topLabel.text = isTracker ?
-        L10n.Localizable.SetupTrackerScreen.TopLabel.trackerTitle :
-        L10n.Localizable.SetupTrackerScreen.TopLabel.eventTitle
+        if model == nil {
+            topLabel.text = isTracker ?
+            L10n.Localizable.SetupTrackerScreen.TopLabel.trackerTitle :
+            L10n.Localizable.SetupTrackerScreen.TopLabel.eventTitle
+        } else {
+            topLabel.text = L10n.Localizable.SetupTrackerScreen.TopLabel.editingMode
+        }
         
         topLabel.textColor = .blackYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
@@ -114,6 +143,7 @@ final class TrackerSetupViewController: UIViewController {
         tableView.rowHeight = 75
         tableView.backgroundColor = .whiteYP
         tableView.layer.cornerRadius = 16
+        tableView.isScrollEnabled = false
         
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -128,10 +158,13 @@ final class TrackerSetupViewController: UIViewController {
         collectionView.isScrollEnabled = false
         collectionView.allowsMultipleSelection = true
         
+        let title = model == nil ?
+        L10n.Localizable.SetupTrackerScreen.CreateButton.title :
+        L10n.Localizable.SetupTrackerScreen.SaveButton.title
+        createButton.setTitle(title, for: .normal)
+        createButton.setTitleColor(.whiteYP, for: .normal)
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         createButton.isEnabled = false
-        createButton.setTitle(L10n.Localizable.SetupTrackerScreen.CreateButton.title, for: .normal)
-        createButton.setTitleColor(.whiteYP, for: .normal)
         createButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         createButton.backgroundColor = .grayYP
         createButton.layer.cornerRadius = 16
@@ -167,13 +200,26 @@ final class TrackerSetupViewController: UIViewController {
         }
         
         scrollView.contentLayoutGuide.snp.makeConstraints { make in
-            make.width.equalTo(scrollView)
+            make.width.equalToSuperview()
+        }
+        
+        if model != nil {
+            scrollView.addSubview(labelInEditingMode)
+            
+            labelInEditingMode.snp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(38)
+            }
         }
         
         textField.snp.makeConstraints { make in
+            if model == nil {
+                make.top.equalTo(24)
+            } else {
+                make.top.equalTo(labelInEditingMode.snp.bottom).offset(40)
+            }
             make.leading.equalTo(16)
             make.trailing.equalTo(-16)
-            make.top.equalTo(24)
             make.height.equalTo(75)
         }
         
@@ -227,12 +273,27 @@ extension TrackerSetupViewController: UITextFieldDelegate {
 
 extension TrackerSetupViewController: UITableViewDataSource {
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.numberOfRowsInTableView
+    func tableView(
+        _ tableView: UITableView,
+        numberOfRowsInSection section: Int
+    ) -> Int {
+        isTracker ? 2 : 1
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
+        
         let cell = ScheduleCategoryCell()
+        if model != nil {
+            if indexPath.row == 0 {
+                cell.detailTextLabel?.text = model!.0.title
+            } else {
+                cell.setDetailTextLabel(for: model!.0.trackers[0].schedule)
+            }
+            
+        }
         cell.configure(with: indexPath.row, isTracker: isTracker)
         return cell
     }
@@ -242,13 +303,20 @@ extension TrackerSetupViewController: UITableViewDataSource {
 
 extension TrackerSetupViewController: UITableViewDelegate {
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
         tableView.deselectRow(at: indexPath, animated: true)
         
         if indexPath.row == 0 {
             
             let vc = CategoriesListViewController(
-                viewModel: CategoriesListViewModel(model: CategoriesListModel(), selectedCategory: selectedCategory)
+                
+                viewModel: CategoriesListViewModel(
+                    model: CategoriesListModel(),
+                    selectedCategory: selectedCategory
+                )
             )
             vc.completion = { [weak self] category in
                 self?.selectedCategory = category
@@ -270,14 +338,13 @@ extension TrackerSetupViewController: UITableViewDelegate {
             
             vc.completion = { [weak self] schedule in
                 self?.schedule = schedule
-                schedule.isEmpty ? self?.viewModel.didDeselectSchedule() : self?.viewModel.didSelectSchedule(schedule)
                 
-                let selectedDays = schedule
-                    .sorted(by: {$0.rawValue < $1.rawValue})
-                    .map { $0.shortName }
+                schedule.isEmpty ?
+                self?.viewModel.didDeselectSchedule() :
+                self?.viewModel.didSelectSchedule(schedule)
                 
                 let cell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ScheduleCategoryCell
-                cell?.setDetailTextLabel(for: selectedDays)
+                cell?.setDetailTextLabel(for: schedule)
             }
             present(vc, animated: true)
         }
@@ -289,34 +356,72 @@ extension TrackerSetupViewController: UITableViewDelegate {
 extension TrackerSetupViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        viewModel.numberOfSectionsInCollectionView
+        2
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.numberOfRowsInCollectionView
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
+        18
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        
         if indexPath.section == 0 {
+            
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: EmojiCell.identifier,
                 for: indexPath
             ) as? EmojiCell else { return UICollectionViewCell() }
             
             cell.configure(with: viewModel.emojiForCollectionView(at: indexPath))
+            
+            if model != nil {
+                let emoji = model!.0.trackers[0].emoji
+                let index = viewModel.emojis.firstIndex(of: emoji)
+                if let index = index,
+                   index == indexPath.row {
+                    cell.backgroundColor = .lightGrayYP
+                    viewModel.didSelectEmoji(at: IndexPath(row: index, section: 0))
+                    collectionView.selectItem(at: IndexPath(row: index, section: 0), animated: false, scrollPosition: .bottom)
+                }
+            }
+            
             return cell
+            
         } else {
+            
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ColorCell.identifier,
                 for: indexPath
             ) as? ColorCell  else { return UICollectionViewCell() }
             
             cell.configure(with: indexPath.row)
+            
+            if model != nil {
+                let char = model!.0.trackers[0].color.last
+                if let char = char,
+                   let index = Int(String(char)),
+                   index == indexPath.row {
+                    cell.itemDidSelect(true)
+                    viewModel.didSelectColor(at: IndexPath(row: index, section: 1))
+                    collectionView.selectItem(at: IndexPath(row: index, section: 1), animated: false, scrollPosition: .bottom)
+                }
+            }
+            
             return cell
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView {
         
         guard let view = collectionView
             .dequeueReusableSupplementaryView(
@@ -333,19 +438,35 @@ extension TrackerSetupViewController: UICollectionViewDataSource {
 
 extension TrackerSetupViewController: UICollectionViewDelegateFlowLayout {
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
         CGSize(width: 52, height: 52)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumInteritemSpacingForSectionAt section: Int
+    ) -> CGFloat {
         5
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumLineSpacingForSectionAt section: Int
+    ) -> CGFloat {
         0
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        referenceSizeForHeaderInSection section: Int
+    ) -> CGSize {
         CGSize(width: view.bounds.width, height: 74)
     }
 }
@@ -354,7 +475,10 @@ extension TrackerSetupViewController: UICollectionViewDelegateFlowLayout {
 
 extension TrackerSetupViewController {
   
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
         if let indexes = collectionView.indexPathsForSelectedItems {
             indexes.filter { $0.section == indexPath.section && $0 != indexPath }.forEach { i in
                     collectionView.deselectItem(at: i, animated: false)
@@ -372,7 +496,10 @@ extension TrackerSetupViewController {
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didDeselectItemAt indexPath: IndexPath
+    ) {
         if let cell = collectionView.cellForItem(at: indexPath) as? EmojiCell {
             cell.backgroundColor = .clear
             viewModel.didDeselectEmoji()
