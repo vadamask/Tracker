@@ -23,18 +23,24 @@ final class CategoriesListViewModel {
             category.isSelected = true
         }
         
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(fetchObjects),
-                                               name: Notification.Name("Category changed"),
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(fetchObjects),
-                                               name: Notification.Name("Category deleted"),
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(fetchObjects),
-                                               name: Notification.Name("Category added"),
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(fetchObjects),
+            name: Notification.Name("Category changed"),
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(fetchObjects),
+            name: Notification.Name("Category deleted"),
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(fetchObjects),
+            name: Notification.Name("Category added"),
+            object: nil
+        )
     }
     
     var categoriesIsEmpty: Bool {
@@ -46,20 +52,9 @@ final class CategoriesListViewModel {
     }
     
     func didSelectRow(at indexPath: IndexPath) {
-        
-        if let index = categories.firstIndex(where: { $0.isSelected }) {
-            if index == indexPath.row {
-                categories[indexPath.row].isSelected.toggle()
-                selectedCategory = nil
-            } else {
-                categories.forEach { $0.isSelected = false }
-                categories[indexPath.row].isSelected.toggle()
-                selectedCategory = categories[indexPath.row].title
-            }
-        } else {
-            categories[indexPath.row].isSelected.toggle()
-            selectedCategory = categories[indexPath.row].title
-        }
+        categories.forEach { $0.isSelected = false }
+        categories[indexPath.row].isSelected.toggle()
+        selectedCategory = categories[indexPath.row].title
     }
     
     func deleteCategory(at indexPath: IndexPath) {

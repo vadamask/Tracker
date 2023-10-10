@@ -139,6 +139,7 @@ extension CategoriesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.didSelectRow(at: indexPath)
+        dismiss(animated: true)
     }
     
     func tableView(
