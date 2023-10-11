@@ -59,6 +59,11 @@ final class TrackerCategoryStore: NSObject {
     
     func fetchCategories() throws -> [CategoryCellViewModel] {
         let request = TrackerCategoryCoreData.fetchRequest()
+        request.predicate = NSPredicate(
+            format: "%K != %@",
+            #keyPath(TrackerCategoryCoreData.title),
+            L10n.Localizable.CollectionScreen.pinHeader
+        )
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         let objects = try context.fetch(request)
         return objects.compactMap { CategoryCellViewModel(title: $0.title ?? "") }

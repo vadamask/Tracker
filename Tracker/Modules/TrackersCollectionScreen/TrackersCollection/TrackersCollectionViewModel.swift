@@ -20,18 +20,31 @@ final class TrackersCollectionViewModel {
     }
     
     init() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(fetchTrackersAtCurrentDate),
-                                               name: Notification.Name(rawValue: "Trackers changed"),
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(fetchTrackersAtCurrentDate),
-                                               name: Notification.Name(rawValue: "Category deleted"),
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(fetchTrackersAtCurrentDate),
-                                               name: Notification.Name(rawValue: "Category changed"),
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(fetchTrackersAtCurrentDate),
+            name: Notification.Name(rawValue: "Trackers changed"),
+            object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(fetchTrackersAtCurrentDate),
+            name: Notification.Name(rawValue: "Category deleted"),
+            object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(fetchTrackersAtCurrentDate),
+            name: Notification.Name(rawValue: "Category changed"),
+            object: nil)
+    }
+    
+    @objc func fetchTrackersAtCurrentDate() {
+        var categories = model.fetchTrackersAtCurrentDate()
+        if let index = categories.firstIndex(where: {$0.title == L10n.Localizable.CollectionScreen.pinHeader}) {
+            categories.swapAt(index, 0)
+            self.categories = categories
+        } else {
+            self.categories = categories
+        }
     }
     
     func deleteTracker(at indexPath: IndexPath) {
@@ -39,8 +52,8 @@ final class TrackersCollectionViewModel {
         model.deleteTracker(with: uuid)
     }
     
-    @objc func fetchTrackersAtCurrentDate() {
-        categories = model.fetchTrackersAtCurrentDate()
+    func pinTracker(at indexPath: IndexPath, isPinned: Bool) {
+        model.pinTracker(with: categories[indexPath.section].trackers[indexPath.row].uuid, isPinned: isPinned)
     }
     
     func detailsFor(_ tracker: Tracker) -> (isDone: Bool, completedDays: Int) {

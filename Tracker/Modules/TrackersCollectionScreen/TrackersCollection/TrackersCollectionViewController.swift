@@ -217,11 +217,11 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
         ) as? TrackersCollectionViewCell else { return UICollectionViewCell() }
             
         cell.delegate = self
-        
         let tracker = viewModel.categories[indexPath.section].trackers[indexPath.row]
         let details = viewModel.detailsFor(tracker)
+        let isPinned = viewModel.categories[indexPath.section].title == L10n.Localizable.CollectionScreen.pinHeader
+        cell.configure(with: tracker, details, and: isPinned)
         
-        cell.configure(with: tracker, isDone: details.isDone, completedDays: details.completedDays)
         return cell
     }
     
@@ -256,10 +256,24 @@ extension TrackersCollectionViewController {
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
         
-        guard let indexPath = indexPaths.first else { return nil }
+        guard let indexPath = indexPaths.first,
+              let cell = collectionView.cellForItem(at: indexPath) as? TrackersCollectionViewCell
+        else { return nil }
         
-        let pinAction = UIAction(title: L10n.Localizable.CollectionScreen.ContextMenu.pinAction) { [weak self] _ in
+        let pinAction = UIAction(
+            title: cell.isPinned ?
+                   L10n.Localizable.CollectionScreen.ContextMenu.unpinAction :
+                   L10n.Localizable.CollectionScreen.ContextMenu.pinAction
+        )
+        { [weak self] _ in
             
+            if cell.isPinned {
+                self?.viewModel.pinTracker(at: indexPath, isPinned: cell.isPinned)
+                cell.isPinned = false
+            } else {
+                self?.viewModel.pinTracker(at: indexPath, isPinned: cell.isPinned)
+                cell.isPinned = true
+            }
         }
         
         let editAction = UIAction(

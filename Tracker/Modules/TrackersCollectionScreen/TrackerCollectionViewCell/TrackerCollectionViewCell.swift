@@ -45,10 +45,11 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with tracker: Tracker, isDone: Bool, completedDays: Int) {
+    func configure(with tracker: Tracker,_ details: (isDone: Bool, completedDays: Int), and isPinned: Bool) {
         self.tracker = tracker
-        self.isDone = isDone
-        self.completedDays = completedDays
+        isDone = details.isDone
+        completedDays = details.completedDays
+        pinView.isHidden = !isPinned
         
         trackerName.text = tracker.name
         trackerName.textColor = .whiteYP
@@ -60,6 +61,15 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         emoji.text = tracker.emoji
         cardView.backgroundColor = UIColor(named: tracker.color)
         setupButton()
+    }
+    
+    var isPinned: Bool {
+        get {
+            !pinView.isHidden
+        }
+        set {
+            pinView.isHidden = !newValue
+        }
     }
       
     @objc private func recordButtonTapped() {

@@ -45,6 +45,7 @@
 "collectionScreen.alertController.deleteAction" = "Delete";
 "collectionScreen.alertController.cancelAction" = "Cancel";
 "collectionScreen.filterButton" = "Filters";
+"collectionScreen.pinHeader" = "Pinned";
 
 "filtersScreen.topLabel.title" = "Filters";
 "filtersScreen.filter.all" = "All trackers";

@@ -109,7 +109,7 @@ final class TrackerStore: NSObject {
         
         trackers.forEach { object in
             let tracker = convertToTracker(object!)
-            if let arr = dict[object?.category?.title ?? ""] {
+            if dict[object?.category?.title ?? ""] != nil {
                 dict[object?.category?.title ?? ""]?.append(tracker)
             } else {
                 dict.updateValue([tracker], forKey: object?.category?.title ?? "")
@@ -139,7 +139,7 @@ final class TrackerStore: NSObject {
         
         incompleteTrackers.forEach { object in
             let tracker = convertToTracker(object!)
-            if let arr = dict[object?.category?.title ?? ""] {
+            if dict[object?.category?.title ?? ""] != nil {
                 dict[object?.category?.title ?? ""]?.append(tracker)
             } else {
                 dict.updateValue([tracker], forKey: object?.category?.title ?? "")
@@ -149,6 +149,59 @@ final class TrackerStore: NSObject {
         return dict
             .map { TrackerCategory(title: $0.key, trackers: $0.value.sorted(by: <)) }
             .sorted(by: <)
+    }
+    
+    func changeCategory(for uuid: String, isPinned: Bool) throws {
+        
+        let trackerRequest = TrackerCoreData.fetchRequest()
+        trackerRequest.predicate = NSPredicate(format: "%K == %@" , #keyPath(TrackerCoreData.uuid), uuid)
+        let tracker = try context.fetch(trackerRequest)[0]
+        
+        if isPinned {
+            
+            let categoryRequest = TrackerCategoryCoreData.fetchRequest()
+            categoryRequest.predicate = NSPredicate(
+                format: "%K == %@"
+                , #keyPath(TrackerCategoryCoreData.title),
+                tracker.lastCategory ?? ""
+            )
+            let categories = try context.fetch(categoryRequest)
+            
+            if categories.isEmpty {
+                let pinCategory = TrackerCategoryCoreData(context: context)
+                pinCategory.title = tracker.lastCategory ?? ""
+                tracker.category = pinCategory
+            } else {
+                let pinCategory = categories[0]
+                tracker.category = pinCategory
+            }
+            
+            tracker.lastCategory = nil
+            
+        } else {
+            
+            tracker.lastCategory = tracker.category?.title
+            
+            let categoryRequest = TrackerCategoryCoreData.fetchRequest()
+            categoryRequest.predicate = NSPredicate(
+                format: "%K == %@"
+                , #keyPath(TrackerCategoryCoreData.title),
+                L10n.Localizable.CollectionScreen.pinHeader
+            )
+            let categories = try context.fetch(categoryRequest)
+            
+            if categories.isEmpty {
+                let pinCategory = TrackerCategoryCoreData(context: context)
+                pinCategory.title = L10n.Localizable.CollectionScreen.pinHeader
+                tracker.category = pinCategory
+            } else {
+                let pinCategory = categories[0]
+                tracker.category = pinCategory
+            }
+        }
+        
+        try context.save()
+        NotificationCenter.default.post(notification)
     }
     
     private func convertToTracker(_ object: TrackerCoreData) -> Tracker {

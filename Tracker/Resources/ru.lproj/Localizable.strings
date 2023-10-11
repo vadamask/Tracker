@@ -45,6 +45,7 @@
 "collectionScreen.alertController.deleteAction" = "Удалить";
 "collectionScreen.alertController.cancelAction" = "Отменить";
 "collectionScreen.filterButton" = "Фильтры";
+"collectionScreen.pinHeader" = "Закрепленные";
 
 "filtersScreen.topLabel.title" = "Фильтры";
 "filtersScreen.filter.all" = "Все трекеры";

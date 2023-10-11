@@ -108,6 +108,14 @@ final class TrackersCollectionModel {
             print(error.localizedDescription)
         }
     }
+    
+    func pinTracker(with uuid: UUID, isPinned: Bool) {
+        do {
+            try trackerStore.changeCategory(for: uuid.uuidString, isPinned: isPinned)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
 
 
