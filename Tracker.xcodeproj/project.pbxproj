@@ -20,7 +20,6 @@
 		DD284A482AC4BD3B003C9BDD /* ScheduleCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD284A472AC4BD3B003C9BDD /* ScheduleCellViewModel.swift */; };
 		DD284A4A2AC4C5E3003C9BDD /* WeekDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD284A492AC4C5E3003C9BDD /* WeekDay.swift */; };
 		DD2EFF542AD2C51B004DCBCB /* swiftgen.yml in Resources */ = {isa = PBXBuildFile; fileRef = DD2EFF532AD2C51B004DCBCB /* swiftgen.yml */; };
-		DD2EFF582AD2C8D7004DCBCB /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2EFF572AD2C8D7004DCBCB /* Strings.swift */; };
 		DD2EFF5B2AD2CFC4004DCBCB /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DD2EFF592AD2CFC4004DCBCB /* Localizable.stringsdict */; };
 		DD2EFF5E2AD2CFDD004DCBCB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DD2EFF5C2AD2CFDD004DCBCB /* InfoPlist.strings */; };
 		DD2EFF7C2AD3040C004DCBCB /* TrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2EFF7B2AD3040C004DCBCB /* TrackerTests.swift */; };
@@ -36,6 +35,8 @@
 		DD41BA8E2AA9D63B00943466 /* GeometricParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */; };
 		DD4D272A2AD84F7F00B4F6B6 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4D27292AD84F7F00B4F6B6 /* AnalyticsService.swift */; };
 		DD4D272C2AD8605700B4F6B6 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4D272B2AD8605700B4F6B6 /* Colors.swift */; };
+		DD4D272F2AD882E000B4F6B6 /* Strings+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4D272D2AD882E000B4F6B6 /* Strings+Generated.swift */; };
+		DD4D27302AD882E000B4F6B6 /* Assets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4D272E2AD882E000B4F6B6 /* Assets+Generated.swift */; };
 		DD5EEF022ACB325400764169 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = DD5EEF012ACB325400764169 /* SnapKit */; };
 		DD7574252A9E2DE800619147 /* TrackerSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7574242A9E2DE800619147 /* TrackerSetupViewController.swift */; };
 		DD75742A2A9E790000619147 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7574292A9E790000619147 /* ScheduleViewController.swift */; };
@@ -96,7 +97,6 @@
 		DD284A472AC4BD3B003C9BDD /* ScheduleCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleCellViewModel.swift; sourceTree = "<group>"; };
 		DD284A492AC4C5E3003C9BDD /* WeekDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDay.swift; sourceTree = "<group>"; };
 		DD2EFF532AD2C51B004DCBCB /* swiftgen.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = SOURCE_ROOT; };
-		DD2EFF572AD2C8D7004DCBCB /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		DD2EFF5A2AD2CFC4004DCBCB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DD2EFF5D2AD2CFDD004DCBCB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DD2EFF5F2AD2CFEE004DCBCB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -114,6 +114,8 @@
 		DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometricParameters.swift; sourceTree = "<group>"; };
 		DD4D27292AD84F7F00B4F6B6 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		DD4D272B2AD8605700B4F6B6 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		DD4D272D2AD882E000B4F6B6 /* Strings+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Strings+Generated.swift"; sourceTree = "<group>"; };
+		DD4D272E2AD882E000B4F6B6 /* Assets+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Assets+Generated.swift"; sourceTree = "<group>"; };
 		DD7574242A9E2DE800619147 /* TrackerSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerSetupViewController.swift; sourceTree = "<group>"; };
 		DD7574292A9E790000619147 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		DD88B2672AD45F3C00AB5FB3 /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
@@ -307,7 +309,8 @@
 		DD2EFF562AD2C858004DCBCB /* Generated */ = {
 			isa = PBXGroup;
 			children = (
-				DD2EFF572AD2C8D7004DCBCB /* Strings.swift */,
+				DD4D272E2AD882E000B4F6B6 /* Assets+Generated.swift */,
+				DD4D272D2AD882E000B4F6B6 /* Strings+Generated.swift */,
 			);
 			path = Generated;
 			sourceTree = "<group>";
@@ -695,6 +698,8 @@
 				DD1D1AAB2A9B820100BF2BCF /* TrackerCategory.swift in Sources */,
 				DDDB536C2AC755850043630D /* TrackerSetupModel.swift in Sources */,
 				DD4137D22AB23127002B851A /* TrackerRecord.swift in Sources */,
+				DD4D27302AD882E000B4F6B6 /* Assets+Generated.swift in Sources */,
+				DD4D272F2AD882E000B4F6B6 /* Strings+Generated.swift in Sources */,
 				DDFD06252A9BCE99005F3117 /* NewTrackerViewController.swift in Sources */,
 				DD88B26C2AD46D3500AB5FB3 /* FiltersViewModel.swift in Sources */,
 				DD3941A82ABEF7520059233A /* PageViewController.swift in Sources */,
@@ -716,7 +721,6 @@
 				DD8E80292AA262EC00790687 /* TrackerCollectionViewHeader.swift in Sources */,
 				DDD982EB2A9FB48000994B01 /* ScheduleCell.swift in Sources */,
 				DD88B2682AD45F3C00AB5FB3 /* FiltersViewController.swift in Sources */,
-				DD2EFF582AD2C8D7004DCBCB /* Strings.swift in Sources */,
 				DD08E51B2A97B3C300E8FEB8 /* AppDelegate.swift in Sources */,
 				DD30BF562AC9C47F00CC0334 /* TrackersCollectionModel.swift in Sources */,
 				DD32B88B2AC0739E0082E91F /* CategoriesListViewController.swift in Sources */,

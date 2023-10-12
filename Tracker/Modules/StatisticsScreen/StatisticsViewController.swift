@@ -11,7 +11,9 @@ import UIKit
 final class StatisticsViewController: UIViewController {
     
     private let colors = Colors.shared
-    private let placeholder = UIImageView(image: UIImage(named: "empty statistics"))
+    private let placeholder = UIImageView(
+        image: UIImage(asset: Asset.Assets.StatisticsScreen.emptyStatistics)
+    )
     private let label = UILabel()
     
     override func viewDidLoad() {

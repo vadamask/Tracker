@@ -6,4 +6,15 @@ strings:
     inputs: Resources/ru.lproj
     outputs:
         templateName: structured-swift5
-        output: Strings.swift
+        output: Strings+Generated.swift
+
+## Assets
+xcassets:
+    inputs: Resources/Assets.xcassets
+    outputs:
+        templateName: swift5
+        params:
+            forceProvidesNamespaces: true
+            forceFileNameEnum: true
+        output: Assets+Generated.swift
+        

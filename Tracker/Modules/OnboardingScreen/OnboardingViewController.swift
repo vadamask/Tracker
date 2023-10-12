@@ -23,8 +23,14 @@ final class OnboardingViewController: UIViewController {
     }
     
     private func setupViews() {
-        let vc1 = PageViewController(imageName: "first onboarding", textLabel: L10n.Localizable.OnboardingScreen.FirstPage.Label.title)
-        let vc2 = PageViewController(imageName: "second onboarding", textLabel: L10n.Localizable.OnboardingScreen.SecondPage.Label.title)
+        let vc1 = PageViewController(
+            image: UIImage(asset: Asset.Assets.OnboardingScreen.firstOnboarding),
+            textLabel: L10n.Localizable.OnboardingScreen.FirstPage.Label.title
+        )
+        let vc2 = PageViewController(
+            image: UIImage(asset: Asset.Assets.OnboardingScreen.secondOnboarding),
+            textLabel: L10n.Localizable.OnboardingScreen.SecondPage.Label.title
+        )
         viewControllers.append(contentsOf: [vc1, vc2])
         
         if let first = viewControllers.first {

@@ -25,7 +25,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     private(set) var cardView = UIView()
     private let quantityView = UIView()
     private let emojiBackground = UIView()
-    private let pinView: UIImageView = UIImageView(image: UIImage(named: "pin symbol"))
+    private let pinView = UIImageView(image: UIImage(asset: Asset.Assets.Tracker.pinSymbol))
     private let emoji = UILabel()
     private let trackerName = UILabel()
     private let daysCount = UILabel()
@@ -78,7 +78,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         guard let delegate = delegate else { return }
         if isDone {
             if delegate.willDeleteRecord(with: tracker?.uuid ?? UUID()) {
-                plusButton.setImage(UIImage(named: "add day button"), for: .normal)
+                plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.addDayButton), for: .normal)
                 plusButton.alpha = 1.0
                 plusButton.backgroundColor = .clear
                 completedDays -= 1
@@ -86,7 +86,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             }
         } else {
             if delegate.willAddRecord(with: tracker?.uuid ?? UUID()) {
-                plusButton.setImage(UIImage(named: "done"), for: .normal)
+                plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.done), for: .normal)
                 plusButton.alpha = 0.3
                 plusButton.backgroundColor = UIColor(named: tracker?.color ?? "Black")
                 completedDays += 1
@@ -103,12 +103,12 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     
     private func setupButton() {
         if isDone {
-            plusButton.setImage(UIImage(named: "done"), for: .normal)
+            plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.done), for: .normal)
             plusButton.alpha = 0.3
             plusButton.backgroundColor = UIColor(named: tracker?.color ?? "Black")
             plusButton.tintColor = UIColor(named: tracker?.color ?? "Black")
         } else {
-            plusButton.setImage(UIImage(named: "add day button"), for: .normal)
+            plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.addDayButton), for: .normal)
             plusButton.alpha = 1.0
             plusButton.backgroundColor = colors.whiteDynamicYP
             plusButton.tintColor = UIColor(named: tracker?.color ?? "Black")

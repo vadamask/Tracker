@@ -79,7 +79,7 @@
 "categoriesScreen.alertController.delete" = "Delete";
 "categoriesScreen.alertController.cancel" = "Cancel";
 
-"newCategoryScreen.doneButtonTitle" = "Done";
+"newCategoryScreen.doneButtonTitle" = "Add";
 "newCategoryScreen.alertController.title" = "Error";
 "newCategoryScreen.alertController.message" = "This name already exists";
 "newCategoryScreen.alertController.action" = "Ok";

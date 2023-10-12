@@ -21,8 +21,8 @@ final class PageViewController: UIViewController {
         setupLayout()
     }
     
-    init(imageName: String, textLabel: String) {
-        imageView.image = UIImage(named: imageName)
+    init(image: UIImage?, textLabel: String) {
+        imageView.image = image
         label.text = textLabel
         super.init(nibName: nil, bundle: nil)
     }

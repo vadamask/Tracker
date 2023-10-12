@@ -16,7 +16,7 @@ final class TrackersCollectionViewController: UIViewController {
     private let colors = Colors.shared
     private var filter: Filter?
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    private let placeholder = UIImageView(image: UIImage())
+    private let placeholder = UIImageView()
     private let placeholderLabel = UILabel()
     private let filterButton = UIButton(type: .system)
     
@@ -59,7 +59,7 @@ final class TrackersCollectionViewController: UIViewController {
 
         viewModel.$categories.bind { [weak self] categories in
             if categories.isEmpty {
-                self?.placeholder.image = UIImage(named: "empty list")
+                self?.placeholder.image = UIImage(asset: Asset.Assets.MainScreen.emptyList)
                 self?.placeholderLabel.text = L10n.Localizable.CollectionScreen.EmptyState.title
                 self?.placeholder.isHidden = false
                 self?.placeholderLabel.isHidden = false
@@ -74,7 +74,7 @@ final class TrackersCollectionViewController: UIViewController {
         
         viewModel.$searchIsEmpty.bind { [weak self] isEmpty in
             if isEmpty {
-                self?.placeholder.image = UIImage(named: "empty search result")
+                self?.placeholder.image = UIImage(asset: Asset.Assets.MainScreen.emptySearchResult)
                 self?.placeholderLabel.text = L10n.Localizable.CollectionScreen.EmptySearch.title
                 self?.placeholder.isHidden = false
                 self?.placeholderLabel.isHidden = false
@@ -132,7 +132,7 @@ final class TrackersCollectionViewController: UIViewController {
     private func setupNavigationItem() {
         
         let leftItem = UIBarButtonItem(
-            image: UIImage(named: "add tracker button"),
+            image: UIImage(asset: Asset.Assets.MainScreen.addTrackerButton),
             style: .plain,
             target: self,
             action: #selector(addNewTracker)

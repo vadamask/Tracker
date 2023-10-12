@@ -14,7 +14,7 @@ final class CategoriesListViewController: UIViewController {
     
     private var viewModel: CategoriesListViewModel
     
-    private let placeholder = UIImageView(image: UIImage(named: "empty list"))
+    private let placeholder = UIImageView(image: UIImage(asset: Asset.Assets.MainScreen.emptyList))
     private let addButton = UIButton(type: .system)
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     private let topLabel = UILabel()
