@@ -18,6 +18,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     static let identifier = "TrackersCollectionViewCell"
     weak var delegate: TrackersCollectionViewCellDelegate?
     
+    private let analyticsService = AnalyticsService()
     private var tracker: Tracker?
     private var isDone = false
     private(set) var cardView = UIView()
@@ -91,6 +92,12 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
                 isDone.toggle()
             }
         }
+        
+        analyticsService.sendEvent(params: [
+            "event": "click",
+            "screen": "main",
+            "item": "track"
+        ])
     }
     
     private func setupButton() {

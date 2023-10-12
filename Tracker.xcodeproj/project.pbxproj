@@ -34,6 +34,7 @@
 		DD3941A82ABEF7520059233A /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3941A72ABEF7520059233A /* PageViewController.swift */; };
 		DD4137D22AB23127002B851A /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4137D12AB23127002B851A /* TrackerRecord.swift */; };
 		DD41BA8E2AA9D63B00943466 /* GeometricParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */; };
+		DD4D272A2AD84F7F00B4F6B6 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4D27292AD84F7F00B4F6B6 /* AnalyticsService.swift */; };
 		DD5EEF022ACB325400764169 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = DD5EEF012ACB325400764169 /* SnapKit */; };
 		DD7574252A9E2DE800619147 /* TrackerSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7574242A9E2DE800619147 /* TrackerSetupViewController.swift */; };
 		DD75742A2A9E790000619147 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7574292A9E790000619147 /* ScheduleViewController.swift */; };
@@ -111,6 +112,7 @@
 		DD3941A72ABEF7520059233A /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
 		DD4137D12AB23127002B851A /* TrackerRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
 		DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometricParameters.swift; sourceTree = "<group>"; };
+		DD4D27292AD84F7F00B4F6B6 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		DD7574242A9E2DE800619147 /* TrackerSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerSetupViewController.swift; sourceTree = "<group>"; };
 		DD7574292A9E790000619147 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		DD88B2672AD45F3C00AB5FB3 /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
@@ -367,6 +369,7 @@
 				DDDF413C2AACA96100F4A75F /* TrackerStore.swift */,
 				DDDF413E2AACA97000F4A75F /* TrackerCategoryStore.swift */,
 				DDDF41402AACA97E00F4A75F /* TrackerRecordStore.swift */,
+				DD4D27292AD84F7F00B4F6B6 /* AnalyticsService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -508,6 +511,7 @@
 				DD08E5132A97B3C300E8FEB8 /* Sources */,
 				DD08E5142A97B3C300E8FEB8 /* Frameworks */,
 				DD08E5152A97B3C300E8FEB8 /* Resources */,
+				B704482AFBD1DFD6E91FC73F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -631,6 +635,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		B704482AFBD1DFD6E91FC73F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tracker/Pods-Tracker-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tracker/Pods-Tracker-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tracker/Pods-Tracker-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		DD2EFF552AD2C67B004DCBCB /* SwiftGen */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -682,6 +703,7 @@
 				DD8C52DA2AC1F957007F3800 /* CategoryCellViewModel.swift in Sources */,
 				DD8C52D82AC1F3DC007F3800 /* Observable.swift in Sources */,
 				DD7574252A9E2DE800619147 /* TrackerSetupViewController.swift in Sources */,
+				DD4D272A2AD84F7F00B4F6B6 /* AnalyticsService.swift in Sources */,
 				DD3941A52ABEE38A0059233A /* OnboardingViewController.swift in Sources */,
 				DDDF413D2AACA96100F4A75F /* TrackerStore.swift in Sources */,
 				DD32B88D2AC073BB0082E91F /* CategoriesListViewModel.swift in Sources */,
@@ -807,7 +829,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -862,7 +884,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -883,6 +905,7 @@
 				DEVELOPMENT_TEAM = UL8MT562QM;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Tracker/Resources/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -914,6 +937,7 @@
 				DEVELOPMENT_TEAM = UL8MT562QM;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Tracker/Resources/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

@@ -11,6 +11,7 @@ import UIKit
 final class TrackersCollectionViewController: UIViewController {
 
     private let viewModel = TrackersCollectionViewModel()
+    private let analyticsService = AnalyticsService()
     private let params: GeometricParameters
     private var filter: Filter?
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -35,6 +36,22 @@ final class TrackersCollectionViewController: UIViewController {
         setupLayout()
         bind()
         viewModel.fetchTrackersAtCurrentDate()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "open",
+            "screen": "main"
+        ])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "closed",
+            "screen": "main"
+        ])
     }
     
     private func bind() {
@@ -71,6 +88,12 @@ final class TrackersCollectionViewController: UIViewController {
         let vc = NewTrackerViewController()
         vc.delegate = self
         present(vc, animated: true)
+        
+        analyticsService.sendEvent(params: [
+            "event": "click",
+            "screen": "main",
+            "item": "add_track"
+        ])
     }
     
     @objc private func datePickerDidChanged(sender: UIDatePicker) {
@@ -97,6 +120,12 @@ final class TrackersCollectionViewController: UIViewController {
              
         }
         present(vc, animated: true)
+        
+        analyticsService.sendEvent(params: [
+            "event": "click",
+            "screen": "main",
+            "item": "filter"
+        ])
     }
     
     private func setupNavigationItem() {
@@ -274,6 +303,12 @@ extension TrackersCollectionViewController {
                 self?.viewModel.pinTracker(at: indexPath, isPinned: cell.isPinned)
                 cell.isPinned = true
             }
+            
+            self?.analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "main",
+                "item": "pin"
+            ])
         }
         
         let editAction = UIAction(
@@ -291,6 +326,12 @@ extension TrackersCollectionViewController {
             )
             vc.delegate = self
             self?.present(vc,animated: true)
+            
+            self?.analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "main",
+                "item": "edit"
+            ])
         }
         
         let deleteAction = UIAction(
@@ -316,6 +357,12 @@ extension TrackersCollectionViewController {
             alertController.addAction(deleteAction)
             alertController.addAction(cancelAction)
             self?.present(alertController, animated: true)
+            
+            self?.analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "main",
+                "item": "delete"
+            ])
         }
         
         return UIContextMenuConfiguration(actionProvider: { _ in
