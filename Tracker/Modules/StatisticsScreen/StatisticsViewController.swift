@@ -10,6 +10,7 @@ import UIKit
 
 final class StatisticsViewController: UIViewController {
     
+    private let colors = Colors.shared
     private let placeholder = UIImageView(image: UIImage(named: "empty statistics"))
     private let label = UILabel()
     
@@ -20,12 +21,12 @@ final class StatisticsViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = .whiteYP
+        view.backgroundColor = colors.whiteDynamicYP
         navigationItem.title = L10n.Localizable.StatisticsScreen.NavigationItem.title
         
         label.textAlignment = .center
         label.text = L10n.Localizable.StatisticsScreen.EmptyState.title
-        label.textColor = .blackYP
+        label.textColor = colors.blackDynamicYP
         label.font = .systemFont(ofSize: 12, weight: .medium)
     }
     

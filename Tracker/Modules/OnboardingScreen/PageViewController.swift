@@ -10,6 +10,7 @@ import UIKit
 
 final class PageViewController: UIViewController {
     
+    private let colors = Colors.shared
     private let imageView = UIImageView()
     private let label = UILabel()
     private let button = UIButton()
@@ -41,13 +42,13 @@ final class PageViewController: UIViewController {
     private func setupViews() {
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.textColor = .blackYP
+        label.textColor = colors.blackStaticYP
         label.font = .systemFont(ofSize: 32, weight: .bold)
         
         button.addTarget(self, action: #selector(buttonDidTapped), for: .touchUpInside)
         button.setTitle(L10n.Localizable.OnboardingScreen.Button.title, for: .normal)
-        button.setTitleColor(.whiteYP, for: .normal)
-        button.backgroundColor = .blackYP
+        button.setTitleColor(colors.whiteStaticYP, for: .normal)
+        button.backgroundColor = colors.blackStaticYP
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.layer.cornerRadius = 16
     }

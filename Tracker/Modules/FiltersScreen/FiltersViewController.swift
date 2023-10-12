@@ -11,6 +11,7 @@ final class FiltersViewController: UIViewController {
     
     var completion: ((Filter) -> Void)?
     
+    private let colors = Colors.shared
     private let viewModel = FiltersViewModel()
     private let topLabel = UILabel()
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
@@ -45,14 +46,14 @@ final class FiltersViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = .whiteYP
+        view.backgroundColor = colors.whiteDynamicYP
         
         topLabel.text = L10n.Localizable.FiltersScreen.TopLabel.title
-        topLabel.textColor = .blackYP
+        topLabel.textColor = colors.blackDynamicYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
         tableView.rowHeight = 75
-        tableView.backgroundColor = .whiteYP
+        tableView.backgroundColor = colors.whiteDynamicYP
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)

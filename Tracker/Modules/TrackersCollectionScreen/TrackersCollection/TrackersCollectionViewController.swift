@@ -13,6 +13,7 @@ final class TrackersCollectionViewController: UIViewController {
     private let viewModel = TrackersCollectionViewModel()
     private let analyticsService = AnalyticsService()
     private let params: GeometricParameters
+    private let colors = Colors.shared
     private var filter: Filter?
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     private let placeholder = UIImageView(image: UIImage())
@@ -136,7 +137,7 @@ final class TrackersCollectionViewController: UIViewController {
             target: self,
             action: #selector(addNewTracker)
         )
-        leftItem.tintColor = .blackYP
+        leftItem.tintColor = colors.blackDynamicYP
         
         let datePicker = UIDatePicker()
         datePicker.locale = .current
@@ -161,16 +162,16 @@ final class TrackersCollectionViewController: UIViewController {
     
     private func setupViews() {
         
-        view.backgroundColor = .whiteYP
+        view.backgroundColor = colors.whiteDynamicYP
         
         placeholderLabel.textAlignment = .center
-        placeholderLabel.textColor = .blackYP
+        placeholderLabel.textColor = colors.blackDynamicYP
         placeholderLabel.font = .systemFont(ofSize: 12, weight: .medium)
         
         filterButton.setTitle(L10n.Localizable.CollectionScreen.filterButton, for: .normal)
-        filterButton.backgroundColor = .blueYP
+        filterButton.backgroundColor = colors.blueStaticYP
         filterButton.titleLabel?.font = .systemFont(ofSize: 17, weight: .regular)
-        filterButton.setTitleColor(.whiteYP, for: .normal)
+        filterButton.setTitleColor(colors.whiteStaticYP, for: .normal)
         filterButton.layer.cornerRadius = 16
         filterButton.addTarget(self, action: #selector(filtersDidTapped), for: .touchUpInside)
         
@@ -178,7 +179,7 @@ final class TrackersCollectionViewController: UIViewController {
         collectionView.delegate = self
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = false
-        collectionView.backgroundColor = .whiteYP
+        collectionView.backgroundColor = colors.whiteDynamicYP
         collectionView.register(
             TrackersCollectionViewCell.self,
             forCellWithReuseIdentifier: TrackersCollectionViewCell.identifier

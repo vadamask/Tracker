@@ -17,9 +17,10 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "TrackersCollectionViewCell"
     weak var delegate: TrackersCollectionViewCellDelegate?
-    
     private let analyticsService = AnalyticsService()
     private var tracker: Tracker?
+    
+    private let colors = Colors.shared
     private var isDone = false
     private(set) var cardView = UIView()
     private let quantityView = UIView()
@@ -53,10 +54,10 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         pinView.isHidden = !isPinned
         
         trackerName.text = tracker.name
-        trackerName.textColor = .whiteYP
+        trackerName.textColor = colors.whiteStaticYP
         trackerName.font = .systemFont(ofSize: 12, weight: .medium)
         
-        daysCount.textColor = .blackYP
+        daysCount.textColor = colors.blackDynamicYP
         daysCount.font = .systemFont(ofSize: 12, weight: .medium)
         
         emoji.text = tracker.emoji
@@ -109,17 +110,14 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         } else {
             plusButton.setImage(UIImage(named: "add day button"), for: .normal)
             plusButton.alpha = 1.0
-            plusButton.backgroundColor = .whiteYP
+            plusButton.backgroundColor = colors.whiteDynamicYP
             plusButton.tintColor = UIColor(named: tracker?.color ?? "Black")
         }
     }
     
     private func setupViews() {
         pinView.isHidden = true
-        
         quantityView.backgroundColor = .clear
-        
-        cardView.backgroundColor = .blueYP
         cardView.layer.cornerRadius = 16
         
         emojiBackground.layer.cornerRadius = 12

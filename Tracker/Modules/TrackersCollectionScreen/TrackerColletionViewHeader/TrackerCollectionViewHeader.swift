@@ -12,6 +12,7 @@ final class TrackerCollectionViewHeader: UICollectionReusableView {
     
     static let identifier = "header"
     private let label = UILabel()
+    private let colors = Colors.shared
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -28,7 +29,7 @@ final class TrackerCollectionViewHeader: UICollectionReusableView {
     
     func configure(with title: String) {
         label.text = title
-        label.textColor = .blackYP
+        label.textColor = colors.blackDynamicYP
         label.font = .systemFont(ofSize: 19, weight: .bold)
     }
 }

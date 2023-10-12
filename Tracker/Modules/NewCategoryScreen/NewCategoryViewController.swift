@@ -14,6 +14,7 @@ final class NewCategoryViewController: UIViewController {
     private let createButton = UIButton(type: .system)
     private let topLabel = UILabel()
     private let textField = UITextField()
+    private let colors = Colors.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,10 +37,12 @@ final class NewCategoryViewController: UIViewController {
         viewModel.$isAllowed.bind { [weak self] isAllowed in
             if isAllowed {
                 self?.createButton.isEnabled = true
-                self?.createButton.backgroundColor = .blackYP
+                self?.createButton.backgroundColor = self?.colors.blackDynamicYP
+                self?.createButton.setTitleColor(self?.colors.whiteDynamicYP, for: .normal)
             } else {
                 self?.createButton.isEnabled = false
-                self?.createButton.backgroundColor = .grayYP
+                self?.createButton.backgroundColor = self?.colors.grayStaticYP
+                self?.createButton.setTitleColor(self?.colors.whiteStaticYP, for: .normal)
             }
         }
         
@@ -74,19 +77,19 @@ final class NewCategoryViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = .whiteYP
+        view.backgroundColor = colors.whiteDynamicYP
         
         topLabel.text = oldTitle == nil ?
         L10n.Localizable.NewCategoryScreen.topLabelForNew :
         L10n.Localizable.NewCategoryScreen.topLabelForEdit
-        topLabel.textColor = .blackYP
+        topLabel.textColor = colors.blackDynamicYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
         createButton.isEnabled = false
         createButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         createButton.setTitle(L10n.Localizable.NewCategoryScreen.doneButtonTitle, for: .normal)
-        createButton.setTitleColor(.whiteYP, for: .normal)
-        createButton.backgroundColor = .grayYP
+        createButton.setTitleColor(colors.whiteStaticYP, for: .normal)
+        createButton.backgroundColor = colors.grayStaticYP
         createButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         createButton.layer.cornerRadius = 16
         
@@ -94,7 +97,7 @@ final class NewCategoryViewController: UIViewController {
         textField.delegate = self
         textField.placeholder = L10n.Localizable.NewCategoryScreen.TextField.placeholder
         textField.clearButtonMode = .always
-        textField.backgroundColor = .backgroundYP
+        textField.backgroundColor = colors.backgroundDynamicYP
         textField.layer.cornerRadius = 16
         textField.leftViewMode = .always
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))

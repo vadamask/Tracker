@@ -35,6 +35,7 @@
 		DD4137D22AB23127002B851A /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4137D12AB23127002B851A /* TrackerRecord.swift */; };
 		DD41BA8E2AA9D63B00943466 /* GeometricParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */; };
 		DD4D272A2AD84F7F00B4F6B6 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4D27292AD84F7F00B4F6B6 /* AnalyticsService.swift */; };
+		DD4D272C2AD8605700B4F6B6 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4D272B2AD8605700B4F6B6 /* Colors.swift */; };
 		DD5EEF022ACB325400764169 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = DD5EEF012ACB325400764169 /* SnapKit */; };
 		DD7574252A9E2DE800619147 /* TrackerSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7574242A9E2DE800619147 /* TrackerSetupViewController.swift */; };
 		DD75742A2A9E790000619147 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7574292A9E790000619147 /* ScheduleViewController.swift */; };
@@ -50,7 +51,6 @@
 		DD8E80292AA262EC00790687 /* TrackerCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD8E80282AA262EC00790687 /* TrackerCollectionViewHeader.swift */; };
 		DDBA49D22A9B242000E1E0C9 /* TrackersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDBA49D12A9B242000E1E0C9 /* TrackersCollectionViewController.swift */; };
 		DDBA49D52A9B248E00E1E0C9 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDBA49D42A9B248E00E1E0C9 /* StatisticsViewController.swift */; };
-		DDBA49D92A9B2DE400E1E0C9 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDBA49D82A9B2DE400E1E0C9 /* UIColor+Extensions.swift */; };
 		DDD280DB2ACF3CA80025BFC3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DDD280DC2ACF3CA80025BFC3 /* LaunchScreen.storyboard */; };
 		DDD280DD2ACF3CCF0025BFC3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DDD280DF2ACF3CCF0025BFC3 /* Localizable.strings */; };
 		DDD982EB2A9FB48000994B01 /* ScheduleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD982EA2A9FB48000994B01 /* ScheduleCell.swift */; };
@@ -113,6 +113,7 @@
 		DD4137D12AB23127002B851A /* TrackerRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
 		DD41BA8D2AA9D63B00943466 /* GeometricParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometricParameters.swift; sourceTree = "<group>"; };
 		DD4D27292AD84F7F00B4F6B6 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
+		DD4D272B2AD8605700B4F6B6 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		DD7574242A9E2DE800619147 /* TrackerSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerSetupViewController.swift; sourceTree = "<group>"; };
 		DD7574292A9E790000619147 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		DD88B2672AD45F3C00AB5FB3 /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
@@ -127,7 +128,6 @@
 		DD8E80282AA262EC00790687 /* TrackerCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCollectionViewHeader.swift; sourceTree = "<group>"; };
 		DDBA49D12A9B242000E1E0C9 /* TrackersCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCollectionViewController.swift; sourceTree = "<group>"; };
 		DDBA49D42A9B248E00E1E0C9 /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
-		DDBA49D82A9B2DE400E1E0C9 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		DDD280DC2ACF3CA80025BFC3 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DDD280DE2ACF3CCF0025BFC3 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DDD280E02ACF3CD30025BFC3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -215,6 +215,7 @@
 				DD85F2242AC750430037D117 /* Modules */,
 				DD08E52F2A97B87500E8FEB8 /* Resources */,
 				DD85F2212AC74FD80037D117 /* Services */,
+				DD4D272B2AD8605700B4F6B6 /* Colors.swift */,
 				DD8C52D72AC1F3DC007F3800 /* Observable.swift */,
 				DD08E51E2A97B3C300E8FEB8 /* TabBarController.swift */,
 			);
@@ -377,10 +378,10 @@
 		DD85F2242AC750430037D117 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				DD88B2662AD45F1300AB5FB3 /* FiltersScreen */,
 				DD3941A62ABEF6FB0059233A /* OnboardingScreen */,
 				DDBA49D32A9B242600E1E0C9 /* StatisticsScreen */,
 				DDD982EF2A9FB4E600994B01 /* TrackersCollectionScreen */,
+				DD88B2662AD45F1300AB5FB3 /* FiltersScreen */,
 				DDD982EE2A9FB4B500994B01 /* NewTrackerScreen */,
 				DDD982ED2A9FB4A100994B01 /* TrackerSetupScreen */,
 				DD32B8892AC072630082E91F /* CategoriesScreen */,
@@ -412,7 +413,6 @@
 		DDBA49D72A9B2DCD00E1E0C9 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				DDBA49D82A9B2DE400E1E0C9 /* UIColor+Extensions.swift */,
 				DD8E80262AA2406C00790687 /* UIViewController+Extensions.swift */,
 			);
 			path = Extensions;
@@ -688,7 +688,6 @@
 				DD8C52E12AC2033E007F3800 /* CategoryCell.swift in Sources */,
 				DD30BF542AC9C46500CC0334 /* TrackersCollectionViewModel.swift in Sources */,
 				DD41BA8E2AA9D63B00943466 /* GeometricParameters.swift in Sources */,
-				DDBA49D92A9B2DE400E1E0C9 /* UIColor+Extensions.swift in Sources */,
 				DD284A3D2AC32FB3003C9BDD /* NewCategoryModel.swift in Sources */,
 				DD8E80272AA2406C00790687 /* UIViewController+Extensions.swift in Sources */,
 				DD284A482AC4BD3B003C9BDD /* ScheduleCellViewModel.swift in Sources */,
@@ -708,6 +707,7 @@
 				DDDF413D2AACA96100F4A75F /* TrackerStore.swift in Sources */,
 				DD32B88D2AC073BB0082E91F /* CategoriesListViewModel.swift in Sources */,
 				DDBA49D22A9B242000E1E0C9 /* TrackersCollectionViewController.swift in Sources */,
+				DD4D272C2AD8605700B4F6B6 /* Colors.swift in Sources */,
 				DD8C52DF2AC1FB57007F3800 /* NewCategoryViewController.swift in Sources */,
 				DD284A392AC21376003C9BDD /* NewCategoryViewModel.swift in Sources */,
 				DDDF413F2AACA97000F4A75F /* TrackerCategoryStore.swift in Sources */,

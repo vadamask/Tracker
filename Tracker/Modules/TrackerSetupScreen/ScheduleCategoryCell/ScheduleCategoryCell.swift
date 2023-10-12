@@ -9,6 +9,8 @@ import UIKit
 
 final class ScheduleCategoryCell: UITableViewCell {
     
+    private let colors = Colors.shared
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     }
@@ -18,16 +20,16 @@ final class ScheduleCategoryCell: UITableViewCell {
     }
     
     func configure(with row: Int, isTracker: Bool) {
-        backgroundColor = .backgroundYP
+        backgroundColor = colors.backgroundDynamicYP
         accessoryType = .disclosureIndicator
         selectionStyle = .none
         
         textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        textLabel?.textColor = .blackYP
+        textLabel?.textColor = colors.blackDynamicYP
         
         layer.cornerRadius = 16
         
-        detailTextLabel?.textColor = .grayYP
+        detailTextLabel?.textColor = colors.grayStaticYP
         detailTextLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         
         if row == 0 {

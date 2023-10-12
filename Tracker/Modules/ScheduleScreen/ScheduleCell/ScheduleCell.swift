@@ -9,21 +9,21 @@ import UIKit
 
 final class ScheduleCell: UITableViewCell {
     var completion: (() -> Void)?
-    private let switcher = UISwitch()
-    
     var viewModel: ScheduleCellViewModel? {
         didSet {
             setupView()
         }
     }
+    private let switcher = UISwitch()
+    private let colors = Colors.shared
     
     private func setupView() {
         textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        textLabel?.textColor = .blackYP
+        textLabel?.textColor = colors.blackDynamicYP
         textLabel?.text = viewModel?.day.fullName
-        backgroundColor = .backgroundYP
+        backgroundColor = colors.backgroundDynamicYP
         
-        switcher.onTintColor = .blueYP
+        switcher.onTintColor = colors.blueStaticYP
         switcher.addTarget(self, action: #selector(switchTapped), for: .touchUpInside)
         switcher.isOn = viewModel?.isOn ?? false
         self.accessoryView = switcher

@@ -16,6 +16,7 @@ final class NewTrackerViewController: UIViewController {
     
     weak var delegate: NewTrackerViewControllerDelegate?
     
+    private let colors = Colors.shared
     private let topLabel = UILabel()
     private let trackerButton = UIButton(type: .system)
     private let eventButton = UIButton(type: .system)
@@ -27,23 +28,23 @@ final class NewTrackerViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = .whiteYP
+        view.backgroundColor = colors.whiteDynamicYP
         
         topLabel.text = L10n.Localizable.NewTrackerScreen.TopLabel.title
-        topLabel.textColor = .blackYP
+        topLabel.textColor = colors.blackDynamicYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
         trackerButton.addTarget(self, action: #selector(trackerButtonTapped), for: .touchUpInside)
         trackerButton.setTitle(L10n.Localizable.NewTrackerScreen.TrackerButton.title, for: .normal)
         trackerButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        trackerButton.setTitleColor(.whiteYP, for: .normal)
-        trackerButton.backgroundColor = .blackYP
+        trackerButton.setTitleColor(colors.whiteDynamicYP, for: .normal)
+        trackerButton.backgroundColor = colors.blackDynamicYP
         trackerButton.layer.cornerRadius = 16
         
         eventButton.addTarget(self, action: #selector(eventButtonTapped), for: .touchUpInside)
         eventButton.setTitle(L10n.Localizable.NewTrackerScreen.EventButton.title, for: .normal)
-        eventButton.setTitleColor(.whiteYP, for: .normal)
-        eventButton.backgroundColor = .blackYP
+        eventButton.setTitleColor(colors.whiteDynamicYP, for: .normal)
+        eventButton.backgroundColor = colors.blackDynamicYP
         eventButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         eventButton.layer.cornerRadius = 16
     }

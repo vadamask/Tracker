@@ -19,6 +19,7 @@ final class CategoriesListViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     private let topLabel = UILabel()
     private let placeholderLabel = UILabel()
+    private let colors = Colors.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,30 +66,30 @@ final class CategoriesListViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = .whiteYP
+        view.backgroundColor = colors.whiteDynamicYP
         
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(CategoryCell.self, forCellReuseIdentifier: CategoryCell.identifier)
         tableView.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
         tableView.rowHeight = 75
-        tableView.backgroundColor = .whiteYP
+        tableView.backgroundColor = colors.whiteDynamicYP
         tableView.allowsMultipleSelection = false
         tableView.layer.cornerRadius = 16
         
         placeholderLabel.text = L10n.Localizable.CategoriesScreen.EmptyState.title
         placeholderLabel.numberOfLines = 2
         placeholderLabel.textAlignment = .center
-        placeholderLabel.textColor = .blackYP
+        placeholderLabel.textColor = colors.blackDynamicYP
         placeholderLabel.font = .systemFont(ofSize: 12, weight: .medium)
         
         topLabel.text = L10n.Localizable.CategoriesScreen.TopLabel.title
-        topLabel.textColor = .blackYP
+        topLabel.textColor = colors.blackDynamicYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
         addButton.setTitle(L10n.Localizable.CategoriesScreen.Button.addTitle, for: .normal)
-        addButton.setTitleColor(.whiteYP, for: .normal)
-        addButton.backgroundColor = .blackYP
+        addButton.setTitleColor(colors.whiteDynamicYP, for: .normal)
+        addButton.backgroundColor = colors.blackDynamicYP
         addButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         addButton.layer.cornerRadius = 16
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)

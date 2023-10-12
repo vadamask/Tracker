@@ -16,6 +16,7 @@ final class TrackerSetupViewController: UIViewController {
     
     weak var delegate: TrackerSetupViewControllerDelegate?
     
+    private let colors = Colors.shared
     private let viewModel = TrackerSetupViewModel(model: TrackerSetupModel())
     private var model: (TrackerCategory, Int)?
     private var isTracker: Bool
@@ -67,7 +68,7 @@ final class TrackerSetupViewController: UIViewController {
             viewModel.didSelectSchedule(schedule)
             
             labelInEditingMode.text = L10n.Localizable.numberOfDays(model.1)
-            labelInEditingMode.textColor = .blackYP
+            labelInEditingMode.textColor = colors.blackDynamicYP
             labelInEditingMode.font = .systemFont(ofSize: 32, weight: .bold)
         }
     }
@@ -98,7 +99,13 @@ final class TrackerSetupViewController: UIViewController {
         
         viewModel.$createButtonIsAllowed.bind { [weak self] isAllowed in
             self?.createButton.isEnabled = isAllowed ? true : false
-            self?.createButton.backgroundColor = isAllowed ? .blackYP : .grayYP
+            self?.createButton.backgroundColor = isAllowed ?
+            self?.colors.blackDynamicYP :
+            self?.colors.grayStaticYP
+            self?.createButton.setTitleColor(
+                isAllowed ? self?.colors.whiteDynamicYP : self?.colors.whiteStaticYP,
+                for: .normal
+            )
         }
     }
     
@@ -108,7 +115,7 @@ final class TrackerSetupViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = .whiteYP
+        view.backgroundColor = colors.whiteDynamicYP
         self.hideKeyboardWhenTappedAround()
         
         if model == nil {
@@ -119,13 +126,13 @@ final class TrackerSetupViewController: UIViewController {
             topLabel.text = L10n.Localizable.SetupTrackerScreen.TopLabel.editingMode
         }
         
-        topLabel.textColor = .blackYP
+        topLabel.textColor = colors.blackDynamicYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
         textField.delegate = self
         textField.placeholder = L10n.Localizable.SetupTrackerScreen.TextField.placeholder
         textField.clearButtonMode = .always
-        textField.backgroundColor = .backgroundYP
+        textField.backgroundColor = colors.backgroundDynamicYP
         textField.layer.cornerRadius = 16
         textField.leftViewMode = .always
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
@@ -134,14 +141,14 @@ final class TrackerSetupViewController: UIViewController {
         
         warningLabel.isHidden = true
         warningLabel.text = L10n.Localizable.SetupTrackerScreen.WarningLabel.title
-        warningLabel.textColor = .redYP
+        warningLabel.textColor = colors.redStaticYP
         warningLabel.font = .systemFont(ofSize: 17, weight: .regular)
         
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
         tableView.rowHeight = 75
-        tableView.backgroundColor = .whiteYP
+        tableView.backgroundColor = colors.whiteDynamicYP
         tableView.layer.cornerRadius = 16
         tableView.isScrollEnabled = false
         
@@ -162,20 +169,20 @@ final class TrackerSetupViewController: UIViewController {
         L10n.Localizable.SetupTrackerScreen.CreateButton.title :
         L10n.Localizable.SetupTrackerScreen.SaveButton.title
         createButton.setTitle(title, for: .normal)
-        createButton.setTitleColor(.whiteYP, for: .normal)
+        createButton.setTitleColor(colors.whiteStaticYP, for: .normal)
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         createButton.isEnabled = false
         createButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        createButton.backgroundColor = .grayYP
+        createButton.backgroundColor = colors.grayStaticYP
         createButton.layer.cornerRadius = 16
         
         cancelButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         cancelButton.setTitle(L10n.Localizable.SetupTrackerScreen.CancelButton.title, for: .normal)
-        cancelButton.setTitleColor(.redYP, for: .normal)
+        cancelButton.setTitleColor(colors.redStaticYP, for: .normal)
         cancelButton.backgroundColor = .clear
         cancelButton.layer.cornerRadius = 16
-        cancelButton.layer.borderColor = UIColor.redYP.cgColor
+        cancelButton.layer.borderColor = colors.redStaticYP.cgColor
         cancelButton.layer.borderWidth = 1
     }
     
@@ -385,7 +392,7 @@ extension TrackerSetupViewController: UICollectionViewDataSource {
                 let index = viewModel.emojis.firstIndex(of: emoji)
                 if let index = index,
                    index == indexPath.row {
-                    cell.backgroundColor = .lightGrayYP
+                    cell.backgroundColor = colors.lightGrayStaticYP
                     viewModel.didSelectEmoji(at: IndexPath(row: index, section: 0))
                     collectionView.selectItem(at: IndexPath(row: index, section: 0), animated: false, scrollPosition: .bottom)
                 }
@@ -487,7 +494,7 @@ extension TrackerSetupViewController {
             }
         }
         if let cell = collectionView.cellForItem(at: indexPath) as? EmojiCell {
-            cell.backgroundColor = .lightGrayYP
+            cell.backgroundColor = colors.lightGrayStaticYP
             viewModel.didSelectEmoji(at: indexPath)
         }
         if let cell = collectionView.cellForItem(at: indexPath) as? ColorCell {

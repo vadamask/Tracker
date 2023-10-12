@@ -13,6 +13,7 @@ final class TabBarController: UITabBarController {
         super.viewDidLoad()
         setupTabBar()
     }
+    private let colors = Colors.shared
     
     private func setupTabBar() {
         let trackersVC = TrackersCollectionViewController(params: GeometricParameters(
@@ -41,13 +42,13 @@ final class TabBarController: UITabBarController {
         
         let appearance = UITabBarAppearance()
         appearance.configureWithDefaultBackground()
-        appearance.backgroundColor = .whiteYP
+        appearance.backgroundColor = colors.whiteDynamicYP
         tabBar.standardAppearance = appearance
         if #available(iOS 15, *) {
             tabBar.scrollEdgeAppearance = appearance
         }
-        tabBar.tintColor = .blueYP
-        tabBar.unselectedItemTintColor = .grayYP
+        tabBar.tintColor = colors.blueStaticYP
+        tabBar.unselectedItemTintColor = colors.grayStaticYP
         
         self.viewControllers = [trackersNavigationVC, statisticsNavigationVC]
     }

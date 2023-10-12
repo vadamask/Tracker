@@ -13,7 +13,7 @@ final class ScheduleViewController: UIViewController {
     var completion: ((Set<WeekDay>) -> Void)?
     
     private var viewModel: ScheduleViewModel
-    
+    private let colors = Colors.shared
     private var schedule: Set<WeekDay> = []
     private let topLabel = UILabel()
     private let doneButton = UIButton(type: .system)
@@ -39,23 +39,23 @@ final class ScheduleViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = .whiteYP
+        view.backgroundColor = colors.whiteDynamicYP
         
         topLabel.text = L10n.Localizable.ScheduleScreen.TopLabel.title
-        topLabel.textColor = .blackYP
+        topLabel.textColor = colors.blackDynamicYP
         topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         doneButton.setTitle(L10n.Localizable.ScheduleScreen.doneButtonTitle, for: .normal)
-        doneButton.setTitleColor(.whiteYP, for: .normal)
-        doneButton.backgroundColor = .blackYP
+        doneButton.setTitleColor(colors.whiteDynamicYP, for: .normal)
+        doneButton.backgroundColor = colors.blackDynamicYP
         doneButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         doneButton.layer.cornerRadius = 16
         
         tableView.dataSource = self
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         tableView.rowHeight = 75
-        tableView.backgroundColor = .whiteYP
+        tableView.backgroundColor = colors.whiteDynamicYP
         tableView.allowsSelection = false
     }
     

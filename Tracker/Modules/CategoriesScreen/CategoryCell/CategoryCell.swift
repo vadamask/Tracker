@@ -18,12 +18,14 @@ final class CategoryCell: UITableViewCell {
         }
     }
     
+    private let colors = Colors.shared
+    
     private func setupView() {
         textLabel?.text = viewModel?.title
         textLabel?.font = .systemFont(ofSize: 17, weight: .regular)
-        textLabel?.textColor = .blackYP
+        textLabel?.textColor = colors.blackDynamicYP
         
-        backgroundColor = .backgroundYP
+        backgroundColor = colors.backgroundDynamicYP
         selectionStyle = .none
         accessoryType = .none
         

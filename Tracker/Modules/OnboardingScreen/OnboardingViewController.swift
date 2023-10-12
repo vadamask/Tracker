@@ -11,35 +11,34 @@ import UIKit
 final class OnboardingViewController: UIViewController {
     
     private var viewControllers: [UIViewController] = []
-    
     private let pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+    private let colors = Colors.shared
     
-    private let pageControl: UIPageControl = {
-        let control = UIPageControl()
-        control.currentPage = 0
-        control.numberOfPages = 2
-        control.currentPageIndicatorTintColor = .blackYP
-        control.pageIndicatorTintColor = .blackYP30
-        control.isEnabled = false
-        return control
-    }()
+    private let pageControl = UIPageControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
-        setupViewControllers()
-        if let first = viewControllers.first {
-            pageViewController.setViewControllers([first], direction: .forward, animated: true)
-        }
-        pageViewController.dataSource = self
-        pageViewController.delegate = self
+        setupViews()
         setupLayout()
     }
     
-    private func setupViewControllers() {
+    private func setupViews() {
         let vc1 = PageViewController(imageName: "first onboarding", textLabel: L10n.Localizable.OnboardingScreen.FirstPage.Label.title)
         let vc2 = PageViewController(imageName: "second onboarding", textLabel: L10n.Localizable.OnboardingScreen.SecondPage.Label.title)
         viewControllers.append(contentsOf: [vc1, vc2])
+        
+        if let first = viewControllers.first {
+            pageViewController.setViewControllers([first], direction: .forward, animated: true)
+        }
+        
+        pageViewController.dataSource = self
+        pageViewController.delegate = self
+        
+        pageControl.currentPage = 0
+        pageControl.numberOfPages = 2
+        pageControl.currentPageIndicatorTintColor = colors.blackStaticYP
+        pageControl.pageIndicatorTintColor = colors.blackStaticYP30
+        pageControl.isEnabled = false
     }
     
     private func setupLayout() {
