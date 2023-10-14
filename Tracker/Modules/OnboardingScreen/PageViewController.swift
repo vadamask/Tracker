@@ -40,6 +40,8 @@ final class PageViewController: UIViewController {
     }
     
     private func setupViews() {
+        imageView.contentMode = .scaleAspectFill
+        
         label.numberOfLines = 0
         label.textAlignment = .center
         label.textColor = colors.blackStaticYP

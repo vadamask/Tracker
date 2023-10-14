@@ -31,6 +31,10 @@
 
 "statisticsScreen.emptyState.title" = "Анализировать пока нечего";
 "statisticsScreen.navigationItem.title" = "Статистика";
+"statisticsScreen.bestPeriod" = "Лучший период";
+"statisticsScreen.perfectDays" = "Идеальные дни";
+"statisticsScreen.trackersCompleted" = "Трекеров завершено";
+"statisticsScreen.avgValue" = "Среднее значение";
 
 "collectionScreen.navigationItem.title" = "Трекеры";
 "collectionScreen.emptyState.title" = "Что будем отслеживать?";

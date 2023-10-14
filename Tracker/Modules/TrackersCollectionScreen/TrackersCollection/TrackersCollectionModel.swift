@@ -24,15 +24,9 @@ final class TrackersCollectionModel {
         return formatter
     }()
     
-    private func weekday(for selectedDate: Date) -> String {
-        var weekday = Calendar(identifier: .gregorian).component(.weekday, from: selectedDate)
-        weekday = weekday == 1 ? 6 : (weekday - 2)
-        return String(weekday)
-    }
-    
     func fetchTrackersAtCurrentDate() -> [TrackerCategory] {
         do {
-            return try trackerStore.fetchCategoriesWithTrackers(at: weekday(for: currentDate))
+            return try trackerStore.fetchCategoriesWithTrackers(at: currentDate.weekday)
         } catch {
             print(error.localizedDescription)
             return []
@@ -42,7 +36,7 @@ final class TrackersCollectionModel {
     func fetchTrackers(at date: Date) -> [TrackerCategory] {
         currentDate = date
         do {
-            return try trackerStore.fetchCategoriesWithTrackers(at: weekday(for: currentDate))
+            return try trackerStore.fetchCategoriesWithTrackers(at: currentDate.weekday)
         } catch {
             print(error.localizedDescription)
             return []
@@ -50,7 +44,7 @@ final class TrackersCollectionModel {
     }
     
     func fetchCompletedTrackers() -> [TrackerCategory] {
-        let weekday = weekday(for: currentDate)
+        let weekday = currentDate.weekday
         do {
             return try trackerStore.fetchCompletedTrackers(today: stringDate)
         } catch {
@@ -60,7 +54,7 @@ final class TrackersCollectionModel {
     }
     
     func fetchIncompleteTrackers() -> [TrackerCategory] {
-        let weekday = weekday(for: currentDate)
+        let weekday = currentDate.weekday
         do {
             return try trackerStore.fetchIncompleteTrackers(at: weekday, stringDate)
         } catch {

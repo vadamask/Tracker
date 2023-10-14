@@ -31,6 +31,10 @@
 
 "statisticsScreen.emptyState.title" = "There is nothing to analyze yet";
 "statisticsScreen.navigationItem.title" = "Statistics";
+"statisticsScreen.bestPeriod" = "Best period";
+"statisticsScreen.perfectDays" = "Perfect days";
+"statisticsScreen.trackersCompleted" = "Тrackers completed";
+"statisticsScreen.avgValue" = "Average value";
 
 "collectionScreen.navigationItem.title" = "Trackers";
 "collectionScreen.emptyState.title" = "What will we track?";

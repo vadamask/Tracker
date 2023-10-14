@@ -8,7 +8,7 @@
 import CoreData
 import UIKit
 
-final class TrackerStore: NSObject {
+final class TrackerStore {
     
     private let context: NSManagedObjectContext
     private var notification = Notification(name: Notification.Name("Trackers changed"))
@@ -17,7 +17,7 @@ final class TrackerStore: NSObject {
         self.context = context
     }
     
-    convenience override init() {
+    convenience init() {
         guard let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
             fatalError("Failed with context")
         }

@@ -8,7 +8,7 @@
 import CoreData
 import UIKit
 
-final class TrackerCategoryStore: NSObject {
+final class TrackerCategoryStore {
     
     static let shared = TrackerCategoryStore()
     let context: NSManagedObjectContext
@@ -21,7 +21,7 @@ final class TrackerCategoryStore: NSObject {
         self.context = context
     }
     
-    private convenience override init() {
+    private convenience init() {
         guard let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
             fatalError("Failed with context")
         }
