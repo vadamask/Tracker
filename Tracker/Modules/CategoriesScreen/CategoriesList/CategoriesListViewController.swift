@@ -13,6 +13,7 @@ final class CategoriesListViewController: UIViewController {
     var completion: ((String?) -> Void)?
     
     private var viewModel: CategoriesListViewModel
+    private let analyticsService = AnalyticsService.shared
     
     private let placeholder = UIImageView(image: UIImage(asset: Asset.Assets.MainScreen.emptyList))
     private let addButton = UIButton(type: .system)
@@ -27,6 +28,22 @@ final class CategoriesListViewController: UIViewController {
         setupLayout()
         bind()
         checkEmptyState()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "open",
+            "screen": "categories"
+        ])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "closed",
+            "screen": "categories"
+        ])
     }
     
     init(viewModel: CategoriesListViewModel) {
@@ -63,6 +80,12 @@ final class CategoriesListViewController: UIViewController {
     @objc private func addButtonTapped() {
         let vc = NewCategoryViewController()
         present(vc, animated: true)
+        
+        analyticsService.sendEvent(params: [
+            "event": "click",
+            "screen": "categories",
+            "item": "add_new"
+        ])
     }
     
     private func setupViews() {
@@ -140,6 +163,13 @@ extension CategoriesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.didSelectRow(at: indexPath)
+        
+        analyticsService.sendEvent(params: [
+            "event": "click",
+            "screen": "categories",
+            "item": "category"
+        ])
+        
         dismiss(animated: true)
     }
     
@@ -190,6 +220,13 @@ extension CategoriesListViewController: UITableViewDelegate {
             let menu = UIMenu(title: "", children: [editAction, deleteAction])
             return menu
         }
+        
+        analyticsService.sendEvent(params: [
+            "event": "click",
+            "screen": "categories",
+            "item": "context_menu"
+        ])
+        
         return config
     }
 }

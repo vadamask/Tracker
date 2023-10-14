@@ -223,9 +223,9 @@
 				DD85F2242AC750430037D117 /* Modules */,
 				DD08E52F2A97B87500E8FEB8 /* Resources */,
 				DD85F2212AC74FD80037D117 /* Services */,
+				DD08E51E2A97B3C300E8FEB8 /* TabBarController.swift */,
 				DD4D272B2AD8605700B4F6B6 /* Colors.swift */,
 				DD8C52D72AC1F3DC007F3800 /* Observable.swift */,
-				DD08E51E2A97B3C300E8FEB8 /* TabBarController.swift */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";

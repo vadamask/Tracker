@@ -15,6 +15,7 @@ protocol NewTrackerViewControllerDelegate: AnyObject {
 final class NewTrackerViewController: UIViewController {
     
     weak var delegate: NewTrackerViewControllerDelegate?
+    private let analyticsService = AnalyticsService.shared
     
     private let colors = Colors.shared
     private let topLabel = UILabel()
@@ -25,6 +26,22 @@ final class NewTrackerViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setupLayout()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "open",
+            "screen": "new_tracker"
+        ])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "closed",
+            "screen": "new_tracker"
+        ])
     }
     
     private func setupViews() {
@@ -76,12 +93,24 @@ final class NewTrackerViewController: UIViewController {
         let vc = TrackerSetupViewController(isTracker: true)
         vc.delegate = self
         present(vc, animated: true)
+        
+        analyticsService.sendEvent(params: [
+            "event": "click",
+            "screen": "new_tracker",
+            "item": "new_tracker"
+        ])
     }
     
     @objc private func eventButtonTapped() {
         let vc = TrackerSetupViewController(isTracker: false)
         vc.delegate = self
         present(vc, animated: true)
+        
+        analyticsService.sendEvent(params: [
+            "event": "click",
+            "screen": "new_tracker",
+            "item": "new_event"
+        ])
     }
 }
 

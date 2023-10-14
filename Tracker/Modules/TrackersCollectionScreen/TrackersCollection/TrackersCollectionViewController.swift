@@ -11,7 +11,7 @@ import UIKit
 final class TrackersCollectionViewController: UIViewController {
 
     private let viewModel = TrackersCollectionViewModel()
-    private let analyticsService = AnalyticsService()
+    private let analyticsService = AnalyticsService.shared
     private let params: GeometricParameters
     private let colors = Colors.shared
     private var filter: Filter?
@@ -109,14 +109,38 @@ final class TrackersCollectionViewController: UIViewController {
             switch filter {
             case .all:
                 self?.viewModel.fetchTrackersAtCurrentDate()
+                
+                self?.analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "filters",
+                    "item": "all"
+                ])
             case .today:
                 let datePicker = self?.navigationItem.rightBarButtonItem?.customView as? UIDatePicker
                 datePicker?.date = Date()
                 self?.viewModel.dateDidChanged(Date())
+                
+                self?.analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "filters",
+                    "item": "today"
+                ])
             case .completed:
                 self?.viewModel.fetchCompletedTrackers()
+                
+                self?.analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "filters",
+                    "item": "completed"
+                ])
             case .incomplete:
                 self?.viewModel.fetchIncompleteTrackers()
+                
+                self?.analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "filters",
+                    "item": "incomplete"
+                ])
             }
              
         }

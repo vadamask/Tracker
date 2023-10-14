@@ -44,7 +44,6 @@ final class TrackersCollectionModel {
     }
     
     func fetchCompletedTrackers() -> [TrackerCategory] {
-        let weekday = currentDate.weekday
         do {
             return try trackerStore.fetchCompletedTrackers(today: stringDate)
         } catch {

@@ -80,4 +80,6 @@ final class StatisticView: UIView {
         gradient.frame = self.bounds
         shape.path = UIBezierPath(roundedRect: self.bounds.insetBy(dx: 1, dy: 1), cornerRadius: 16).cgPath
     }
+    
+    
 }

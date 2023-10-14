@@ -12,6 +12,7 @@ final class FiltersViewController: UIViewController {
     var completion: ((Filter) -> Void)?
     
     private let colors = Colors.shared
+    private let analyticsService = AnalyticsService.shared
     private let viewModel = FiltersViewModel()
     private let topLabel = UILabel()
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
@@ -22,6 +23,22 @@ final class FiltersViewController: UIViewController {
         setupViews()
         setupLayout()
         bind()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "open",
+            "screen": "filters"
+        ])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "closed",
+            "screen": "filters"
+        ])
     }
     
     init(filter: Filter?) {

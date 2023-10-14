@@ -17,7 +17,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "TrackersCollectionViewCell"
     weak var delegate: TrackersCollectionViewCellDelegate?
-    private let analyticsService = AnalyticsService()
+    private let analyticsService = AnalyticsService.shared
     private var tracker: Tracker?
     
     private let colors = Colors.shared

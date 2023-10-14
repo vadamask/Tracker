@@ -10,6 +10,9 @@ import Foundation
 
 final class AnalyticsService {
     
+    static let shared = AnalyticsService()
+    private init() {}
+    
     func sendEvent(params: [AnyHashable : Any]) {
         
         YMMYandexMetrica.reportEvent("EVENT", parameters: params, onFailure: { error in

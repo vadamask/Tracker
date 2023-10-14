@@ -9,6 +9,7 @@ import UIKit
 
 final class NewCategoryViewController: UIViewController {
     
+    private let analyticsService = AnalyticsService.shared
     private let oldTitle: String?
     private let viewModel = NewCategoryViewModel(model: NewCategoryModel())
     private let createButton = UIButton(type: .system)
@@ -21,6 +22,22 @@ final class NewCategoryViewController: UIViewController {
         setupViews()
         setupLayout()
         bind()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "open",
+            "screen": "new_category"
+        ])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "closed",
+            "screen": "new_category"
+        ])
     }
     
     init(oldTitle: String? = nil) {
@@ -70,6 +87,12 @@ final class NewCategoryViewController: UIViewController {
     @objc private func doneButtonTapped() {
         guard let newTitle = textField.text else { return }
         viewModel.updateCategory(oldTitle, with: newTitle)
+        
+        analyticsService.sendEvent(params: [
+            "event": "click",
+            "screen": "new_category",
+            "item": "done"
+        ])
     }
     
     @objc private func textDidChanged() {
@@ -137,11 +160,21 @@ extension NewCategoryViewController: UITextFieldDelegate {
 
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         viewModel.textDidChanged("")
+        analyticsService.sendEvent(params: [
+            "event": "click",
+            "screen": "new_category",
+            "item": "clear_textfield"
+        ])
         return true
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        view.endEditing(true)
-        return true
+        analyticsService.sendEvent(params: [
+            "event": "click",
+            "screen": "new_category",
+            "item": "hide_keyborad"
+        ])
+        
+        return view.endEditing(true)
     }
 }

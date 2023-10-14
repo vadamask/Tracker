@@ -12,6 +12,8 @@ final class StatisticsViewController: UIViewController {
     
     private let viewModel = StatisticViewModel()
     private let colors = Colors.shared
+    private let analyticsService = AnalyticsService.shared
+    
     private let placeholder = UIImageView(
         image: UIImage(asset: Asset.Assets.StatisticsScreen.emptyStatistics)
     )
@@ -28,6 +30,22 @@ final class StatisticsViewController: UIViewController {
         setupLayout()
         bind()
         viewModel.updateView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "open",
+            "screen": "statistics"
+        ])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "closed",
+            "screen": "statistics"
+        ])
     }
     
     private func bind() {

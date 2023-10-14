@@ -16,6 +16,7 @@ final class TrackerSetupViewController: UIViewController {
     
     weak var delegate: TrackerSetupViewControllerDelegate?
     
+    private let analyticsService = AnalyticsService.shared
     private let colors = Colors.shared
     private let viewModel = TrackerSetupViewModel(model: TrackerSetupModel())
     private var model: (TrackerCategory, Int)?
@@ -56,6 +57,38 @@ final class TrackerSetupViewController: UIViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if isTracker {
+            analyticsService.sendEvent(params: [
+                "event": "open",
+                "screen": "setup_tracker"
+            ])
+        } else {
+            analyticsService.sendEvent(params: [
+                "event": "open",
+                "screen": "setup_event"
+            ])
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        if isTracker {
+            analyticsService.sendEvent(params: [
+                "event": "closed",
+                "screen": "setup_tracker"
+            ])
+        } else {
+            analyticsService.sendEvent(params: [
+                "event": "closed",
+                "screen": "setup_event"
+            ])
+        }
+    }
+    
     private func configureScreen() {
         if let model = model {
             textField.text = model.0.trackers[0].name
@@ -75,6 +108,20 @@ final class TrackerSetupViewController: UIViewController {
     
     @objc private func cancelButtonTapped() {
         delegate?.dismiss()
+        
+        if isTracker {
+            analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "setup_tracker",
+                "item": "cancel_button"
+            ])
+        } else {
+            analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "setup_event",
+                "item": "cancel_button"
+            ])
+        }
     }
     
     @objc private func createButtonTapped() {
@@ -84,6 +131,20 @@ final class TrackerSetupViewController: UIViewController {
             viewModel.saveButtonTapped(model!.0.trackers[0].uuid)
         }
         delegate?.dismiss()
+        
+        if isTracker {
+            analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "setup_tracker",
+                "item": "create_button"
+            ])
+        } else {
+            analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "setup_event",
+                "item": "create_button"
+            ])
+        }
     }
     
     private func bind() {
@@ -266,12 +327,58 @@ final class TrackerSetupViewController: UIViewController {
 
 extension TrackerSetupViewController: UITextFieldDelegate {
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if isTracker {
+            analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "setup_tracker",
+                "item": "textfield"
+            ])
+        } else {
+            analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "setup_event",
+                "item": "textfield"
+            ])
+        }
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        view.endEditing(true)
+        
+        if isTracker {
+            analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "setup_tracker",
+                "item": "hide_keyboard"
+            ])
+        } else {
+            analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "setup_event",
+                "item": "hide_keyboard"
+            ])
+        }
+        
+        return view.endEditing(true)
     }
     
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         viewModel.clearTextButtonTapped()
+        
+        if isTracker {
+            analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "setup_tracker",
+                "item": "clear_textfield"
+            ])
+        } else {
+            analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "setup_event",
+                "item": "clear_textfield"
+            ])
+        }
+        
         return true
     }
 }
@@ -339,6 +446,20 @@ extension TrackerSetupViewController: UITableViewDelegate {
             }
             present(vc, animated: true)
             
+            if isTracker {
+                analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "setup_tracker",
+                    "item": "category"
+                ])
+            } else {
+                analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "setup_event",
+                    "item": "category"
+                ])
+            }
+            
         } else {
             
             let vc = ScheduleViewController(viewModel: ScheduleViewModel(schedule: schedule))
@@ -354,6 +475,13 @@ extension TrackerSetupViewController: UITableViewDelegate {
                 cell?.setDetailTextLabel(for: schedule)
             }
             present(vc, animated: true)
+          
+            analyticsService.sendEvent(params: [
+                "event": "click",
+                "screen": "setup_tracker",
+                "item": "schedule"
+            ])
+            
         }
     }
 }
@@ -496,10 +624,38 @@ extension TrackerSetupViewController {
         if let cell = collectionView.cellForItem(at: indexPath) as? EmojiCell {
             cell.backgroundColor = colors.lightGrayStaticYP
             viewModel.didSelectEmoji(at: indexPath)
+            
+            if isTracker {
+                analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "setup_tracker",
+                    "item": "emoji"
+                ])
+            } else {
+                analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "setup_event",
+                    "item": "emoji"
+                ])
+            }
         }
         if let cell = collectionView.cellForItem(at: indexPath) as? ColorCell {
             cell.itemDidSelect(true)
             viewModel.didSelectColor(at: indexPath)
+            
+            if isTracker {
+                analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "setup_tracker",
+                    "item": "color"
+                ])
+            } else {
+                analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "setup_event",
+                    "item": "color"
+                ])
+            }
         }
     }
     

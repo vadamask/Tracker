@@ -11,7 +11,7 @@ import UIKit
 final class ScheduleViewController: UIViewController {
     
     var completion: ((Set<WeekDay>) -> Void)?
-    
+    private let analyticsService = AnalyticsService.shared
     private var viewModel: ScheduleViewModel
     private let colors = Colors.shared
     private var schedule: Set<WeekDay> = []
@@ -34,7 +34,29 @@ final class ScheduleViewController: UIViewController {
         setupLayout()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "open",
+            "screen": "schedule"
+        ])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.sendEvent(params: [
+            "event": "closed",
+            "screen": "schedule"
+        ])
+    }
+    
     @objc private func doneButtonTapped() {
+        analyticsService.sendEvent(params: [
+            "event": "click",
+            "screen": "schedule",
+            "item": "done"
+        ])
+        
         dismiss(animated: true)
     }
     
