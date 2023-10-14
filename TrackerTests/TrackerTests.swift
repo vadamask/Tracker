@@ -6,30 +6,74 @@
 //
 
 import XCTest
+import SnapshotTesting
+@testable import Tracker
 
 final class TrackerTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    func testCollectionVCLight() {
+        let params = GeometricParameters(
+            cellCount: 2,
+            leftInset: 16,
+            rightInset: 16,
+            cellSpacing: 9
+        )
+        let vc = TrackersCollectionViewController(params: params)
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .light)))
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func testStatisticsVCLight() {
+        let vc = StatisticsViewController()
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .light)))
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    
+    func testNewTrackerVCLight() {
+        let vc = NewTrackerViewController()
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .light)))
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        measure {
-            // Put the code you want to measure the time of here.
-        }
+    
+    func testSetupVCLight() {
+        let trackerVC = TrackerSetupViewController(isTracker: true)
+        let eventVC = TrackerSetupViewController(isTracker: false)
+        assertSnapshot(of: trackerVC, as: .image(traits: .init(userInterfaceStyle: .light)))
+        assertSnapshot(of: eventVC, as: .image(traits: .init(userInterfaceStyle: .light)))
     }
-
+    
+    func testNewCategoryVCLight() {
+        let vc = NewCategoryViewController()
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .light)))
+    }
+    
+    func testCollectionVCDark() {
+        let params = GeometricParameters(
+            cellCount: 2,
+            leftInset: 16,
+            rightInset: 16,
+            cellSpacing: 9
+        )
+        let vc = TrackersCollectionViewController(params: params)
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .dark)))
+    }
+    
+    func testStatisticsVCDark() {
+        let vc = StatisticsViewController()
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .dark)))
+    }
+    
+    func testNewTrackerVCDark() {
+        let vc = NewTrackerViewController()
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .dark)))
+    }
+    
+    func testSetupVCDark() {
+        let trackerVC = TrackerSetupViewController(isTracker: true)
+        let eventVC = TrackerSetupViewController(isTracker: false)
+        assertSnapshot(of: trackerVC, as: .image(traits: .init(userInterfaceStyle: .dark)))
+        assertSnapshot(of: eventVC, as: .image(traits: .init(userInterfaceStyle: .dark)))
+    }
+    
+    func testNewCategoryVCDark() {
+        let vc = NewCategoryViewController()
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .dark)))
+    }
 }
