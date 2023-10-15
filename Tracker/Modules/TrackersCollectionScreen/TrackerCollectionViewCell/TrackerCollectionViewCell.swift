@@ -9,8 +9,8 @@ import SnapKit
 import UIKit
 
 protocol TrackersCollectionViewCellDelegate: AnyObject {
-    func willAddRecord(with uuid: UUID) -> Bool
-    func willDeleteRecord(with uuid: UUID) -> Bool
+    func willAddRecord(with id: UUID) -> Bool
+    func willDeleteRecord(with id: UUID) -> Bool
 }
 
 final class TrackersCollectionViewCell: UICollectionViewCell {
@@ -37,6 +37,12 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    var isPinned: Bool = false {
+        didSet {
+            pinView.isHidden = !isPinned
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
@@ -47,11 +53,11 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with tracker: Tracker,_ details: (isDone: Bool, completedDays: Int), and isPinned: Bool) {
+    func configure(with tracker: Tracker, and details: (isDone: Bool, completedDays: Int)) {
         self.tracker = tracker
-        isDone = details.isDone
-        completedDays = details.completedDays
-        pinView.isHidden = !isPinned
+        self.isDone = details.isDone
+        self.completedDays = details.completedDays
+        self.isPinned = tracker.isPinned
         
         trackerName.text = tracker.name
         trackerName.textColor = colors.whiteStaticYP
@@ -64,20 +70,11 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         cardView.backgroundColor = UIColor(named: tracker.color)
         setupButton()
     }
-    
-    var isPinned: Bool {
-        get {
-            !pinView.isHidden
-        }
-        set {
-            pinView.isHidden = !newValue
-        }
-    }
       
     @objc private func recordButtonTapped() {
         guard let delegate = delegate else { return }
         if isDone {
-            if delegate.willDeleteRecord(with: tracker?.uuid ?? UUID()) {
+            if delegate.willDeleteRecord(with: tracker?.id ?? UUID()) {
                 plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.addDayButton), for: .normal)
                 plusButton.alpha = 1.0
                 plusButton.backgroundColor = .clear
@@ -85,7 +82,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
                 isDone.toggle()
             }
         } else {
-            if delegate.willAddRecord(with: tracker?.uuid ?? UUID()) {
+            if delegate.willAddRecord(with: tracker?.id ?? UUID()) {
                 plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.done), for: .normal)
                 plusButton.alpha = 0.3
                 plusButton.backgroundColor = UIColor(named: tracker?.color ?? "Black")
@@ -116,7 +113,6 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupViews() {
-        pinView.isHidden = true
         quantityView.backgroundColor = .clear
         cardView.layer.cornerRadius = 16
         

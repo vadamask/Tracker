@@ -26,13 +26,17 @@ final class TrackerSetupViewModel {
         model.addTracker()
     }
     
-    func saveButtonTapped(_ uuid: UUID) {
-        self.model.replaceTracker(with: uuid)
+    func saveButtonTapped(_ id: UUID) {
+        self.model.replaceTracker(with: id)
     }
     
     func eventIsSelected() {
         model.eventIsSelected()
         isTracker = false
+    }
+    
+    func trackerIsPinned(_ isPinned: Bool) {
+        model.trackerIsPinned(isPinned)
     }
     
 }

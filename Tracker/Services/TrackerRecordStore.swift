@@ -39,11 +39,11 @@ final class TrackerRecordStore {
     
     func addRecord(_ record: TrackerRecord) throws {
         let request = TrackerCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.uuid), record.uuid.uuidString)
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.uuid), record.id.uuidString)
         let trackerObject = try? context.fetch(request)[0]
         
         let recordObject = TrackerRecordCoreData(context: context)
-        recordObject.uuid = record.uuid.uuidString
+        recordObject.uuid = record.id.uuidString
         recordObject.date = record.date
         recordObject.tracker = trackerObject
         try context.save()
@@ -51,11 +51,11 @@ final class TrackerRecordStore {
         NotificationCenter.default.post(notification)
     }
     
-    func removeRecord(with uuid: UUID, at date: String) throws {
+    func removeRecord(with id: UUID, at date: String) throws {
         let request = TrackerRecordCoreData.fetchRequest()
-        let uuidPredicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.uuid), uuid.uuidString)
+        let idPredicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.uuid), id.uuidString)
         let datePredicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.date), date)
-        let compoundPredicate = NSCompoundPredicate(type: .and, subpredicates: [uuidPredicate, datePredicate])
+        let compoundPredicate = NSCompoundPredicate(type: .and, subpredicates: [idPredicate, datePredicate])
         request.predicate = compoundPredicate
         let records = try context.fetch(request)
         guard !records.isEmpty else { return }
@@ -65,9 +65,9 @@ final class TrackerRecordStore {
         NotificationCenter.default.post(notification)
     }
     
-    func detailsFor(_ uuid: UUID, at date: String) throws -> (isDone: Bool, completedDays: Int) {
+    func detailsFor(_ id: UUID, at date: String) throws -> (isDone: Bool, completedDays: Int) {
         let request = TrackerRecordCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.uuid), uuid.uuidString)
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.uuid), id.uuidString)
         let records = try context.fetch(request)
         return (
             records.contains(where: { $0.date == date }),

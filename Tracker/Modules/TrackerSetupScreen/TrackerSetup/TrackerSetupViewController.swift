@@ -103,6 +103,8 @@ final class TrackerSetupViewController: UIViewController {
             labelInEditingMode.text = L10n.Localizable.numberOfDays(model.1)
             labelInEditingMode.textColor = colors.blackDynamicYP
             labelInEditingMode.font = .systemFont(ofSize: 32, weight: .bold)
+            
+            viewModel.trackerIsPinned(model.0.trackers[0].isPinned)
         }
     }
     
@@ -128,7 +130,7 @@ final class TrackerSetupViewController: UIViewController {
         if model == nil {
             viewModel.createButtonTapped()
         } else {
-            viewModel.saveButtonTapped(model!.0.trackers[0].uuid)
+            viewModel.saveButtonTapped(model!.0.trackers[0].id)
         }
         delegate?.dismiss()
         

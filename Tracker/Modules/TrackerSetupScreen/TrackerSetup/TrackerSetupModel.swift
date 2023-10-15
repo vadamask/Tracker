@@ -16,6 +16,7 @@ final class TrackerSetupModel {
     private var schedule: Set<WeekDay>?
     private var color: String?
     private var emoji: String?
+    private var isPinned = false
     
     var isAllSetup: Bool {
         guard title != nil,
@@ -29,11 +30,12 @@ final class TrackerSetupModel {
     func addTracker() {
         if isAllSetup {
             let tracker = Tracker(
-                uuid: UUID(),
+                id: UUID(),
                 name: title!,
                 color: color!,
                 emoji: emoji!,
-                schedule: schedule!
+                schedule: schedule!,
+                isPinned: isPinned
             )
             do {
                 try trackerStore.addTracker(tracker, with: category!)
@@ -43,14 +45,15 @@ final class TrackerSetupModel {
         }
     }
     
-    func replaceTracker(with uuid: UUID) {
+    func replaceTracker(with id: UUID) {
         if isAllSetup {
             let tracker = Tracker(
-                uuid: uuid,
+                id: id,
                 name: title!,
                 color: color!,
                 emoji: emoji!,
-                schedule: schedule!
+                schedule: schedule!,
+                isPinned: isPinned
             )
             do {
                 try trackerStore.changeTracker(with: TrackerCategory(title: category!, trackers: [tracker]))
@@ -108,4 +111,7 @@ final class TrackerSetupModel {
         self.color = nil
     }
     
+    func trackerIsPinned(_ isPinned: Bool) {
+        self.isPinned = isPinned
+    }
 }

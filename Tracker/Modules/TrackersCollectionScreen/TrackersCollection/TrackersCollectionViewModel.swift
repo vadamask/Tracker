@@ -13,7 +13,6 @@ final class TrackersCollectionViewModel {
     @Observable var searchIsEmpty = false
 
     private var model = TrackersCollectionModel()
-    private var indexes: [IndexPath]?
     
     var stringSelectedDate: String {
         model.stringDate
@@ -38,22 +37,22 @@ final class TrackersCollectionViewModel {
     }
     
     @objc func fetchTrackersAtCurrentDate() {
-        var categories = model.fetchTrackersAtCurrentDate()
-        if let index = categories.firstIndex(where: {$0.title == L10n.Localizable.CollectionScreen.pinHeader}) {
-            categories.swapAt(index, 0)
-            self.categories = categories
-        } else {
-            self.categories = categories
-        }
+        categories = model.fetchTrackersAtCurrentDate()
+    }
+    
+    func fetchTracker(at indexPath: IndexPath) -> (TrackerCategory, Int)? {
+        let id = categories[indexPath.section].trackers[indexPath.row].id
+        return model.fetchTracker(with: id)
     }
     
     func deleteTracker(at indexPath: IndexPath) {
-        let uuid = categories[indexPath.section].trackers[indexPath.row].uuid
-        model.deleteTracker(with: uuid)
+        let id = categories[indexPath.section].trackers[indexPath.row].id
+        model.deleteTracker(with: id)
     }
     
-    func pinTracker(at indexPath: IndexPath, isPinned: Bool) {
-        model.pinTracker(with: categories[indexPath.section].trackers[indexPath.row].uuid, isPinned: isPinned)
+    func pinTracker(at indexPath: IndexPath) {
+        let tracker = categories[indexPath.section].trackers[indexPath.row]
+        model.pinTracker(with: tracker.id, isPinned: tracker.isPinned)
     }
     
     func detailsFor(_ tracker: Tracker) -> (isDone: Bool, completedDays: Int) {
@@ -83,12 +82,12 @@ final class TrackersCollectionViewModel {
         searchIsEmpty = filteredCategories.isEmpty ? true : false
     }
     
-    func willAddRecord(with uuid: UUID) -> Bool {
-        model.willAddRecord(with: uuid)
+    func willAddRecord(with id: UUID) -> Bool {
+        model.willAddRecord(with: id)
     }
     
-    func willDeleteRecord(with uuid: UUID) -> Bool {
-        model.willDeleteRecord(with: uuid)
+    func willDeleteRecord(with id: UUID) -> Bool {
+        model.willDeleteRecord(with: id)
     }
     
     deinit {

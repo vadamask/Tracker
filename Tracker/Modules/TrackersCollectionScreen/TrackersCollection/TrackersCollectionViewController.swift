@@ -273,8 +273,7 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
         cell.delegate = self
         let tracker = viewModel.categories[indexPath.section].trackers[indexPath.row]
         let details = viewModel.detailsFor(tracker)
-        let isPinned = viewModel.categories[indexPath.section].title == L10n.Localizable.CollectionScreen.pinHeader
-        cell.configure(with: tracker, details, and: isPinned)
+        cell.configure(with: tracker, and: details)
         
         return cell
     }
@@ -321,13 +320,7 @@ extension TrackersCollectionViewController {
         )
         { [weak self] _ in
             
-            if cell.isPinned {
-                self?.viewModel.pinTracker(at: indexPath, isPinned: cell.isPinned)
-                cell.isPinned = false
-            } else {
-                self?.viewModel.pinTracker(at: indexPath, isPinned: cell.isPinned)
-                cell.isPinned = true
-            }
+            self?.viewModel.pinTracker(at: indexPath)
             
             self?.analyticsService.sendEvent(params: [
                 "event": "click",
@@ -340,14 +333,11 @@ extension TrackersCollectionViewController {
             title: L10n.Localizable.CollectionScreen.ContextMenu.editAction
         ) { [weak self] _ in
             
-            guard let categoryTitle = self?.viewModel.categories[indexPath.section].title,
-                  let tracker = self?.viewModel.categories[indexPath.section].trackers[indexPath.row],
-                  let completedDays = self?.viewModel.detailsFor(tracker).completedDays
-            else { return }
+            let model = self?.viewModel.fetchTracker(at: indexPath)
             
             let vc = TrackerSetupViewController(
                 isTracker: true,
-                model: (TrackerCategory(title: categoryTitle, trackers: [tracker]), completedDays)
+                model: model
             )
             vc.delegate = self
             self?.present(vc,animated: true)
@@ -499,12 +489,12 @@ extension TrackersCollectionViewController: UISearchBarDelegate {
 
 extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
     
-    func willAddRecord(with uuid: UUID) -> Bool {
-        viewModel.willAddRecord(with: uuid)
+    func willAddRecord(with id: UUID) -> Bool {
+        viewModel.willAddRecord(with: id)
     }
     
-    func willDeleteRecord(with uuid: UUID) -> Bool {
-        viewModel.willDeleteRecord(with: uuid)
+    func willDeleteRecord(with id: UUID) -> Bool {
+        viewModel.willDeleteRecord(with: id)
     }
 }
 

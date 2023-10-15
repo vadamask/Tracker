@@ -12,9 +12,10 @@ struct Tracker: Comparable {
         lhs.name < rhs.name
     }
     
-    let uuid: UUID
+    let id: UUID
     let name: String
     let color: String
     let emoji: String
     let schedule: Set<WeekDay>
+    let isPinned: Bool
 }

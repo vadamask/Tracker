@@ -24,6 +24,15 @@ final class TrackersCollectionModel {
         return formatter
     }()
     
+    func fetchTracker(with id: UUID) -> (TrackerCategory, Int)? {
+        do {
+            return try trackerStore.fetchTracker(with: id.uuidString)
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
     func fetchTrackersAtCurrentDate() -> [TrackerCategory] {
         do {
             return try trackerStore.fetchCategoriesWithTrackers(at: currentDate.weekday)
@@ -64,17 +73,17 @@ final class TrackersCollectionModel {
     
     func detailsFor(_ tracker: Tracker) -> (isDone: Bool, completedDays: Int) {
         do {
-            return try recordStore.detailsFor(tracker.uuid, at: stringDate)
+            return try recordStore.detailsFor(tracker.id, at: stringDate)
         } catch {
             print(error.localizedDescription)
             return (false, 0)
         }
     }
     
-    func willAddRecord(with uuid: UUID) -> Bool {
+    func willAddRecord(with id: UUID) -> Bool {
         if currentDate < Date() {
             do {
-                try recordStore.addRecord(TrackerRecord(uuid: uuid, date: stringDate))
+                try recordStore.addRecord(TrackerRecord(id: id, date: stringDate))
                 return true
             } catch {
                 print(error.localizedDescription)
@@ -84,9 +93,9 @@ final class TrackersCollectionModel {
         return false
     }
     
-    func willDeleteRecord(with uuid: UUID) -> Bool {
+    func willDeleteRecord(with id: UUID) -> Bool {
         do {
-            try recordStore.removeRecord(with: uuid, at: stringDate)
+            try recordStore.removeRecord(with: id, at: stringDate)
             return true
         } catch {
             print(error.localizedDescription)
@@ -94,17 +103,17 @@ final class TrackersCollectionModel {
         return false
     }
     
-    func deleteTracker(with uuid: UUID) {
+    func deleteTracker(with id: UUID) {
         do {
-            try trackerStore.deleteTracker(with: uuid.uuidString)
+            try trackerStore.deleteTracker(with: id.uuidString)
         } catch {
             print(error.localizedDescription)
         }
     }
     
-    func pinTracker(with uuid: UUID, isPinned: Bool) {
+    func pinTracker(with id: UUID, isPinned: Bool) {
         do {
-            try trackerStore.changeCategory(for: uuid.uuidString, isPinned: isPinned)
+            try trackerStore.pinTracker(with: id.uuidString, isPinned: isPinned)
         } catch {
             print(error.localizedDescription)
         }

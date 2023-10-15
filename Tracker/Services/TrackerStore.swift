@@ -29,9 +29,12 @@ final class TrackerStore {
         request.predicate = NSPredicate(format: "%K CONTAINS %@", #keyPath(TrackerCoreData.schedule), weekday)
         
         let objects = try context.fetch(request)
+        let pinnedTrackers = objects.filter { $0.isPinned }
+        let unpinnedTrackers = objects.filter { !$0.isPinned }
+        
         var dict: [String: [Tracker]] = [:]
         
-        objects.forEach { object in
+        unpinnedTrackers.forEach { object in
             let tracker = convertToTracker(object)
             if dict[object.category?.title ?? ""] != nil {
                 dict[object.category?.title ?? ""]?.append(tracker)
@@ -39,10 +42,37 @@ final class TrackerStore {
                 dict.updateValue([tracker], forKey: object.category?.title ?? "")
             }
         }
+        
+        var result: [TrackerCategory] = []
+        
+        if !pinnedTrackers.isEmpty {
+            result.append(
+                TrackerCategory(
+                    title: L10n.Localizable.CollectionScreen.pinHeader,
+                    trackers: pinnedTrackers.map { convertToTracker($0) }
+                )
+            )
+        }
             
-        return dict
-            .map { TrackerCategory(title: $0.key, trackers: $0.value.sorted(by: <)) }
-            .sorted(by: <)
+        result.append(
+            contentsOf: dict
+                .map { TrackerCategory(title: $0.key, trackers: $0.value) }
+                .sorted(by: <)
+        )
+        
+        return result
+    }
+    
+    func fetchTracker(with id: String) throws -> (TrackerCategory, Int) {
+        let request = TrackerCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "%K == %@" , #keyPath(TrackerCoreData.uuid), id)
+        let object = try context.fetch(request)[0]
+        let records = object.records?.count
+        
+        return (
+            TrackerCategory(title: object.category?.title ?? "", trackers: [convertToTracker(object)]),
+            records ?? 0
+        )
     }
     
     func addTracker(_ tracker: Tracker, with categoryTitle: String) throws {
@@ -52,10 +82,11 @@ final class TrackerStore {
         guard !categories.isEmpty else { throw StoreError.categoriesIsEmpty }
         
         let object = TrackerCoreData(context: context)
-        object.uuid = tracker.uuid.uuidString
+        object.uuid = tracker.id.uuidString
         object.color = tracker.color
         object.emoji = tracker.emoji
         object.name = tracker.name
+        object.isPinned = tracker.isPinned
         object.schedule = tracker.schedule.map {String($0.rawValue)}.joined(separator: ",")
         object.category = categories[0]
         try context.save()
@@ -67,7 +98,7 @@ final class TrackerStore {
         trackerRequest.predicate = NSPredicate(
             format: "%K == %@",
             #keyPath(TrackerCoreData.uuid),
-            model.trackers[0].uuid.uuidString
+            model.trackers[0].id.uuidString
         )
         let trackerObject = try context.fetch(trackerRequest).first
         
@@ -88,9 +119,9 @@ final class TrackerStore {
         NotificationCenter.default.post(notification)
     }
     
-    func deleteTracker(with uuid: String) throws {
+    func deleteTracker(with id: String) throws {
         let request = TrackerCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "%K == %@" , #keyPath(TrackerCoreData.uuid), uuid)
+        request.predicate = NSPredicate(format: "%K == %@" , #keyPath(TrackerCoreData.uuid), id)
         let trackers = try context.fetch(request)
         context.delete(trackers[0])
         try context.save()
@@ -151,55 +182,14 @@ final class TrackerStore {
             .sorted(by: <)
     }
     
-    func changeCategory(for uuid: String, isPinned: Bool) throws {
+    func pinTracker(with id: String, isPinned: Bool) throws {
+        let request = TrackerCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "%K == %@" , #keyPath(TrackerCoreData.uuid), id)
+        let trackers = try context.fetch(request)
         
-        let trackerRequest = TrackerCoreData.fetchRequest()
-        trackerRequest.predicate = NSPredicate(format: "%K == %@" , #keyPath(TrackerCoreData.uuid), uuid)
-        let tracker = try context.fetch(trackerRequest)[0]
+        guard !trackers.isEmpty else { return }
         
-        if isPinned {
-            
-            let categoryRequest = TrackerCategoryCoreData.fetchRequest()
-            categoryRequest.predicate = NSPredicate(
-                format: "%K == %@"
-                , #keyPath(TrackerCategoryCoreData.title),
-                tracker.lastCategory ?? ""
-            )
-            let categories = try context.fetch(categoryRequest)
-            
-            if categories.isEmpty {
-                let pinCategory = TrackerCategoryCoreData(context: context)
-                pinCategory.title = tracker.lastCategory ?? ""
-                tracker.category = pinCategory
-            } else {
-                let pinCategory = categories[0]
-                tracker.category = pinCategory
-            }
-            
-            tracker.lastCategory = nil
-            
-        } else {
-            
-            tracker.lastCategory = tracker.category?.title
-            
-            let categoryRequest = TrackerCategoryCoreData.fetchRequest()
-            categoryRequest.predicate = NSPredicate(
-                format: "%K == %@"
-                , #keyPath(TrackerCategoryCoreData.title),
-                L10n.Localizable.CollectionScreen.pinHeader
-            )
-            let categories = try context.fetch(categoryRequest)
-            
-            if categories.isEmpty {
-                let pinCategory = TrackerCategoryCoreData(context: context)
-                pinCategory.title = L10n.Localizable.CollectionScreen.pinHeader
-                tracker.category = pinCategory
-            } else {
-                let pinCategory = categories[0]
-                tracker.category = pinCategory
-            }
-        }
-        
+        trackers[0].isPinned = !isPinned
         try context.save()
         NotificationCenter.default.post(notification)
     }
@@ -213,11 +203,12 @@ final class TrackerStore {
             
             let schedule = rawValues.components(separatedBy: ",").compactMap { Int($0) }.compactMap { WeekDay(rawValue: $0)}
             return Tracker(
-                uuid: UUID(uuidString: id) ?? UUID(),
+                id: UUID(uuidString: id) ?? UUID(),
                 name: name,
                 color: color,
                 emoji: emoji,
-                schedule: Set(schedule)
+                schedule: Set(schedule),
+                isPinned: object.isPinned
             )
         } else {
             fatalError("object doesn't exist")
