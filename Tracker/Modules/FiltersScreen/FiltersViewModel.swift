@@ -30,10 +30,8 @@ final class FiltersViewModel {
         filter = Filter(rawValue: indexPath.row)
     }
     
-    func setCheckmark(for filter: Filter?) {
-        if let index = filter?.rawValue {
-            filters[index].isSelected.toggle()
-        }
+    func setCheckmark(for filter: Filter) {
+        filters[filter.rawValue].isSelected.toggle()
     }
 }
 

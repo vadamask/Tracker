@@ -41,7 +41,7 @@ final class FiltersViewController: UIViewController {
         ])
     }
     
-    init(filter: Filter?) {
+    init(filter: Filter) {
         super.init(nibName: nil, bundle: nil)
         viewModel.setCheckmark(for: filter)
     }

@@ -32,16 +32,7 @@ final class TrackerStore {
         let pinnedTrackers = objects.filter { $0.isPinned }
         let unpinnedTrackers = objects.filter { !$0.isPinned }
         
-        var dict: [String: [Tracker]] = [:]
-        
-        unpinnedTrackers.forEach { object in
-            let tracker = convertToTracker(object)
-            if dict[object.category?.title ?? ""] != nil {
-                dict[object.category?.title ?? ""]?.append(tracker)
-            } else {
-                dict.updateValue([tracker], forKey: object.category?.title ?? "")
-            }
-        }
+        let dict = convertToCategories(objects: unpinnedTrackers)
         
         var result: [TrackerCategory] = []
         
@@ -146,52 +137,67 @@ final class TrackerStore {
         recordsRequest.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.date), today)
         let records = try context.fetch(recordsRequest)
 
-        let trackers = Set(records.map {$0.tracker})
+        let trackers = Set(records.map { $0.tracker }.compactMap { $0 })
+        let pinnedTrackers = trackers.filter { $0.isPinned }
+        let unpinnedTrackers = pinnedTrackers.subtracting(pinnedTrackers)
         
-        var dict: [String: [Tracker]] = [:]
+        let dict = convertToCategories(objects: Array(unpinnedTrackers))
+            
+        var result: [TrackerCategory] = []
         
-        trackers.forEach { object in
-            let tracker = convertToTracker(object!)
-            if dict[object?.category?.title ?? ""] != nil {
-                dict[object?.category?.title ?? ""]?.append(tracker)
-            } else {
-                dict.updateValue([tracker], forKey: object?.category?.title ?? "")
-            }
+        if !pinnedTrackers.isEmpty {
+            result.append(
+                TrackerCategory(
+                    title: L10n.Localizable.CollectionScreen.pinHeader,
+                    trackers: pinnedTrackers.map { convertToTracker($0) }
+                )
+            )
         }
             
-        return dict
-            .map { TrackerCategory(title: $0.key, trackers: $0.value.sorted(by: <)) }
-            .sorted(by: <)
+        result.append(
+            contentsOf: dict
+                .map { TrackerCategory(title: $0.key, trackers: $0.value) }
+                .sorted(by: <)
+        )
+        
+        return result
     }
     
     func fetchIncompleteTrackers(at weekday: String,_ stringDate: String) throws -> [TrackerCategory] {
+        
         let recordsRequest = TrackerRecordCoreData.fetchRequest()
         recordsRequest.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.date), stringDate)
         let records = try context.fetch(recordsRequest)
 
-        let completedTrackers = Set(records.map {$0.tracker})
-        
         let trackersRequest = TrackerCoreData.fetchRequest()
         trackersRequest.predicate = NSPredicate(format: "%K CONTAINS %@", #keyPath(TrackerCoreData.schedule), weekday)
-        
         let allTrackersAtToday = try context.fetch(trackersRequest)
         
-        let incompleteTrackers = Set(allTrackersAtToday).subtracting(completedTrackers)
+        let completedTrackers = Set(records.map {$0.tracker})
+        let incompleteTrackers = Set(Set(allTrackersAtToday).subtracting(completedTrackers).compactMap { $0 })
+        let pinnedTrackers = incompleteTrackers.filter { $0.isPinned }
+        let unpinnedTrackers = incompleteTrackers.subtracting(pinnedTrackers)
         
-        var dict: [String: [Tracker]] = [:]
+        let dict = convertToCategories(objects: Array(unpinnedTrackers))
+            
+        var result: [TrackerCategory] = []
         
-        incompleteTrackers.forEach { object in
-            let tracker = convertToTracker(object!)
-            if dict[object?.category?.title ?? ""] != nil {
-                dict[object?.category?.title ?? ""]?.append(tracker)
-            } else {
-                dict.updateValue([tracker], forKey: object?.category?.title ?? "")
-            }
+        if !pinnedTrackers.isEmpty {
+            result.append(
+                TrackerCategory(
+                    title: L10n.Localizable.CollectionScreen.pinHeader,
+                    trackers: pinnedTrackers.map { convertToTracker($0) }
+                )
+            )
         }
             
-        return dict
-            .map { TrackerCategory(title: $0.key, trackers: $0.value.sorted(by: <)) }
-            .sorted(by: <)
+        result.append(
+            contentsOf: dict
+                .map { TrackerCategory(title: $0.key, trackers: $0.value) }
+                .sorted(by: <)
+        )
+        
+        return result
     }
     
     private func convertToTracker(_ object: TrackerCoreData) -> Tracker {
@@ -213,5 +219,21 @@ final class TrackerStore {
         } else {
             fatalError("object doesn't exist")
         }
+    }
+    
+    private func convertToCategories(objects: [TrackerCoreData] ) -> [String: [Tracker]] {
+        
+        var dict: [String: [Tracker]] = [:]
+        
+        objects.forEach { object in
+            let tracker = convertToTracker(object)
+            if dict[object.category?.title ?? ""] != nil {
+                dict[object.category?.title ?? ""]?.append(tracker)
+            } else {
+                dict.updateValue([tracker], forKey: object.category?.title ?? "")
+            }
+        }
+        
+        return dict
     }
 }

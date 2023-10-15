@@ -265,16 +265,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		DD284A3A2AC32F52003C9BDD /* CategoriesList */ = {
-			isa = PBXGroup;
-			children = (
-				DD32B88A2AC0739E0082E91F /* CategoriesListViewController.swift */,
-				DD32B88C2AC073BB0082E91F /* CategoriesListViewModel.swift */,
-				DD32B88E2AC073CA0082E91F /* CategoriesListModel.swift */,
-			);
-			path = CategoriesList;
-			sourceTree = "<group>";
-		};
 		DD284A3B2AC32F75003C9BDD /* NewCategoryScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -283,33 +273,6 @@
 				DD284A3C2AC32FB3003C9BDD /* NewCategoryModel.swift */,
 			);
 			path = NewCategoryScreen;
-			sourceTree = "<group>";
-		};
-		DD284A3E2AC33537003C9BDD /* CategoryCell */ = {
-			isa = PBXGroup;
-			children = (
-				DD8C52E02AC2033E007F3800 /* CategoryCell.swift */,
-				DD8C52D92AC1F957007F3800 /* CategoryCellViewModel.swift */,
-			);
-			path = CategoryCell;
-			sourceTree = "<group>";
-		};
-		DD284A412AC4BAF9003C9BDD /* ScheduleList */ = {
-			isa = PBXGroup;
-			children = (
-				DD7574292A9E790000619147 /* ScheduleViewController.swift */,
-				DD284A432AC4BB38003C9BDD /* ScheduleViewModel.swift */,
-			);
-			path = ScheduleList;
-			sourceTree = "<group>";
-		};
-		DD284A422AC4BB18003C9BDD /* ScheduleCell */ = {
-			isa = PBXGroup;
-			children = (
-				DDD982EA2A9FB48000994B01 /* ScheduleCell.swift */,
-				DD284A472AC4BD3B003C9BDD /* ScheduleCellViewModel.swift */,
-			);
-			path = ScheduleCell;
 			sourceTree = "<group>";
 		};
 		DD2EFF562AD2C858004DCBCB /* Generated */ = {
@@ -329,37 +292,14 @@
 			path = TrackerTests;
 			sourceTree = "<group>";
 		};
-		DD30BF502AC9C43600CC0334 /* TrackersCollection */ = {
-			isa = PBXGroup;
-			children = (
-				DDBA49D12A9B242000E1E0C9 /* TrackersCollectionViewController.swift */,
-				DD30BF532AC9C46500CC0334 /* TrackersCollectionViewModel.swift */,
-				DD30BF552AC9C47F00CC0334 /* TrackersCollectionModel.swift */,
-			);
-			path = TrackersCollection;
-			sourceTree = "<group>";
-		};
-		DD30BF572AC9C48600CC0334 /* TrackerCollectionViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				DDFD06282A9CFB2E005F3117 /* TrackerCollectionViewCell.swift */,
-			);
-			path = TrackerCollectionViewCell;
-			sourceTree = "<group>";
-		};
-		DD30BF5A2AC9C4CD00CC0334 /* TrackerColletionViewHeader */ = {
-			isa = PBXGroup;
-			children = (
-				DD8E80282AA262EC00790687 /* TrackerCollectionViewHeader.swift */,
-			);
-			path = TrackerColletionViewHeader;
-			sourceTree = "<group>";
-		};
 		DD32B8892AC072630082E91F /* CategoriesScreen */ = {
 			isa = PBXGroup;
 			children = (
-				DD284A3A2AC32F52003C9BDD /* CategoriesList */,
-				DD284A3E2AC33537003C9BDD /* CategoryCell */,
+				DD32B88A2AC0739E0082E91F /* CategoriesListViewController.swift */,
+				DD32B88C2AC073BB0082E91F /* CategoriesListViewModel.swift */,
+				DD32B88E2AC073CA0082E91F /* CategoriesListModel.swift */,
+				DD8C52E02AC2033E007F3800 /* CategoryCell.swift */,
+				DD8C52D92AC1F957007F3800 /* CategoryCellViewModel.swift */,
 			);
 			path = CategoriesScreen;
 			sourceTree = "<group>";
@@ -433,8 +373,10 @@
 		DDD982EC2A9FB48400994B01 /* ScheduleScreen */ = {
 			isa = PBXGroup;
 			children = (
-				DD284A412AC4BAF9003C9BDD /* ScheduleList */,
-				DD284A422AC4BB18003C9BDD /* ScheduleCell */,
+				DD7574292A9E790000619147 /* ScheduleViewController.swift */,
+				DD284A432AC4BB38003C9BDD /* ScheduleViewModel.swift */,
+				DDD982EA2A9FB48000994B01 /* ScheduleCell.swift */,
+				DD284A472AC4BD3B003C9BDD /* ScheduleCellViewModel.swift */,
 			);
 			path = ScheduleScreen;
 			sourceTree = "<group>";
@@ -462,9 +404,11 @@
 		DDD982EF2A9FB4E600994B01 /* TrackersCollectionScreen */ = {
 			isa = PBXGroup;
 			children = (
-				DD30BF502AC9C43600CC0334 /* TrackersCollection */,
-				DD30BF572AC9C48600CC0334 /* TrackerCollectionViewCell */,
-				DD30BF5A2AC9C4CD00CC0334 /* TrackerColletionViewHeader */,
+				DDBA49D12A9B242000E1E0C9 /* TrackersCollectionViewController.swift */,
+				DD30BF532AC9C46500CC0334 /* TrackersCollectionViewModel.swift */,
+				DD30BF552AC9C47F00CC0334 /* TrackersCollectionModel.swift */,
+				DDFD06282A9CFB2E005F3117 /* TrackerCollectionViewCell.swift */,
+				DD8E80282AA262EC00790687 /* TrackerCollectionViewHeader.swift */,
 			);
 			path = TrackersCollectionScreen;
 			sourceTree = "<group>";

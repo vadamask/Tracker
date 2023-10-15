@@ -14,7 +14,7 @@ final class TrackersCollectionViewController: UIViewController {
     private let analyticsService = AnalyticsService.shared
     private let params: GeometricParameters
     private let colors = Colors.shared
-    private var filter: Filter?
+    private var filter = Filter.all
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     private let placeholder = UIImageView()
     private let placeholderLabel = UILabel()
@@ -78,9 +78,11 @@ final class TrackersCollectionViewController: UIViewController {
                 self?.placeholderLabel.text = L10n.Localizable.CollectionScreen.EmptySearch.title
                 self?.placeholder.isHidden = false
                 self?.placeholderLabel.isHidden = false
+                self?.filterButton.isHidden = false
             } else {
                 self?.placeholder.isHidden = true
                 self?.placeholderLabel.isHidden = true
+                self?.filterButton.isHidden = true
             }
         }
     }
@@ -99,6 +101,7 @@ final class TrackersCollectionViewController: UIViewController {
     
     @objc private func datePickerDidChanged(sender: UIDatePicker) {
         viewModel.dateDidChanged(sender.date)
+        filter = .all
     }
     
     @objc private func filtersDidTapped() {
@@ -142,7 +145,6 @@ final class TrackersCollectionViewController: UIViewController {
                     "item": "incomplete"
                 ])
             }
-             
         }
         present(vc, animated: true)
         

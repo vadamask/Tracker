@@ -65,10 +65,16 @@ final class TrackersCollectionViewModel {
     
     func fetchCompletedTrackers() {
         categories = model.fetchCompletedTrackers()
+        if categories.isEmpty {
+            searchIsEmpty = true
+        }
     }
     
     func fetchIncompleteTrackers() {
         categories = model.fetchIncompleteTrackers()
+        if categories.isEmpty {
+            searchIsEmpty = true
+        }
     }
     
     func searchFieldDidChanged(_ searchText: String) {
@@ -79,7 +85,7 @@ final class TrackersCollectionViewModel {
             let filteredCategories = categories.map {
                 TrackerCategory(
                     title: $0.title,
-                    trackers: $0.trackers.filter { $0.name.lowercased().contains(searchText.lowercased()) }
+                    trackers: $0.trackers.filter { $0.name.lowercased().hasPrefix(searchText.lowercased()) }
                 )
             }.filter { !$0.trackers.isEmpty }
             self.categories = filteredCategories
