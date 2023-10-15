@@ -128,6 +128,18 @@ final class TrackerStore {
         NotificationCenter.default.post(notification)
     }
     
+    func pinTracker(with id: String, isPinned: Bool) throws {
+        let request = TrackerCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "%K == %@" , #keyPath(TrackerCoreData.uuid), id)
+        let trackers = try context.fetch(request)
+        
+        guard !trackers.isEmpty else { return }
+        
+        trackers[0].isPinned = !isPinned
+        try context.save()
+        NotificationCenter.default.post(notification)
+    }
+    
     func fetchCompletedTrackers(today: String) throws -> [TrackerCategory] {
         
         let recordsRequest = TrackerRecordCoreData.fetchRequest()
@@ -180,18 +192,6 @@ final class TrackerStore {
         return dict
             .map { TrackerCategory(title: $0.key, trackers: $0.value.sorted(by: <)) }
             .sorted(by: <)
-    }
-    
-    func pinTracker(with id: String, isPinned: Bool) throws {
-        let request = TrackerCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "%K == %@" , #keyPath(TrackerCoreData.uuid), id)
-        let trackers = try context.fetch(request)
-        
-        guard !trackers.isEmpty else { return }
-        
-        trackers[0].isPinned = !isPinned
-        try context.save()
-        NotificationCenter.default.post(notification)
     }
     
     private func convertToTracker(_ object: TrackerCoreData) -> Tracker {

@@ -464,12 +464,7 @@ extension TrackersCollectionViewController: UICollectionViewDelegateFlowLayout {
 extension TrackersCollectionViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.isEmpty {
-            viewModel.fetchTrackersAtCurrentDate()
-            
-        } else {
-            viewModel.searchFieldDidChanged(searchText)
-        }
+        viewModel.searchFieldDidChanged(searchText)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -489,12 +484,12 @@ extension TrackersCollectionViewController: UISearchBarDelegate {
 
 extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
     
-    func willAddRecord(with id: UUID) -> Bool {
-        viewModel.willAddRecord(with: id)
+    func addRecord(with id: UUID) {
+        viewModel.addRecord(with: id)
     }
     
-    func willDeleteRecord(with id: UUID) -> Bool {
-        viewModel.willDeleteRecord(with: id)
+    func deleteRecord(with id: UUID) {
+        viewModel.deleteRecord(with: id)
     }
 }
 

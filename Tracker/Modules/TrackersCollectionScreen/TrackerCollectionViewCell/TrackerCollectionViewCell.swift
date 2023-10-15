@@ -9,8 +9,8 @@ import SnapKit
 import UIKit
 
 protocol TrackersCollectionViewCellDelegate: AnyObject {
-    func willAddRecord(with id: UUID) -> Bool
-    func willDeleteRecord(with id: UUID) -> Bool
+    func addRecord(with id: UUID)
+    func deleteRecord(with id: UUID)
 }
 
 final class TrackersCollectionViewCell: UICollectionViewCell {
@@ -74,21 +74,19 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     @objc private func recordButtonTapped() {
         guard let delegate = delegate else { return }
         if isDone {
-            if delegate.willDeleteRecord(with: tracker?.id ?? UUID()) {
-                plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.addDayButton), for: .normal)
-                plusButton.alpha = 1.0
-                plusButton.backgroundColor = .clear
-                completedDays -= 1
-                isDone.toggle()
-            }
+            delegate.deleteRecord(with: tracker?.id ?? UUID())
+            plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.addDayButton), for: .normal)
+            plusButton.alpha = 1.0
+            plusButton.backgroundColor = .clear
+            completedDays -= 1
+            isDone.toggle()
         } else {
-            if delegate.willAddRecord(with: tracker?.id ?? UUID()) {
-                plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.done), for: .normal)
-                plusButton.alpha = 0.3
-                plusButton.backgroundColor = UIColor(named: tracker?.color ?? "Black")
-                completedDays += 1
-                isDone.toggle()
-            }
+            delegate.addRecord(with: tracker?.id ?? UUID())
+            plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.done), for: .normal)
+            plusButton.alpha = 0.3
+            plusButton.backgroundColor = UIColor(named: tracker?.color ?? "Black")
+            completedDays += 1
+            isDone.toggle()
         }
         
         analyticsService.sendEvent(params: [

@@ -44,12 +44,7 @@ final class TrackersCollectionModel {
     
     func fetchTrackers(at date: Date) -> [TrackerCategory] {
         currentDate = date
-        do {
-            return try trackerStore.fetchCategoriesWithTrackers(at: currentDate.weekday)
-        } catch {
-            print(error.localizedDescription)
-            return []
-        }
+        return fetchTrackersAtCurrentDate()
     }
     
     func fetchCompletedTrackers() -> [TrackerCategory] {
@@ -80,27 +75,22 @@ final class TrackersCollectionModel {
         }
     }
     
-    func willAddRecord(with id: UUID) -> Bool {
+    func addRecord(with id: UUID) {
         if currentDate < Date() {
             do {
                 try recordStore.addRecord(TrackerRecord(id: id, date: stringDate))
-                return true
             } catch {
                 print(error.localizedDescription)
-                return false
             }
         }
-        return false
     }
     
-    func willDeleteRecord(with id: UUID) -> Bool {
+    func deleteRecord(with id: UUID) {
         do {
-            try recordStore.removeRecord(with: id, at: stringDate)
-            return true
+            try recordStore.deleteRecord(with: id, at: stringDate)
         } catch {
             print(error.localizedDescription)
         }
-        return false
     }
     
     func deleteTracker(with id: UUID) {

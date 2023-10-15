@@ -72,22 +72,27 @@ final class TrackersCollectionViewModel {
     }
     
     func searchFieldDidChanged(_ searchText: String) {
-        let filteredCategories = categories.map {
-            TrackerCategory(
-                title: $0.title,
-                trackers: $0.trackers.filter { $0.name.lowercased().hasPrefix(searchText.lowercased()) }
-            )
-        }.filter { !$0.trackers.isEmpty }
-        categories = filteredCategories
-        searchIsEmpty = filteredCategories.isEmpty ? true : false
+        if searchText.isEmpty {
+            categories = model.fetchTrackersAtCurrentDate()
+        } else {
+            let categories = model.fetchTrackersAtCurrentDate()
+            let filteredCategories = categories.map {
+                TrackerCategory(
+                    title: $0.title,
+                    trackers: $0.trackers.filter { $0.name.lowercased().contains(searchText.lowercased()) }
+                )
+            }.filter { !$0.trackers.isEmpty }
+            self.categories = filteredCategories
+        }
+        searchIsEmpty = categories.isEmpty ? true : false
     }
     
-    func willAddRecord(with id: UUID) -> Bool {
-        model.willAddRecord(with: id)
+    func addRecord(with id: UUID) {
+        model.addRecord(with: id)
     }
     
-    func willDeleteRecord(with id: UUID) -> Bool {
-        model.willDeleteRecord(with: id)
+    func deleteRecord(with id: UUID) {
+        model.deleteRecord(with: id)
     }
     
     deinit {

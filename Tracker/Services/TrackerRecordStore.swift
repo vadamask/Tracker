@@ -51,7 +51,7 @@ final class TrackerRecordStore {
         NotificationCenter.default.post(notification)
     }
     
-    func removeRecord(with id: UUID, at date: String) throws {
+    func deleteRecord(with id: UUID, at date: String) throws {
         let request = TrackerRecordCoreData.fetchRequest()
         let idPredicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.uuid), id.uuidString)
         let datePredicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.date), date)
