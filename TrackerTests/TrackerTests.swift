@@ -18,12 +18,12 @@ final class TrackerTests: XCTestCase {
             rightInset: 16,
             cellSpacing: 9
         )
-        let vc = TrackersCollectionViewController(params: params)
+        let vc = TrackersCollectionViewController(params: params, test:  true)
         assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .light)))
     }
     
     func testStatisticsVCLight() {
-        let vc = StatisticsViewController()
+        let vc = StatisticsViewController(test: true)
         assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .light)))
     }
     
@@ -51,12 +51,12 @@ final class TrackerTests: XCTestCase {
             rightInset: 16,
             cellSpacing: 9
         )
-        let vc = TrackersCollectionViewController(params: params)
+        let vc = TrackersCollectionViewController(params: params, test:  true)
         assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .dark)))
     }
     
     func testStatisticsVCDark() {
-        let vc = StatisticsViewController()
+        let vc = StatisticsViewController(test: true)
         assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .dark)))
     }
     

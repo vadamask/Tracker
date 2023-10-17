@@ -33,6 +33,11 @@ final class StatisticView: UIView {
         countLabel.text = text
     }
     
+    override func layoutSubviews() {
+        gradient.frame = self.bounds
+        shape.path = UIBezierPath(roundedRect: self.bounds.insetBy(dx: 1, dy: 1), cornerRadius: 16).cgPath
+    }
+    
     private func setupViews() {
  
         stackView.addArrangedSubview(countLabel)
@@ -75,11 +80,4 @@ final class StatisticView: UIView {
         
         layer.addSublayer(gradient)
     }
-    
-    override func layoutSubviews() {
-        gradient.frame = self.bounds
-        shape.path = UIBezierPath(roundedRect: self.bounds.insetBy(dx: 1, dy: 1), cornerRadius: 16).cgPath
-    }
-    
-    
 }

@@ -11,6 +11,7 @@ final class TrackersCollectionViewModel {
 
     @Observable var categories: [TrackerCategory] = []
     @Observable var searchIsEmpty = false
+    @Observable var filter: Filter = .all
 
     private var model = TrackersCollectionModel()
     
@@ -42,7 +43,16 @@ final class TrackersCollectionViewModel {
     }
     
     @objc func fetchTrackersAtCurrentDate() {
-        categories = model.fetchTrackersAtCurrentDate()
+        switch filter {
+        case .all:
+            categories = model.fetchTrackersAtCurrentDate()
+        case .today:
+            categories = model.fetchTrackersAtCurrentDate()
+        case .completed:
+            fetchCompletedTrackers()
+        case .incomplete:
+            fetchIncompleteTrackers()
+        }
     }
     
     func fetchTracker(at indexPath: IndexPath) -> (TrackerCategory, Int)? {
@@ -66,6 +76,7 @@ final class TrackersCollectionViewModel {
     
     func dateDidChanged(_ date: Date) {
         categories = model.fetchTrackers(at: date)
+        filter = .all
     }
     
     func fetchCompletedTrackers() {
@@ -104,6 +115,33 @@ final class TrackersCollectionViewModel {
     
     func deleteRecord(with recordID: UUID) {
         model.deleteRecord(with: recordID)
+    }
+    
+    func didSelectedFilter(_ filter: Filter) {
+        self.filter = filter
+    }
+    
+    func addMock() {
+        categories = [TrackerCategory(
+            title: "Test", trackers: [
+                Tracker(
+                    id: UUID(),
+                    name: "Test",
+                    color: "Color selection 0",
+                    emoji: "😂",
+                    schedule: Set([.monday]),
+                    isPinned: true
+                ),
+                Tracker(
+                    id: UUID(),
+                    name: "Test2",
+                    color: "Color selection 1",
+                    emoji: "🤪",
+                    schedule: Set([.monday]),
+                    isPinned: false
+                )
+            ]
+        )]
     }
     
     deinit {

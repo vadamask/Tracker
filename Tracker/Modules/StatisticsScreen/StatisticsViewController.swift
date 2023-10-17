@@ -13,7 +13,7 @@ final class StatisticsViewController: UIViewController {
     private let viewModel = StatisticViewModel()
     private let colors = Colors.shared
     private let analyticsService = AnalyticsService.shared
-    
+    private var test: Bool
     private let placeholder = UIImageView(
         image: UIImage(asset: Asset.Assets.StatisticsScreen.emptyStatistics)
     )
@@ -24,12 +24,26 @@ final class StatisticsViewController: UIViewController {
     private let trackersCompletedView = StatisticView(text: L10n.Localizable.StatisticsScreen.trackersCompleted)
     private let avgValueView = StatisticView(text: L10n.Localizable.StatisticsScreen.avgValue)
     
+    init(test: Bool = false) {
+        self.test = test
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         setupLayout()
         bind()
-        viewModel.updateView()
+        
+        if test {
+            viewModel.addMock()
+        } else {
+            viewModel.updateView()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

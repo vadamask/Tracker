@@ -39,6 +39,16 @@ final class StatisticViewModel {
         emptyState = statistics == nil
     }
     
+    func addMock() {
+        statistics = StatisticsResult(
+            bestPeriod: 1,
+            perfectDays: 2,
+            completedTrackers: 3,
+            avgValue: 4
+        )
+        emptyState = false
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }

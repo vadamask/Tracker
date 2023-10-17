@@ -14,14 +14,16 @@ final class TrackersCollectionViewController: UIViewController {
     private let analyticsService = AnalyticsService.shared
     private let params: GeometricParameters
     private let colors = Colors.shared
-    private var filter = Filter.all
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     private let placeholder = UIImageView()
     private let placeholderLabel = UILabel()
     private let filterButton = UIButton(type: .system)
     
-    init(params: GeometricParameters) {
+    private var test: Bool
+    
+    init(params: GeometricParameters, test: Bool = false) {
         self.params = params
+        self.test = test
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -36,7 +38,12 @@ final class TrackersCollectionViewController: UIViewController {
         setupViews()
         setupLayout()
         bind()
-        viewModel.fetchTrackersAtCurrentDate()
+        
+        if test {
+            viewModel.addMock()
+        } else {
+            viewModel.fetchTrackersAtCurrentDate()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -85,30 +92,8 @@ final class TrackersCollectionViewController: UIViewController {
                 self?.filterButton.isHidden = true
             }
         }
-    }
-    
-    @objc private func addNewTracker() {
-        let vc = NewTrackerViewController()
-        vc.delegate = self
-        present(vc, animated: true)
         
-        analyticsService.sendEvent(params: [
-            "event": "click",
-            "screen": "main",
-            "item": "add_track"
-        ])
-    }
-    
-    @objc private func datePickerDidChanged(sender: UIDatePicker) {
-        viewModel.dateDidChanged(sender.date)
-        filter = .all
-    }
-    
-    @objc private func filtersDidTapped() {
-        let vc = FiltersViewController(filter: filter)
-        vc.completion = { [weak self] filter in
-            self?.filter = filter
-            
+        viewModel.$filter.bind { [weak self] filter in
             switch filter {
             case .all:
                 self?.viewModel.fetchTrackersAtCurrentDate()
@@ -146,6 +131,30 @@ final class TrackersCollectionViewController: UIViewController {
                 ])
             }
         }
+    }
+    
+    @objc private func addNewTracker() {
+        let vc = NewTrackerViewController()
+        vc.delegate = self
+        present(vc, animated: true)
+        
+        analyticsService.sendEvent(params: [
+            "event": "click",
+            "screen": "main",
+            "item": "add_track"
+        ])
+    }
+    
+    @objc private func datePickerDidChanged(sender: UIDatePicker) {
+        viewModel.dateDidChanged(sender.date)
+    }
+    
+    @objc private func filtersDidTapped() {
+        let vc = FiltersViewController(filter: viewModel.filter)
+        
+        vc.completion = { [weak self] filter in
+            self?.viewModel.didSelectedFilter(filter)
+        }
         present(vc, animated: true)
         
         analyticsService.sendEvent(params: [
@@ -170,6 +179,10 @@ final class TrackersCollectionViewController: UIViewController {
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(datePickerDidChanged(sender:)), for: .valueChanged)
+        
+        if test {
+            datePicker.date = Date(timeIntervalSince1970: 1000000)
+        }
         
         let searchController = UISearchController()
         searchController.hidesNavigationBarDuringPresentation = false
@@ -274,7 +287,11 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
             
         cell.delegate = self
         let tracker = viewModel.categories[indexPath.section].trackers[indexPath.row]
-        let details = viewModel.detailsFor(tracker.id)
+        
+        let details = test ?
+        Details(isDone: true, completedDays: 0, recordID: nil) :
+        viewModel.detailsFor(tracker.id)
+        
         cell.configure(with: tracker, and: details)
         
         return cell
