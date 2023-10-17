@@ -324,11 +324,71 @@ extension TrackersCollectionViewController {
     
     func collectionView(
         _ collectionView: UICollectionView,
+        contextMenuConfigurationForItemAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        
+        contextMenu(for: indexPath)
+        
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
         contextMenuConfigurationForItemsAt indexPaths: [IndexPath],
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
         
         guard let indexPath = indexPaths.first else { return nil }
+        return contextMenu(for: indexPath)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        contextMenuConfiguration configuration: UIContextMenuConfiguration,
+        highlightPreviewForItemAt indexPath: IndexPath
+    ) -> UITargetedPreview? {
+        
+        if let cell = collectionView.cellForItem(at: indexPath) as? TrackersCollectionViewCell {
+            return UITargetedPreview(view: cell.cardView)
+        } else {
+            return nil
+        }
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        contextMenuConfiguration configuration: UIContextMenuConfiguration,
+        dismissalPreviewForItemAt indexPath: IndexPath
+    ) -> UITargetedPreview? {
+        
+        if let cell = collectionView.cellForItem(at: indexPath) as? TrackersCollectionViewCell {
+            return UITargetedPreview(view: cell.cardView)
+        } else {
+            return nil
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        guard let indexPath = configuration.identifier as? IndexPath else { return nil }
+            
+        if let cell = collectionView.cellForItem(at: indexPath) as? TrackersCollectionViewCell {
+            return UITargetedPreview(view: cell.cardView)
+        } else {
+            return nil
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        guard let indexPath = configuration.identifier as? IndexPath else { return nil }
+            
+        if let cell = collectionView.cellForItem(at: indexPath) as? TrackersCollectionViewCell {
+            return UITargetedPreview(view: cell.cardView)
+        } else {
+            return nil
+        }
+    }
+    
+    private func contextMenu(for indexPath: IndexPath) -> UIContextMenuConfiguration {
         let isPinned = viewModel.categories[indexPath.section].trackers[indexPath.row].isPinned
         
         let pinAction = UIAction(
@@ -398,35 +458,9 @@ extension TrackersCollectionViewController {
             ])
         }
         
-        return UIContextMenuConfiguration(actionProvider: { _ in
+        return UIContextMenuConfiguration(identifier: indexPath as NSCopying, actionProvider: { _ in
             UIMenu(children: [pinAction, editAction, deleteAction])
         })
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        contextMenuConfiguration configuration: UIContextMenuConfiguration,
-        highlightPreviewForItemAt indexPath: IndexPath
-    ) -> UITargetedPreview? {
-        
-        if let cell = collectionView.cellForItem(at: indexPath) as? TrackersCollectionViewCell {
-            return UITargetedPreview(view: cell.cardView)
-        } else {
-            return nil
-        }
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        contextMenuConfiguration configuration: UIContextMenuConfiguration,
-        dismissalPreviewForItemAt indexPath: IndexPath
-    ) -> UITargetedPreview? {
-        
-        if let cell = collectionView.cellForItem(at: indexPath) as? TrackersCollectionViewCell {
-            return UITargetedPreview(view: cell.cardView)
-        } else {
-            return nil
-        }
     }
 }
 
