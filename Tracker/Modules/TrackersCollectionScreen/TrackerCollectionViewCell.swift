@@ -74,6 +74,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     @objc private func recordButtonTapped() {
         if let recordID = recordID {
             delegate?.deleteRecord(with: recordID)
+            self.recordID = nil
         } else {
             let recordID = UUID()
             self.recordID = recordID

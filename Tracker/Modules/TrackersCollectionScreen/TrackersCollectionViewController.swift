@@ -93,43 +93,8 @@ final class TrackersCollectionViewController: UIViewController {
             }
         }
         
-        viewModel.$filter.bind { [weak self] filter in
-            switch filter {
-            case .all:
-                self?.viewModel.fetchTrackersAtCurrentDate()
-                
-                self?.analyticsService.sendEvent(params: [
-                    "event": "click",
-                    "screen": "filters",
-                    "item": "all"
-                ])
-            case .today:
-                let datePicker = self?.navigationItem.rightBarButtonItem?.customView as? UIDatePicker
-                datePicker?.date = Date()
-                self?.viewModel.dateDidChanged(Date())
-                
-                self?.analyticsService.sendEvent(params: [
-                    "event": "click",
-                    "screen": "filters",
-                    "item": "today"
-                ])
-            case .completed:
-                self?.viewModel.fetchCompletedTrackers()
-                
-                self?.analyticsService.sendEvent(params: [
-                    "event": "click",
-                    "screen": "filters",
-                    "item": "completed"
-                ])
-            case .incomplete:
-                self?.viewModel.fetchIncompleteTrackers()
-                
-                self?.analyticsService.sendEvent(params: [
-                    "event": "click",
-                    "screen": "filters",
-                    "item": "incomplete"
-                ])
-            }
+        viewModel.$filter.bind { [weak self] _ in
+            self?.viewModel.fetchTrackersAtCurrentDate()
         }
     }
     
@@ -154,6 +119,36 @@ final class TrackersCollectionViewController: UIViewController {
         
         vc.completion = { [weak self] filter in
             self?.viewModel.didSelectedFilter(filter)
+            switch filter {
+            case .all:
+                
+                self?.analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "filters",
+                    "item": "all"
+                ])
+            case .today:
+                
+                self?.analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "filters",
+                    "item": "today"
+                ])
+            case .completed:
+                
+                self?.analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "filters",
+                    "item": "completed"
+                ])
+            case .incomplete:
+                
+                self?.analyticsService.sendEvent(params: [
+                    "event": "click",
+                    "screen": "filters",
+                    "item": "incomplete"
+                ])
+            }
         }
         present(vc, animated: true)
         

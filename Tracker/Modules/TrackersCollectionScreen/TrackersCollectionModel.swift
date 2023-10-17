@@ -89,10 +89,12 @@ final class TrackersCollectionModel {
     }
     
     func deleteRecord(with recordID: UUID) {
-        do {
-            try recordStore.deleteRecord(with: recordID)
-        } catch {
-            print(error.localizedDescription)
+        if currentDate < Date() {
+            do {
+                try recordStore.deleteRecord(with: recordID)
+            } catch {
+                print(error.localizedDescription)
+            }
         }
     }
     
