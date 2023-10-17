@@ -274,7 +274,7 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
             
         cell.delegate = self
         let tracker = viewModel.categories[indexPath.section].trackers[indexPath.row]
-        let details = viewModel.detailsFor(tracker)
+        let details = viewModel.detailsFor(tracker.id)
         cell.configure(with: tracker, and: details)
         
         return cell
@@ -311,12 +311,11 @@ extension TrackersCollectionViewController {
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
         
-        guard let indexPath = indexPaths.first,
-              let cell = collectionView.cellForItem(at: indexPath) as? TrackersCollectionViewCell
-        else { return nil }
+        guard let indexPath = indexPaths.first else { return nil }
+        let isPinned = viewModel.categories[indexPath.section].trackers[indexPath.row].isPinned
         
         let pinAction = UIAction(
-            title: cell.isPinned ?
+            title: isPinned ?
                    L10n.Localizable.CollectionScreen.ContextMenu.unpinAction :
                    L10n.Localizable.CollectionScreen.ContextMenu.pinAction
         )
@@ -485,13 +484,12 @@ extension TrackersCollectionViewController: UISearchBarDelegate {
 // MARK: - TrackersCollectionViewCellDelegate
 
 extension TrackersCollectionViewController: TrackersCollectionViewCellDelegate {
-    
-    func addRecord(with id: UUID) {
-        viewModel.addRecord(with: id)
+    func addRecord(with recordID: UUID, for trackerID: UUID) {
+        viewModel.addRecord(with: recordID, for: trackerID)
     }
     
-    func deleteRecord(with id: UUID) {
-        viewModel.deleteRecord(with: id)
+    func deleteRecord(with recordID: UUID) {
+        viewModel.deleteRecord(with: recordID)
     }
 }
 

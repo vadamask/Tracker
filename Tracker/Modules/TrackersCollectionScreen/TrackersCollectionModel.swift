@@ -66,28 +66,31 @@ final class TrackersCollectionModel {
         }
     }
     
-    func detailsFor(_ tracker: Tracker) -> (isDone: Bool, completedDays: Int) {
+    func detailsFor(_ trackerID: UUID) -> Details {
         do {
-            return try recordStore.detailsFor(tracker.id, at: stringDate)
+            return try recordStore.detailsFor(trackerID, at: stringDate)
         } catch {
             print(error.localizedDescription)
-            return (false, 0)
+            return Details(isDone: false, completedDays: 0, recordID: UUID())
         }
     }
     
-    func addRecord(with id: UUID) {
+    func addRecord(with recordID: UUID, for trackerID: UUID) {
         if currentDate < Date() {
             do {
-                try recordStore.addRecord(TrackerRecord(id: id, date: stringDate))
+                try recordStore.addRecord(
+                    TrackerRecord(id: recordID, date: stringDate),
+                    for: trackerID
+                )
             } catch {
                 print(error.localizedDescription)
             }
         }
     }
     
-    func deleteRecord(with id: UUID) {
+    func deleteRecord(with recordID: UUID) {
         do {
-            try recordStore.deleteRecord(with: id, at: stringDate)
+            try recordStore.deleteRecord(with: recordID)
         } catch {
             print(error.localizedDescription)
         }

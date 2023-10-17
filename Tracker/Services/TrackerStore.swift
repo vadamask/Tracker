@@ -139,7 +139,7 @@ final class TrackerStore {
 
         let trackers = Set(records.map { $0.tracker }.compactMap { $0 })
         let pinnedTrackers = trackers.filter { $0.isPinned }
-        let unpinnedTrackers = pinnedTrackers.subtracting(pinnedTrackers)
+        let unpinnedTrackers = trackers.subtracting(pinnedTrackers)
         
         let dict = convertToCategories(objects: Array(unpinnedTrackers))
             

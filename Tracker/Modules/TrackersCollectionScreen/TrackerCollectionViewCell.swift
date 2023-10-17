@@ -9,19 +9,20 @@ import SnapKit
 import UIKit
 
 protocol TrackersCollectionViewCellDelegate: AnyObject {
-    func addRecord(with id: UUID)
-    func deleteRecord(with id: UUID)
+    func addRecord(with recordID: UUID, for trackerID: UUID)
+    func deleteRecord(with recordID: UUID)
 }
 
 final class TrackersCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "TrackersCollectionViewCell"
     weak var delegate: TrackersCollectionViewCellDelegate?
-    private let analyticsService = AnalyticsService.shared
-    private var tracker: Tracker?
-    
     private let colors = Colors.shared
-    private var isDone = false
+    private let analyticsService = AnalyticsService.shared
+    
+    private var trackerID: UUID?
+    private var recordID: UUID?
+
     private(set) var cardView = UIView()
     private let quantityView = UIView()
     private let emojiBackground = UIView()
@@ -30,18 +31,6 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     private let trackerName = UILabel()
     private let daysCount = UILabel()
     private let plusButton = UIButton()
-    
-    private var completedDays = 0 {
-        didSet {
-            daysCount.text = L10n.Localizable.numberOfDays(completedDays)
-        }
-    }
-    
-    var isPinned: Bool = false {
-        didSet {
-            pinView.isHidden = !isPinned
-        }
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -53,11 +42,9 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with tracker: Tracker, and details: (isDone: Bool, completedDays: Int)) {
-        self.tracker = tracker
-        self.isDone = details.isDone
-        self.completedDays = details.completedDays
-        self.isPinned = tracker.isPinned
+    func configure(with tracker: Tracker, and details: Details) {
+        self.trackerID = tracker.id
+        self.recordID = details.recordID
         
         trackerName.text = tracker.name
         trackerName.textColor = colors.whiteStaticYP
@@ -65,28 +52,32 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         
         daysCount.textColor = colors.blackDynamicYP
         daysCount.font = .systemFont(ofSize: 12, weight: .medium)
+        daysCount.text = L10n.Localizable.numberOfDays(details.completedDays)
         
         emoji.text = tracker.emoji
         cardView.backgroundColor = UIColor(named: tracker.color)
-        setupButton()
+        pinView.isHidden = !tracker.isPinned
+        
+        if details.isDone {
+            plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.done), for: .normal)
+            plusButton.alpha = 0.3
+            plusButton.backgroundColor = UIColor(named: tracker.color)
+            plusButton.tintColor = UIColor(named: tracker.color)
+        } else {
+            plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.addDayButton), for: .normal)
+            plusButton.alpha = 1.0
+            plusButton.backgroundColor = colors.whiteDynamicYP
+            plusButton.tintColor = UIColor(named: tracker.color)
+        }
     }
       
     @objc private func recordButtonTapped() {
-        guard let delegate = delegate else { return }
-        if isDone {
-            delegate.deleteRecord(with: tracker?.id ?? UUID())
-            plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.addDayButton), for: .normal)
-            plusButton.alpha = 1.0
-            plusButton.backgroundColor = .clear
-            completedDays -= 1
-            isDone.toggle()
+        if let recordID = recordID {
+            delegate?.deleteRecord(with: recordID)
         } else {
-            delegate.addRecord(with: tracker?.id ?? UUID())
-            plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.done), for: .normal)
-            plusButton.alpha = 0.3
-            plusButton.backgroundColor = UIColor(named: tracker?.color ?? "Black")
-            completedDays += 1
-            isDone.toggle()
+            let recordID = UUID()
+            self.recordID = recordID
+            delegate?.addRecord(with: recordID, for: trackerID ?? UUID())
         }
         
         analyticsService.sendEvent(params: [
@@ -94,20 +85,6 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             "screen": "main",
             "item": "track"
         ])
-    }
-    
-    private func setupButton() {
-        if isDone {
-            plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.done), for: .normal)
-            plusButton.alpha = 0.3
-            plusButton.backgroundColor = UIColor(named: tracker?.color ?? "Black")
-            plusButton.tintColor = UIColor(named: tracker?.color ?? "Black")
-        } else {
-            plusButton.setImage(UIImage(asset: Asset.Assets.Tracker.addDayButton), for: .normal)
-            plusButton.alpha = 1.0
-            plusButton.backgroundColor = colors.whiteDynamicYP
-            plusButton.tintColor = UIColor(named: tracker?.color ?? "Black")
-        }
     }
     
     private func setupViews() {

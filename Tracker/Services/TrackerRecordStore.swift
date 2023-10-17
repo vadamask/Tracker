@@ -15,6 +15,12 @@ struct StatisticsResult {
     let avgValue: Int
 }
 
+struct Details {
+    let isDone: Bool
+    let completedDays: Int
+    let recordID: UUID?
+}
+
 final class TrackerRecordStore {
     
     private let context: NSManagedObjectContext
@@ -37,10 +43,10 @@ final class TrackerRecordStore {
         self.init(context: context)
     }
     
-    func addRecord(_ record: TrackerRecord) throws {
+    func addRecord(_ record: TrackerRecord, for trackerID: UUID) throws {
         let request = TrackerCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.uuid), record.id.uuidString)
-        let trackerObject = try? context.fetch(request)[0]
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.uuid), trackerID.uuidString)
+        let trackerObject = try context.fetch(request)[0]
         
         let recordObject = TrackerRecordCoreData(context: context)
         recordObject.uuid = record.id.uuidString
@@ -51,28 +57,38 @@ final class TrackerRecordStore {
         NotificationCenter.default.post(notification)
     }
     
-    func deleteRecord(with id: UUID, at date: String) throws {
+    func deleteRecord(with id: UUID) throws {
         let request = TrackerRecordCoreData.fetchRequest()
-        let idPredicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.uuid), id.uuidString)
-        let datePredicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.date), date)
-        let compoundPredicate = NSCompoundPredicate(type: .and, subpredicates: [idPredicate, datePredicate])
-        request.predicate = compoundPredicate
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.uuid), id.uuidString)
         let records = try context.fetch(request)
-        guard !records.isEmpty else { return }
         context.delete(records[0])
         try context.save()
         
         NotificationCenter.default.post(notification)
     }
     
-    func detailsFor(_ id: UUID, at date: String) throws -> (isDone: Bool, completedDays: Int) {
-        let request = TrackerRecordCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.uuid), id.uuidString)
-        let records = try context.fetch(request)
-        return (
-            records.contains(where: { $0.date == date }),
-            records.count
-        )
+    func detailsFor(_ trackerID: UUID, at date: String) throws -> Details {
+        let request = TrackerCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.uuid), trackerID.uuidString)
+        let trackers = try context.fetch(request)
+        let records = trackers[0].records as? Set<TrackerRecordCoreData>
+        
+        if let records = records,
+           let index = records.firstIndex(where: { $0.date == date }),
+           let stringID = records[index].uuid,
+           let id = UUID(uuidString: stringID) {
+            return Details(
+                isDone: true,
+                completedDays: records.count,
+                recordID: id
+            )
+        } else {
+            return Details(
+                isDone: false,
+                completedDays: records?.count ?? 0,
+                recordID: nil
+            )
+        }
     }
     
     func getStatistics() throws -> StatisticsResult? {
