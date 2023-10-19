@@ -18,13 +18,13 @@ final class StatisticViewModel {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(updateView),
-            name: Notification.Name("Records changed"),
+            name: Notification.Name.recordsChanged,
             object: nil
         )
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(updateView),
-            name: Notification.Name("Trackers changed"),
+            name: Notification.Name.trackersChanged,
             object: nil
         )
     }

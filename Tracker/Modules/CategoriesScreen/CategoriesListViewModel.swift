@@ -9,7 +9,7 @@ import Foundation
 
 final class CategoriesListViewModel {
     
-    let model: CategoriesListModel
+    private let model: CategoriesListModel
     
     @Observable var categories: [CategoryCellViewModel] = []
     @Observable var selectedCategory: String?
@@ -26,28 +26,24 @@ final class CategoriesListViewModel {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(fetchObjects),
-            name: Notification.Name("Category changed"),
+            name: Notification.Name.categoryChanged,
             object: nil
         )
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(fetchObjects),
-            name: Notification.Name("Category deleted"),
+            name: Notification.Name.categoryDeleted,
             object: nil
         )
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(fetchObjects),
-            name: Notification.Name("Category added"),
+            name: Notification.Name.categoryAdded,
             object: nil
         )
     }
     
-    var categoriesIsEmpty: Bool {
-        categories.isEmpty
-    }
-    
-    @objc func fetchObjects() {
+    @objc private func fetchObjects() {
         categories = model.fetchObjects()
     }
     

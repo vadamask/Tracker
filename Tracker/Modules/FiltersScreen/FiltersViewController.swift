@@ -28,16 +28,16 @@ final class FiltersViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         analyticsService.sendEvent(params: [
-            "event": "open",
-            "screen": "filters"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.filters.rawValue
         ])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         analyticsService.sendEvent(params: [
-            "event": "closed",
-            "screen": "filters"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.filters.rawValue
         ])
     }
     

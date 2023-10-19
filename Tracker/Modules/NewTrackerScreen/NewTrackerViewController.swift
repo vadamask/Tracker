@@ -31,16 +31,16 @@ final class NewTrackerViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         analyticsService.sendEvent(params: [
-            "event": "open",
-            "screen": "new_tracker"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_tracker.rawValue
         ])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         analyticsService.sendEvent(params: [
-            "event": "closed",
-            "screen": "new_tracker"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_tracker.rawValue
         ])
     }
     
@@ -95,9 +95,9 @@ final class NewTrackerViewController: UIViewController {
         present(vc, animated: true)
         
         analyticsService.sendEvent(params: [
-            "event": "click",
-            "screen": "new_tracker",
-            "item": "new_tracker"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_tracker.rawValue,
+            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.new_tracker.rawValue
         ])
     }
     
@@ -107,9 +107,9 @@ final class NewTrackerViewController: UIViewController {
         present(vc, animated: true)
         
         analyticsService.sendEvent(params: [
-            "event": "click",
-            "screen": "new_tracker",
-            "item": "new_event"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_tracker.rawValue,
+            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.new_event.rawValue
         ])
     }
 }

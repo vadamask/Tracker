@@ -27,16 +27,16 @@ final class NewCategoryViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         analyticsService.sendEvent(params: [
-            "event": "open",
-            "screen": "new_category"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_category.rawValue
         ])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         analyticsService.sendEvent(params: [
-            "event": "closed",
-            "screen": "new_category"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_category.rawValue
         ])
     }
     
@@ -52,14 +52,16 @@ final class NewCategoryViewController: UIViewController {
     private func bind() {
         
         viewModel.$isAllowed.bind { [weak self] isAllowed in
+            guard let self = self else { return }
+            
             if isAllowed {
-                self?.createButton.isEnabled = true
-                self?.createButton.backgroundColor = self?.colors.blackDynamicYP
-                self?.createButton.setTitleColor(self?.colors.whiteDynamicYP, for: .normal)
+                createButton.isEnabled = true
+                createButton.backgroundColor = colors.blackDynamicYP
+                createButton.setTitleColor(colors.whiteDynamicYP, for: .normal)
             } else {
-                self?.createButton.isEnabled = false
-                self?.createButton.backgroundColor = self?.colors.grayStaticYP
-                self?.createButton.setTitleColor(self?.colors.whiteStaticYP, for: .normal)
+                createButton.isEnabled = false
+                createButton.backgroundColor = colors.grayStaticYP
+                createButton.setTitleColor(colors.whiteStaticYP, for: .normal)
             }
         }
         
@@ -89,9 +91,9 @@ final class NewCategoryViewController: UIViewController {
         viewModel.updateCategory(oldTitle, with: newTitle)
         
         analyticsService.sendEvent(params: [
-            "event": "click",
-            "screen": "new_category",
-            "item": "done"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_category.rawValue,
+            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.done.rawValue
         ])
     }
     
@@ -161,18 +163,18 @@ extension NewCategoryViewController: UITextFieldDelegate {
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         viewModel.textDidChanged("")
         analyticsService.sendEvent(params: [
-            "event": "click",
-            "screen": "new_category",
-            "item": "clear_textfield"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_category.rawValue,
+            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.clear_textfield.rawValue
         ])
         return true
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         analyticsService.sendEvent(params: [
-            "event": "click",
-            "screen": "new_category",
-            "item": "hide_keyborad"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_category.rawValue,
+            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.hide_keyboard.rawValue
         ])
         
         return view.endEditing(true)

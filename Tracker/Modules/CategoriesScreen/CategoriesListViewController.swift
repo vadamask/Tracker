@@ -33,16 +33,16 @@ final class CategoriesListViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         analyticsService.sendEvent(params: [
-            "event": "open",
-            "screen": "categories"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.categories.rawValue
         ])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         analyticsService.sendEvent(params: [
-            "event": "closed",
-            "screen": "categories"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.categories.rawValue
         ])
     }
     
@@ -68,7 +68,7 @@ final class CategoriesListViewController: UIViewController {
     }
     
     private func checkEmptyState() {
-        if viewModel.categoriesIsEmpty {
+        if viewModel.categories.isEmpty {
             placeholder.isHidden = false
             placeholderLabel.isHidden = false
         } else {
@@ -82,9 +82,9 @@ final class CategoriesListViewController: UIViewController {
         present(vc, animated: true)
         
         analyticsService.sendEvent(params: [
-            "event": "click",
-            "screen": "categories",
-            "item": "add_new"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.categories.rawValue,
+            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.add_category.rawValue
         ])
     }
     
@@ -165,9 +165,9 @@ extension CategoriesListViewController: UITableViewDelegate {
         viewModel.didSelectRow(at: indexPath)
         
         analyticsService.sendEvent(params: [
-            "event": "click",
-            "screen": "categories",
-            "item": "category"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.categories.rawValue,
+            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.category.rawValue
         ])
         
         dismiss(animated: true)
@@ -184,9 +184,11 @@ extension CategoriesListViewController: UITableViewDelegate {
             let editAction = UIAction(
                 title: L10n.Localizable.CategoriesScreen.editCategoryTitle
             ) { [weak self] _ in
-                let title = self?.viewModel.categories[indexPath.row].title ?? ""
+                guard let self = self else { return }
+                
+                let title = viewModel.categories[indexPath.row].title
                 let vc = NewCategoryViewController(oldTitle: title)
-                self?.present(vc, animated: true)
+                present(vc, animated: true)
             }
             
             let deleteAction = UIAction(
@@ -222,9 +224,9 @@ extension CategoriesListViewController: UITableViewDelegate {
         }
         
         analyticsService.sendEvent(params: [
-            "event": "click",
-            "screen": "categories",
-            "item": "context_menu"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.categories.rawValue,
+            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.context_menu.rawValue
         ])
         
         return config

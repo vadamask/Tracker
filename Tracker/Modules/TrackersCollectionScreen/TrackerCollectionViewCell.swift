@@ -82,9 +82,9 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         }
         
         analyticsService.sendEvent(params: [
-            "event": "click",
-            "screen": "main",
-            "item": "track"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue,
+            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.track.rawValue
         ])
     }
     

@@ -9,8 +9,8 @@ import Foundation
 
 final class TrackersCollectionModel {
     
-    let trackerStore = TrackerStore()
-    let recordStore = TrackerRecordStore()
+    private let trackerStore = TrackerStore()
+    private let recordStore = TrackerRecordStore()
     
     private var currentDate = Date()
     

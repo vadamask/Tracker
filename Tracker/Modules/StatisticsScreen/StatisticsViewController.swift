@@ -49,34 +49,37 @@ final class StatisticsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         analyticsService.sendEvent(params: [
-            "event": "open",
-            "screen": "statistics"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.statistics.rawValue
         ])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         analyticsService.sendEvent(params: [
-            "event": "closed",
-            "screen": "statistics"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.statistics.rawValue
         ])
     }
     
     private func bind() {
         viewModel.$statistics.bind { [weak self] statistics in
+            guard let self = self else { return }
             guard let statistics = statistics else { return }
             
-            self?.trackersCompletedView.changeText(String(statistics.completedTrackers))
-            self?.perfectDaysView.changeText(String(statistics.perfectDays))
-            self?.bestPeriodView.changeText(String(statistics.bestPeriod))
-            self?.avgValueView.changeText(String(statistics.avgValue))
+            trackersCompletedView.changeText(String(statistics.completedTrackers))
+            perfectDaysView.changeText(String(statistics.perfectDays))
+            bestPeriodView.changeText(String(statistics.bestPeriod))
+            avgValueView.changeText(String(statistics.avgValue))
         }
         
         viewModel.$emptyState.bind { [weak self] emptyState in
-            self?.placeholder.isHidden = emptyState ? false : true
-            self?.label.isHidden = emptyState ? false : true
+            guard let self = self else { return }
+            
+            placeholder.isHidden = emptyState ? false : true
+            label.isHidden = emptyState ? false : true
 
-            [self?.bestPeriodView, self?.perfectDaysView, self?.trackersCompletedView, self?.avgValueView]
+            [bestPeriodView, perfectDaysView, trackersCompletedView, avgValueView]
                 .forEach {
                     $0?.isHidden = emptyState ? true : false
                 }

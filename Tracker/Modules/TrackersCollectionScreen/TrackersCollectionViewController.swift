@@ -49,47 +49,51 @@ final class TrackersCollectionViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         analyticsService.sendEvent(params: [
-            "event": "open",
-            "screen": "main"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue
         ])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         analyticsService.sendEvent(params: [
-            "event": "closed",
-            "screen": "main"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue
         ])
     }
     
     private func bind() {
 
         viewModel.$categories.bind { [weak self] categories in
+            guard let self = self else { return }
+            
             if categories.isEmpty {
-                self?.placeholder.image = UIImage(asset: Asset.Assets.MainScreen.emptyList)
-                self?.placeholderLabel.text = L10n.Localizable.CollectionScreen.EmptyState.title
-                self?.placeholder.isHidden = false
-                self?.placeholderLabel.isHidden = false
-                self?.filterButton.isHidden = true
+                placeholder.image = UIImage(asset: Asset.Assets.MainScreen.emptyList)
+                placeholderLabel.text = L10n.Localizable.CollectionScreen.EmptyState.title
+                placeholder.isHidden = false
+                placeholderLabel.isHidden = false
+                filterButton.isHidden = true
             } else {
-                self?.placeholder.isHidden = true
-                self?.placeholderLabel.isHidden = true
-                self?.filterButton.isHidden = false
+                placeholder.isHidden = true
+                placeholderLabel.isHidden = true
+                filterButton.isHidden = false
             }
-            self?.collectionView.reloadData()
+            collectionView.reloadData()
         }
         
         viewModel.$searchIsEmpty.bind { [weak self] isEmpty in
+            guard let self = self else { return }
+            
             if isEmpty {
-                self?.placeholder.image = UIImage(asset: Asset.Assets.MainScreen.emptySearchResult)
-                self?.placeholderLabel.text = L10n.Localizable.CollectionScreen.EmptySearch.title
-                self?.placeholder.isHidden = false
-                self?.placeholderLabel.isHidden = false
-                self?.filterButton.isHidden = false
+                placeholder.image = UIImage(asset: Asset.Assets.MainScreen.emptySearchResult)
+                placeholderLabel.text = L10n.Localizable.CollectionScreen.EmptySearch.title
+                placeholder.isHidden = false
+                placeholderLabel.isHidden = false
+                filterButton.isHidden = false
             } else {
-                self?.placeholder.isHidden = true
-                self?.placeholderLabel.isHidden = true
-                self?.filterButton.isHidden = true
+                placeholder.isHidden = true
+                placeholderLabel.isHidden = true
+                filterButton.isHidden = true
             }
         }
         
@@ -104,9 +108,9 @@ final class TrackersCollectionViewController: UIViewController {
         present(vc, animated: true)
         
         analyticsService.sendEvent(params: [
-            "event": "click",
-            "screen": "main",
-            "item": "add_track"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue,
+            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.add_track.rawValue
         ])
     }
     
@@ -118,44 +122,47 @@ final class TrackersCollectionViewController: UIViewController {
         let vc = FiltersViewController(filter: viewModel.filter)
         
         vc.completion = { [weak self] filter in
-            self?.viewModel.didSelectedFilter(filter)
+            guard let self = self else { return }
+            
+            viewModel.didSelectedFilter(filter)
+            
             switch filter {
             case .all:
                 
-                self?.analyticsService.sendEvent(params: [
-                    "event": "click",
-                    "screen": "filters",
-                    "item": "all"
+                analyticsService.sendEvent(params: [
+                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.filters.rawValue,
+                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Filter.all.rawValue
                 ])
             case .today:
                 
-                self?.analyticsService.sendEvent(params: [
-                    "event": "click",
-                    "screen": "filters",
-                    "item": "today"
+                analyticsService.sendEvent(params: [
+                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.filters.rawValue,
+                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Filter.today.rawValue
                 ])
             case .completed:
                 
-                self?.analyticsService.sendEvent(params: [
-                    "event": "click",
-                    "screen": "filters",
-                    "item": "completed"
+                analyticsService.sendEvent(params: [
+                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.filters.rawValue,
+                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Filter.completed.rawValue
                 ])
             case .incomplete:
                 
-                self?.analyticsService.sendEvent(params: [
-                    "event": "click",
-                    "screen": "filters",
-                    "item": "incomplete"
+                analyticsService.sendEvent(params: [
+                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.filters.rawValue,
+                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Filter.incomplete.rawValue
                 ])
             }
         }
         present(vc, animated: true)
         
         analyticsService.sendEvent(params: [
-            "event": "click",
-            "screen": "main",
-            "item": "filter"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue,
+            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.filter.rawValue
         ])
     }
     
@@ -192,6 +199,7 @@ final class TrackersCollectionViewController: UIViewController {
         navigationItem.leftBarButtonItem = leftItem
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
         navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
     
     private func setupViews() {
@@ -396,29 +404,30 @@ extension TrackersCollectionViewController {
             self?.viewModel.pinTracker(at: indexPath)
             
             self?.analyticsService.sendEvent(params: [
-                "event": "click",
-                "screen": "main",
-                "item": "pin"
+                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue,
+                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.pin.rawValue
             ])
         }
         
         let editAction = UIAction(
             title: L10n.Localizable.CollectionScreen.ContextMenu.editAction
         ) { [weak self] _ in
+            guard let self = self else { return }
             
-            let model = self?.viewModel.fetchTracker(at: indexPath)
+            let model = viewModel.fetchTracker(at: indexPath)
             
             let vc = TrackerSetupViewController(
                 isTracker: true,
                 model: model
             )
             vc.delegate = self
-            self?.present(vc,animated: true)
+            present(vc,animated: true)
             
-            self?.analyticsService.sendEvent(params: [
-                "event": "click",
-                "screen": "main",
-                "item": "edit"
+            analyticsService.sendEvent(params: [
+                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue,
+                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.edit.rawValue
             ])
         }
         
@@ -426,6 +435,7 @@ extension TrackersCollectionViewController {
             title: L10n.Localizable.CollectionScreen.ContextMenu.deleteAction,
             attributes: .destructive
         ) { [weak self] _ in
+            guard let self = self else { return }
             
             let alertController = UIAlertController(
                 title: nil,
@@ -435,7 +445,7 @@ extension TrackersCollectionViewController {
             let deleteAction = UIAlertAction(
                 title: L10n.Localizable.CollectionScreen.AlertController.deleteAction,
                 style: .destructive
-            ) { _ in
+            ) { [weak self] _ in
                 self?.viewModel.deleteTracker(at: indexPath)
             }
             let cancelAction = UIAlertAction(
@@ -444,12 +454,12 @@ extension TrackersCollectionViewController {
             )
             alertController.addAction(deleteAction)
             alertController.addAction(cancelAction)
-            self?.present(alertController, animated: true)
+            present(alertController, animated: true)
             
-            self?.analyticsService.sendEvent(params: [
-                "event": "click",
-                "screen": "main",
-                "item": "delete"
+            analyticsService.sendEvent(params: [
+                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue,
+                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.delete.rawValue
             ])
         }
         

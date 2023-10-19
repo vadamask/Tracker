@@ -13,9 +13,9 @@ final class TrackerCategoryStore {
     static let shared = TrackerCategoryStore()
     let context: NSManagedObjectContext
     
-    private var addNotification = Notification(name: Notification.Name("Category added"))
-    private var changeNotification = Notification(name: Notification.Name("Category changed"))
-    private var deleteNotification = Notification(name: Notification.Name("Category deleted"))
+    private var addNotification = Notification(name: Notification.Name.categoryAdded)
+    private var changeNotification = Notification(name: Notification.Name.categoryChanged)
+    private var deleteNotification = Notification(name: Notification.Name.categoryDeleted)
     
     private init(context: NSManagedObjectContext) {
         self.context = context

@@ -37,24 +37,24 @@ final class ScheduleViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         analyticsService.sendEvent(params: [
-            "event": "open",
-            "screen": "schedule"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.schedule.rawValue
         ])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         analyticsService.sendEvent(params: [
-            "event": "closed",
-            "screen": "schedule"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.schedule.rawValue
         ])
     }
     
     @objc private func doneButtonTapped() {
         analyticsService.sendEvent(params: [
-            "event": "click",
-            "screen": "schedule",
-            "item": "done"
+            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.schedule.rawValue,
+            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.done.rawValue
         ])
         
         dismiss(animated: true)
