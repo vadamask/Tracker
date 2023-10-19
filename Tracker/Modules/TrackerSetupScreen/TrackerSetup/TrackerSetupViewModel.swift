@@ -11,6 +11,7 @@ final class TrackerSetupViewModel {
     
     @Observable var textTooLong = false
     @Observable var createButtonIsAllowed = false
+    @Observable var error: Error?
     
     private let model: TrackerSetupModel
     private var isTracker = true
@@ -27,7 +28,11 @@ final class TrackerSetupViewModel {
     }
     
     func saveButtonTapped(_ id: UUID) {
-        self.model.replaceTracker(with: id)
+        do {
+           try self.model.replaceTracker(with: id)
+        } catch {
+            self.error = error
+        }
     }
     
     func eventIsSelected() {

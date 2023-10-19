@@ -35,6 +35,8 @@
 "statisticsScreen.perfectDays" = "Идеальные дни";
 "statisticsScreen.trackersCompleted" = "Трекеров завершено";
 "statisticsScreen.avgValue" = "Среднее значение";
+"statisticsScreen.alertController.title" = "Ошибка";
+"statisticsScreen.alertController.ok" = "Ок";
 
 "collectionScreen.navigationItem.title" = "Трекеры";
 "collectionScreen.emptyState.title" = "Что будем отслеживать?";

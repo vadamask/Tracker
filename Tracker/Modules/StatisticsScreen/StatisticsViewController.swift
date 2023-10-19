@@ -64,8 +64,8 @@ final class StatisticsViewController: UIViewController {
     
     private func bind() {
         viewModel.$statistics.bind { [weak self] statistics in
-            guard let self = self else { return }
-            guard let statistics = statistics else { return }
+            guard let self = self,
+                  let statistics = statistics else { return }
             
             trackersCompletedView.changeText(String(statistics.completedTrackers))
             perfectDaysView.changeText(String(statistics.perfectDays))
@@ -84,6 +84,25 @@ final class StatisticsViewController: UIViewController {
                     $0?.isHidden = emptyState ? true : false
                 }
         }
+        
+        viewModel.$error.bind { [weak self] error in
+            guard let error = error else { return }
+            self?.showAlert(error)
+        }
+    }
+    
+    private func showAlert(_ error: Error) {
+        let alertController = UIAlertController(
+            title: L10n.Localizable.StatisticsScreen.AlertController.title,
+            message: error.localizedDescription,
+            preferredStyle: .alert
+        )
+        
+        let action = UIAlertAction(
+            title: L10n.Localizable.StatisticsScreen.AlertController.ok,
+            style: .cancel
+        )
+        present(alertController, animated: true)
     }
     
     private func setupViews() {

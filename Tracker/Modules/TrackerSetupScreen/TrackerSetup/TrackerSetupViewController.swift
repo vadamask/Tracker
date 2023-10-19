@@ -89,6 +89,20 @@ final class TrackerSetupViewController: UIViewController {
         }
     }
     
+    private func showAlert(_ error: Error) {
+        let alertController = UIAlertController(
+            title: L10n.Localizable.StatisticsScreen.AlertController.title,
+            message: error.localizedDescription,
+            preferredStyle: .alert
+        )
+        
+        let action = UIAlertAction(
+            title: L10n.Localizable.StatisticsScreen.AlertController.ok,
+            style: .cancel
+        )
+        present(alertController, animated: true)
+    }
+    
     private func configureScreen() {
         if let model = model {
             textField.text = model.0.trackers[0].name
@@ -108,46 +122,7 @@ final class TrackerSetupViewController: UIViewController {
         }
     }
     
-    @objc private func cancelButtonTapped() {
-        delegate?.dismiss()
-        
-        if isTracker {
-            analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.cancel_button.rawValue
-            ])
-        } else {
-            analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.cancel_button.rawValue
-            ])
-        }
-    }
-    
-    @objc private func createButtonTapped() {
-        if model == nil {
-            viewModel.createButtonTapped()
-        } else {
-            viewModel.saveButtonTapped(model!.0.trackers[0].id)
-        }
-        delegate?.dismiss()
-        
-        if isTracker {
-            analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.create_button.rawValue
-            ])
-        } else {
-            analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.create_button.rawValue
-            ])
-        }
-    }
+ 
     
     private func bind() {
         viewModel.$textTooLong.bind { [weak self] tooLong in
@@ -174,11 +149,11 @@ final class TrackerSetupViewController: UIViewController {
                 for: .normal
             )
         }
-    }
-    
-    @objc private func textDidChanged() {
-        guard let text = textField.text else { return }
-        viewModel.textDidChanged(text)
+        
+        viewModel.$error.bind { [weak self] error in
+            guard let error = error else { return }
+            self?.showAlert(error)
+        }
     }
     
     private func setupViews() {
@@ -325,6 +300,52 @@ final class TrackerSetupViewController: UIViewController {
             make.centerY.size.equalTo(cancelButton)
             make.leading.equalTo(cancelButton.snp.trailing).offset(8)
             make.trailing.equalTo(-20)
+        }
+    }
+    
+    @objc private func textDidChanged() {
+        guard let text = textField.text else { return }
+        viewModel.textDidChanged(text)
+    }
+    
+    @objc private func cancelButtonTapped() {
+        delegate?.dismiss()
+        
+        if isTracker {
+            analyticsService.sendEvent(params: [
+                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue,
+                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.cancel_button.rawValue
+            ])
+        } else {
+            analyticsService.sendEvent(params: [
+                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue,
+                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.cancel_button.rawValue
+            ])
+        }
+    }
+    
+    @objc private func createButtonTapped() {
+        if model == nil {
+            viewModel.createButtonTapped()
+        } else {
+            viewModel.saveButtonTapped(model!.0.trackers[0].id)
+        }
+        delegate?.dismiss()
+        
+        if isTracker {
+            analyticsService.sendEvent(params: [
+                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue,
+                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.create_button.rawValue
+            ])
+        } else {
+            analyticsService.sendEvent(params: [
+                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
+                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue,
+                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.create_button.rawValue
+            ])
         }
     }
 }

@@ -35,6 +35,8 @@
 "statisticsScreen.perfectDays" = "Perfect days";
 "statisticsScreen.trackersCompleted" = "Тrackers completed";
 "statisticsScreen.avgValue" = "Average value";
+"statisticsScreen.alertController.title" = "Error";
+"statisticsScreen.alertController.ok" = "Ok";
 
 "collectionScreen.navigationItem.title" = "Trackers";
 "collectionScreen.emptyState.title" = "What will we track?";

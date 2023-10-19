@@ -11,6 +11,7 @@ final class StatisticViewModel {
     
     @Observable var emptyState = true
     @Observable var statistics: StatisticsResult?
+    @Observable var error: Error?
     
     private let recordStore = TrackerRecordStore()
     
@@ -33,7 +34,7 @@ final class StatisticViewModel {
         do {
             statistics = try recordStore.getStatistics()
         } catch {
-            print(error.localizedDescription)
+            self.error = error
         }
         
         emptyState = statistics == nil

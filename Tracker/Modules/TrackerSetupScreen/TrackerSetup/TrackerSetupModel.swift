@@ -45,7 +45,7 @@ final class TrackerSetupModel {
         }
     }
     
-    func replaceTracker(with id: UUID) {
+    func replaceTracker(with id: UUID) throws {
         if isAllSetup {
             let tracker = Tracker(
                 id: id,
@@ -55,11 +55,8 @@ final class TrackerSetupModel {
                 schedule: schedule!,
                 isPinned: isPinned
             )
-            do {
-                try trackerStore.changeTracker(with: TrackerCategory(title: category!, trackers: [tracker]))
-            } catch {
-                print(error.localizedDescription)
-            }
+            
+            try trackerStore.changeTracker(with: TrackerCategory(title: category!, trackers: [tracker]))
         }
     }
     

@@ -12,6 +12,7 @@ final class TrackersCollectionViewModel {
     @Observable var categories: [TrackerCategory] = []
     @Observable var searchIsEmpty = false
     @Observable var filter: Filter = .all
+    @Observable var error: Error?
 
     private var model = TrackersCollectionModel()
     
@@ -45,10 +46,19 @@ final class TrackersCollectionViewModel {
     @objc func fetchTrackersAtCurrentDate() {
         switch filter {
         case .all:
-            categories = model.fetchTrackersAtCurrentDate()
+            do {
+                categories = try model.fetchTrackersAtCurrentDate()
+            } catch {
+                self.error = error
+            }
         case .today:
-            categories = model.fetchTrackersAtCurrentDate()
+            do {
+                categories = try model.fetchTrackersAtCurrentDate()
+            } catch {
+                self.error = error
+            }
         case .completed:
+            
             fetchCompletedTrackers()
         case .incomplete:
             fetchIncompleteTrackers()
@@ -57,64 +67,111 @@ final class TrackersCollectionViewModel {
     
     func fetchTracker(at indexPath: IndexPath) -> (TrackerCategory, Int)? {
         let id = categories[indexPath.section].trackers[indexPath.row].id
-        return model.fetchTracker(with: id)
+        do {
+            return try model.fetchTracker(with: id)
+        } catch {
+            self.error = error
+            return nil
+        }
     }
     
     func deleteTracker(at indexPath: IndexPath) {
         let id = categories[indexPath.section].trackers[indexPath.row].id
-        model.deleteTracker(with: id)
+        do {
+            try model.deleteTracker(with: id)
+        } catch {
+            self.error = error
+        }
     }
     
     func pinTracker(at indexPath: IndexPath) {
         let tracker = categories[indexPath.section].trackers[indexPath.row]
-        model.pinTracker(with: tracker.id, isPinned: tracker.isPinned)
+        do {
+            try model.pinTracker(with: tracker.id, isPinned: tracker.isPinned)
+        } catch {
+            self.error = error
+        }
     }
     
-    func detailsFor(_ trackerID: UUID) -> Details {
-        return model.detailsFor(trackerID)
+    func detailsFor(_ trackerID: UUID) -> Details? {
+        do {
+            return try model.detailsFor(trackerID)
+        } catch {
+            self.error = error
+            return nil
+        }
     }
     
     func dateDidChanged(_ date: Date) {
-        categories = model.fetchTrackers(at: date)
-        filter = .all
+        do {
+            categories = try model.fetchTrackers(at: date)
+            filter = .all
+        } catch {
+            self.error = error
+        }
+        
     }
     
     func fetchCompletedTrackers() {
-        categories = model.fetchCompletedTrackers()
-        if categories.isEmpty {
-            searchIsEmpty = true
+        do {
+            categories = try model.fetchCompletedTrackers()
+            if categories.isEmpty {
+                searchIsEmpty = true
+            }
+        } catch {
+            self.error = error
         }
     }
     
     func fetchIncompleteTrackers() {
-        categories = model.fetchIncompleteTrackers()
-        if categories.isEmpty {
-            searchIsEmpty = true
+        do {
+            categories = try model.fetchIncompleteTrackers()
+            if categories.isEmpty {
+                searchIsEmpty = true
+            }
+        } catch {
+            self.error = error
         }
     }
     
     func searchFieldDidChanged(_ searchText: String) {
         if searchText.isEmpty {
-            categories = model.fetchTrackersAtCurrentDate()
+            do {
+                categories = try model.fetchTrackersAtCurrentDate()
+            } catch {
+                self.error = error
+            }
         } else {
-            let categories = model.fetchTrackersAtCurrentDate()
-            let filteredCategories = categories.map {
-                TrackerCategory(
-                    title: $0.title,
-                    trackers: $0.trackers.filter { $0.name.lowercased().contains(searchText.lowercased()) }
-                )
-            }.filter { !$0.trackers.isEmpty }
-            self.categories = filteredCategories
+            do {
+                let categories = try model.fetchTrackersAtCurrentDate()
+                let filteredCategories = categories.map {
+                    TrackerCategory(
+                        title: $0.title,
+                        trackers: $0.trackers.filter { $0.name.lowercased().contains(searchText.lowercased()) }
+                    )
+                }.filter { !$0.trackers.isEmpty }
+                self.categories = filteredCategories
+            } catch {
+                self.error = error
+            }
         }
         searchIsEmpty = categories.isEmpty ? true : false
     }
     
     func addRecord(with recordID: UUID, for trackerID: UUID) {
-        model.addRecord(with: recordID, for: trackerID)
+        do {
+            try model.addRecord(with: recordID, for: trackerID)
+        } catch {
+            self.error = error
+        }
     }
     
     func deleteRecord(with recordID: UUID) {
-        model.deleteRecord(with: recordID)
+        do {
+            try model.deleteRecord(with: recordID)
+        } catch {
+            self.error = error
+        }
     }
     
     func didSelectedFilter(_ filter: Filter) {

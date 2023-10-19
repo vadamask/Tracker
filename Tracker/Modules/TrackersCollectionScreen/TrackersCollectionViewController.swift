@@ -100,6 +100,11 @@ final class TrackersCollectionViewController: UIViewController {
         viewModel.$filter.bind { [weak self] _ in
             self?.viewModel.fetchTrackersAtCurrentDate()
         }
+        
+        viewModel.$error.bind { [weak self] error in
+            guard let error = error else { return }
+            self?.showAlert(error)
+        }
     }
     
     @objc private func addNewTracker() {
@@ -164,6 +169,20 @@ final class TrackersCollectionViewController: UIViewController {
             AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue,
             AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.filter.rawValue
         ])
+    }
+    
+    private func showAlert(_ error: Error) {
+        let alertController = UIAlertController(
+            title: L10n.Localizable.StatisticsScreen.AlertController.title,
+            message: error.localizedDescription,
+            preferredStyle: .alert
+        )
+        
+        let action = UIAlertAction(
+            title: L10n.Localizable.StatisticsScreen.AlertController.ok,
+            style: .cancel
+        )
+        present(alertController, animated: true)
     }
     
     private func setupNavigationItem() {
@@ -295,6 +314,7 @@ extension TrackersCollectionViewController: UICollectionViewDataSource {
         Details(isDone: true, completedDays: 0, recordID: nil) :
         viewModel.detailsFor(tracker.id)
         
+        guard let details = details else { return UICollectionViewCell() }
         cell.configure(with: tracker, and: details)
         
         return cell
