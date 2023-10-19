@@ -7,6 +7,9 @@
 Assets+Generated.swift
 Strings+Generated.swift
 
+## SnapshotTests
+__Snapshots__/
+
 ## User settings
 xcuserdata/
 Tracker.xcscheme
