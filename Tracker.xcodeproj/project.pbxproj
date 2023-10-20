@@ -380,10 +380,10 @@
 			isa = PBXGroup;
 			children = (
 				DDDB53642AC753B90043630D /* TrackerSetup */,
-				DDDB53652AC754720043630D /* ScheduleCategoryCell */,
-				DDDB53662AC754960043630D /* EmojiCell */,
-				DDDB53672AC754A70043630D /* ColorCell */,
-				DDDB53682AC754CF0043630D /* TrackerSetupCollectionViewHeader */,
+				DDD982F02A9FD70100994B01 /* ScheduleCategoryCell.swift */,
+				DDDF41272AAB3AA500F4A75F /* EmojiCell.swift */,
+				DDDF412B2AAB3AB800F4A75F /* ColorCell.swift */,
+				DDDF41292AAB3AB100F4A75F /* TrackerSetupCollectionViewHeader.swift */,
 			);
 			path = TrackerSetupScreen;
 			sourceTree = "<group>";
@@ -416,38 +416,6 @@
 				DDDB536B2AC755850043630D /* TrackerSetupModel.swift */,
 			);
 			path = TrackerSetup;
-			sourceTree = "<group>";
-		};
-		DDDB53652AC754720043630D /* ScheduleCategoryCell */ = {
-			isa = PBXGroup;
-			children = (
-				DDD982F02A9FD70100994B01 /* ScheduleCategoryCell.swift */,
-			);
-			path = ScheduleCategoryCell;
-			sourceTree = "<group>";
-		};
-		DDDB53662AC754960043630D /* EmojiCell */ = {
-			isa = PBXGroup;
-			children = (
-				DDDF41272AAB3AA500F4A75F /* EmojiCell.swift */,
-			);
-			path = EmojiCell;
-			sourceTree = "<group>";
-		};
-		DDDB53672AC754A70043630D /* ColorCell */ = {
-			isa = PBXGroup;
-			children = (
-				DDDF412B2AAB3AB800F4A75F /* ColorCell.swift */,
-			);
-			path = ColorCell;
-			sourceTree = "<group>";
-		};
-		DDDB53682AC754CF0043630D /* TrackerSetupCollectionViewHeader */ = {
-			isa = PBXGroup;
-			children = (
-				DDDF41292AAB3AB100F4A75F /* TrackerSetupCollectionViewHeader.swift */,
-			);
-			path = TrackerSetupCollectionViewHeader;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

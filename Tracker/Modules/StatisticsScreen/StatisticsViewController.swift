@@ -49,16 +49,16 @@ final class StatisticsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.statistics.rawValue
+            Parameters.event.rawValue: Event.open.rawValue,
+            Parameters.screen.rawValue: Screen.statistics.rawValue
         ])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.statistics.rawValue
+            Parameters.event.rawValue: Event.closed.rawValue,
+            Parameters.screen.rawValue: Screen.statistics.rawValue
         ])
     }
     
@@ -102,6 +102,7 @@ final class StatisticsViewController: UIViewController {
             title: L10n.Localizable.StatisticsScreen.AlertController.ok,
             style: .cancel
         )
+        alertController.addAction(action)
         present(alertController, animated: true)
     }
     

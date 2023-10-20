@@ -18,7 +18,6 @@ final class TrackersCollectionViewController: UIViewController {
     private let placeholder = UIImageView()
     private let placeholderLabel = UILabel()
     private let filterButton = UIButton(type: .system)
-    
     private var test: Bool
     
     init(params: GeometricParameters, test: Bool = false) {
@@ -49,16 +48,16 @@ final class TrackersCollectionViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue
+            Parameters.event.rawValue: Event.open.rawValue,
+            Parameters.screen.rawValue: Screen.main.rawValue
         ])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue
+            Parameters.event.rawValue: Event.closed.rawValue,
+            Parameters.screen.rawValue: Screen.main.rawValue
         ])
     }
     
@@ -107,23 +106,28 @@ final class TrackersCollectionViewController: UIViewController {
         }
     }
     
-    @objc private func addNewTracker() {
+    @objc
+    private func addNewTracker() {
+        
         let vc = NewTrackerViewController()
         vc.delegate = self
         present(vc, animated: true)
         
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue,
-            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.add_track.rawValue
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.main.rawValue,
+            Parameters.item.rawValue: Item.add_track.rawValue
         ])
     }
     
-    @objc private func datePickerDidChanged(sender: UIDatePicker) {
+    @objc
+    private func datePickerDidChanged(sender: UIDatePicker) {
         viewModel.dateDidChanged(sender.date)
     }
     
-    @objc private func filtersDidTapped() {
+    @objc
+    private func filtersDidTapped() {
+        
         let vc = FiltersViewController(filter: viewModel.filter)
         
         vc.completion = { [weak self] filter in
@@ -135,43 +139,44 @@ final class TrackersCollectionViewController: UIViewController {
             case .all:
                 
                 analyticsService.sendEvent(params: [
-                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.filters.rawValue,
-                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Filter.all.rawValue
+                    Parameters.event.rawValue: Event.click.rawValue,
+                    Parameters.screen.rawValue: Screen.filters.rawValue,
+                    Parameters.item.rawValue: FilterAnalytics.all.rawValue
                 ])
             case .today:
                 
                 analyticsService.sendEvent(params: [
-                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.filters.rawValue,
-                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Filter.today.rawValue
+                    Parameters.event.rawValue: Event.click.rawValue,
+                    Parameters.screen.rawValue: Screen.filters.rawValue,
+                    Parameters.item.rawValue: FilterAnalytics.today.rawValue
                 ])
             case .completed:
                 
                 analyticsService.sendEvent(params: [
-                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.filters.rawValue,
-                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Filter.completed.rawValue
+                    Parameters.event.rawValue: Event.click.rawValue,
+                    Parameters.screen.rawValue: Screen.filters.rawValue,
+                    Parameters.item.rawValue: FilterAnalytics.completed.rawValue
                 ])
             case .incomplete:
                 
                 analyticsService.sendEvent(params: [
-                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.filters.rawValue,
-                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Filter.incomplete.rawValue
+                    Parameters.event.rawValue: Event.click.rawValue,
+                    Parameters.screen.rawValue: Screen.filters.rawValue,
+                    Parameters.item.rawValue: FilterAnalytics.incomplete.rawValue
                 ])
             }
         }
         present(vc, animated: true)
         
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue,
-            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.filter.rawValue
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.main.rawValue,
+            Parameters.item.rawValue: Item.filter.rawValue
         ])
     }
     
     private func showAlert(_ error: Error) {
+        
         let alertController = UIAlertController(
             title: L10n.Localizable.StatisticsScreen.AlertController.title,
             message: error.localizedDescription,
@@ -182,6 +187,7 @@ final class TrackersCollectionViewController: UIViewController {
             title: L10n.Localizable.StatisticsScreen.AlertController.ok,
             style: .cancel
         )
+        alertController.addAction(action)
         present(alertController, animated: true)
     }
     
@@ -424,9 +430,9 @@ extension TrackersCollectionViewController {
             self?.viewModel.pinTracker(at: indexPath)
             
             self?.analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.pin.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.main.rawValue,
+                Parameters.item.rawValue: Item.pin.rawValue
             ])
         }
         
@@ -445,9 +451,9 @@ extension TrackersCollectionViewController {
             present(vc,animated: true)
             
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.edit.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.main.rawValue,
+                Parameters.item.rawValue: Item.edit.rawValue
             ])
         }
         
@@ -477,9 +483,9 @@ extension TrackersCollectionViewController {
             present(alertController, animated: true)
             
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.delete.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.main.rawValue,
+                Parameters.item.rawValue: Item.delete.rawValue
             ])
         }
         

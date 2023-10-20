@@ -16,7 +16,6 @@ final class NewTrackerViewController: UIViewController {
     
     weak var delegate: NewTrackerViewControllerDelegate?
     private let analyticsService = AnalyticsService.shared
-    
     private let colors = Colors.shared
     private let topLabel = UILabel()
     private let trackerButton = UIButton(type: .system)
@@ -31,16 +30,16 @@ final class NewTrackerViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_tracker.rawValue
+            Parameters.event.rawValue: Event.open.rawValue,
+            Parameters.screen.rawValue: Screen.new_tracker.rawValue
         ])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_tracker.rawValue
+            Parameters.event.rawValue: Event.closed.rawValue,
+            Parameters.screen.rawValue: Screen.new_tracker.rawValue
         ])
     }
     
@@ -89,27 +88,29 @@ final class NewTrackerViewController: UIViewController {
         }
     }
     
-    @objc private func trackerButtonTapped(sender: Any) {
+    @objc
+    private func trackerButtonTapped(sender: Any) {
         let vc = TrackerSetupViewController(isTracker: true)
         vc.delegate = self
         present(vc, animated: true)
         
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_tracker.rawValue,
-            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.new_tracker.rawValue
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.new_tracker.rawValue,
+            Parameters.item.rawValue: Item.new_tracker.rawValue
         ])
     }
     
-    @objc private func eventButtonTapped() {
+    @objc
+    private func eventButtonTapped() {
         let vc = TrackerSetupViewController(isTracker: false)
         vc.delegate = self
         present(vc, animated: true)
         
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_tracker.rawValue,
-            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.new_event.rawValue
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.new_tracker.rawValue,
+            Parameters.item.rawValue: Item.new_event.rawValue
         ])
     }
 }

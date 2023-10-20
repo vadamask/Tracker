@@ -25,22 +25,6 @@ final class FiltersViewController: UIViewController {
         bind()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.filters.rawValue
-        ])
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.filters.rawValue
-        ])
-    }
-    
     init(filter: Filter) {
         super.init(nibName: nil, bundle: nil)
         viewModel.setCheckmark(for: filter)
@@ -48,6 +32,22 @@ final class FiltersViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.sendEvent(params: [
+            Parameters.event.rawValue: Event.open.rawValue,
+            Parameters.screen.rawValue: Screen.filters.rawValue
+        ])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.sendEvent(params: [
+            Parameters.event.rawValue: Event.closed.rawValue,
+            Parameters.screen.rawValue: Screen.filters.rawValue
+        ])
     }
     
     private func bind() {

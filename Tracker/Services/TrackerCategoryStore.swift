@@ -11,11 +11,11 @@ import UIKit
 final class TrackerCategoryStore {
     
     static let shared = TrackerCategoryStore()
-    let context: NSManagedObjectContext
+    private let context: NSManagedObjectContext
     
-    private var addNotification = Notification(name: Notification.Name.categoryAdded)
-    private var changeNotification = Notification(name: Notification.Name.categoryChanged)
-    private var deleteNotification = Notification(name: Notification.Name.categoryDeleted)
+    private let addNotification = Notification(name: .categoryAdded)
+    private let changeNotification = Notification(name: .categoryChanged)
+    private let deleteNotification = Notification(name: .categoryDeleted)
     
     private init(context: NSManagedObjectContext) {
         self.context = context

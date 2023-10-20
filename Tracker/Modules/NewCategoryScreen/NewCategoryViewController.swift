@@ -24,22 +24,6 @@ final class NewCategoryViewController: UIViewController {
         bind()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_category.rawValue
-        ])
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_category.rawValue
-        ])
-    }
-    
     init(oldTitle: String? = nil) {
         self.oldTitle = oldTitle
         super.init(nibName: nil, bundle: nil)
@@ -47,6 +31,22 @@ final class NewCategoryViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.sendEvent(params: [
+            Parameters.event.rawValue: Event.open.rawValue,
+            Parameters.screen.rawValue: Screen.new_category.rawValue
+        ])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.sendEvent(params: [
+            Parameters.event.rawValue: Event.closed.rawValue,
+            Parameters.screen.rawValue: Screen.new_category.rawValue
+        ])
     }
     
     private func bind() {
@@ -86,18 +86,20 @@ final class NewCategoryViewController: UIViewController {
         }
     }
     
-    @objc private func doneButtonTapped() {
+    @objc
+    private func doneButtonTapped() {
         guard let newTitle = textField.text else { return }
         viewModel.updateCategory(oldTitle, with: newTitle)
         
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_category.rawValue,
-            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.done.rawValue
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.new_category.rawValue,
+            Parameters.item.rawValue: Item.done.rawValue
         ])
     }
     
-    @objc private func textDidChanged() {
+    @objc
+    private func textDidChanged() {
         viewModel.textDidChanged(textField.text)
     }
     
@@ -163,18 +165,18 @@ extension NewCategoryViewController: UITextFieldDelegate {
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         viewModel.textDidChanged("")
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_category.rawValue,
-            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.clear_textfield.rawValue
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.new_category.rawValue,
+            Parameters.item.rawValue: Item.clear_textfield.rawValue
         ])
         return true
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.new_category.rawValue,
-            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.hide_keyboard.rawValue
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.new_category.rawValue,
+            Parameters.item.rawValue: Item.hide_keyboard.rawValue
         ])
         
         return view.endEditing(true)

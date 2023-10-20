@@ -9,10 +9,9 @@ import Foundation
 
 final class CategoriesListViewModel {
     
-    private let model: CategoriesListModel
-    
     @Observable var categories: [CategoryCellViewModel] = []
     @Observable var selectedCategory: String?
+    private let model: CategoriesListModel
     
     init(model: CategoriesListModel, selectedCategory: String?) {
         self.model = model
@@ -26,25 +25,21 @@ final class CategoriesListViewModel {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(fetchObjects),
-            name: Notification.Name.categoryChanged,
+            name: .categoryChanged,
             object: nil
         )
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(fetchObjects),
-            name: Notification.Name.categoryDeleted,
+            name: .categoryDeleted,
             object: nil
         )
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(fetchObjects),
-            name: Notification.Name.categoryAdded,
+            name: .categoryAdded,
             object: nil
         )
-    }
-    
-    @objc private func fetchObjects() {
-        categories = model.fetchObjects()
     }
     
     func didSelectRow(at indexPath: IndexPath) {
@@ -56,6 +51,11 @@ final class CategoriesListViewModel {
     func deleteCategory(at indexPath: IndexPath) {
         let title = categories[indexPath.row].title
         model.deleteCategory(with: title)
+    }
+    
+    @objc
+    private func fetchObjects() {
+        categories = model.fetchObjects()
     }
     
     deinit {

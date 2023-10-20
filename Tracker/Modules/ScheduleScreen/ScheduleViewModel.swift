@@ -9,6 +9,14 @@ import Foundation
 
 final class ScheduleViewModel {
     
+    var numberOfRows: Int {
+        schedule.count
+    }
+    
+    var selectedDays: Set<WeekDay> {
+        Set(schedule.filter { $0.isOn }.map { $0.day })
+    }
+    
     var schedule: [ScheduleCellViewModel] = [
         ScheduleCellViewModel(day: .monday, isOn: false),
         ScheduleCellViewModel(day: .tuesday, isOn: false),
@@ -24,14 +32,6 @@ final class ScheduleViewModel {
             let viewModel = self.schedule.first(where: {$0.day == weekday})
             viewModel?.isOn = true
         }
-    }
-    
-    var numberOfRows: Int {
-        schedule.count
-    }
-    
-    var selectedDays: Set<WeekDay> {
-        Set(schedule.filter { $0.isOn }.map { $0.day })
     }
     
     func viewModel(at indexPath: IndexPath) -> ScheduleCellViewModel {

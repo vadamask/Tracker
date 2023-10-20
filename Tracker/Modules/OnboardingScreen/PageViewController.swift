@@ -15,12 +15,6 @@ final class PageViewController: UIViewController {
     private let label = UILabel()
     private let button = UIButton()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupViews()
-        setupLayout()
-    }
-    
     init(image: UIImage?, textLabel: String) {
         imageView.image = image
         label.text = textLabel
@@ -31,7 +25,14 @@ final class PageViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc private func buttonDidTapped() {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupViews()
+        setupLayout()
+    }
+    
+    @objc
+    private func buttonDidTapped() {
         if let delegate = UIApplication.shared.delegate as? AppDelegate {
             let vc = TabBarController()
             delegate.window?.rootViewController = vc

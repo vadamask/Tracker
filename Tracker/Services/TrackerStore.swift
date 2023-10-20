@@ -11,7 +11,7 @@ import UIKit
 final class TrackerStore {
     
     private let context: NSManagedObjectContext
-    private var notification = Notification(name: Notification.Name.trackersChanged)
+    private let notification = Notification(name: .trackersChanged)
     
     init(context: NSManagedObjectContext) {
         self.context = context

@@ -62,13 +62,13 @@ final class TrackerSetupViewController: UIViewController {
         
         if isTracker {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue
+                Parameters.event.rawValue: Event.open.rawValue,
+                Parameters.screen.rawValue: Screen.setup_tracker.rawValue
             ])
         } else {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue
+                Parameters.event.rawValue: Event.open.rawValue,
+                Parameters.screen.rawValue: Screen.setup_event.rawValue
             ])
         }
     }
@@ -78,13 +78,13 @@ final class TrackerSetupViewController: UIViewController {
         
         if isTracker {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue
+                Parameters.event.rawValue: Event.closed.rawValue,
+                Parameters.screen.rawValue: Screen.setup_tracker.rawValue
             ])
         } else {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue
+                Parameters.event.rawValue: Event.closed.rawValue,
+                Parameters.screen.rawValue: Screen.setup_event.rawValue
             ])
         }
     }
@@ -100,6 +100,7 @@ final class TrackerSetupViewController: UIViewController {
             title: L10n.Localizable.StatisticsScreen.AlertController.ok,
             style: .cancel
         )
+        alertController.addAction(action)
         present(alertController, animated: true)
     }
     
@@ -121,8 +122,6 @@ final class TrackerSetupViewController: UIViewController {
             viewModel.trackerIsPinned(model.0.trackers[0].isPinned)
         }
     }
-    
- 
     
     private func bind() {
         viewModel.$textTooLong.bind { [weak self] tooLong in
@@ -303,30 +302,33 @@ final class TrackerSetupViewController: UIViewController {
         }
     }
     
-    @objc private func textDidChanged() {
+    @objc
+    private func textDidChanged() {
         guard let text = textField.text else { return }
         viewModel.textDidChanged(text)
     }
     
-    @objc private func cancelButtonTapped() {
+    @objc
+    private func cancelButtonTapped() {
         delegate?.dismiss()
         
         if isTracker {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.cancel_button.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.setup_tracker.rawValue,
+                Parameters.item.rawValue: Item.cancel_button.rawValue
             ])
         } else {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.cancel_button.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.setup_event.rawValue,
+                Parameters.item.rawValue: Item.cancel_button.rawValue
             ])
         }
     }
     
-    @objc private func createButtonTapped() {
+    @objc
+    private func createButtonTapped() {
         if model == nil {
             viewModel.createButtonTapped()
         } else {
@@ -336,15 +338,15 @@ final class TrackerSetupViewController: UIViewController {
         
         if isTracker {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.create_button.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.setup_tracker.rawValue,
+                Parameters.item.rawValue: Item.create_button.rawValue
             ])
         } else {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.create_button.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.setup_event.rawValue,
+                Parameters.item.rawValue: Item.create_button.rawValue
             ])
         }
     }
@@ -357,15 +359,15 @@ extension TrackerSetupViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if isTracker {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.textfield.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.setup_tracker.rawValue,
+                Parameters.item.rawValue: Item.textfield.rawValue
             ])
         } else {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.textfield.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.setup_event.rawValue,
+                Parameters.item.rawValue: Item.textfield.rawValue
             ])
         }
     }
@@ -374,15 +376,15 @@ extension TrackerSetupViewController: UITextFieldDelegate {
         
         if isTracker {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.hide_keyboard.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.setup_tracker.rawValue,
+                Parameters.item.rawValue: Item.hide_keyboard.rawValue
             ])
         } else {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.hide_keyboard.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.setup_event.rawValue,
+                Parameters.item.rawValue: Item.hide_keyboard.rawValue
             ])
         }
         
@@ -394,15 +396,15 @@ extension TrackerSetupViewController: UITextFieldDelegate {
         
         if isTracker {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.clear_textfield.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.setup_tracker.rawValue,
+                Parameters.item.rawValue: Item.clear_textfield.rawValue
             ])
         } else {
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.clear_textfield.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.setup_event.rawValue,
+                Parameters.item.rawValue: Item.clear_textfield.rawValue
             ])
         }
         
@@ -477,15 +479,15 @@ extension TrackerSetupViewController: UITableViewDelegate {
             
             if isTracker {
                 analyticsService.sendEvent(params: [
-                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue,
-                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.category.rawValue
+                    Parameters.event.rawValue: Event.click.rawValue,
+                    Parameters.screen.rawValue: Screen.setup_tracker.rawValue,
+                    Parameters.item.rawValue: Item.category.rawValue
                 ])
             } else {
                 analyticsService.sendEvent(params: [
-                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue,
-                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.category.rawValue
+                    Parameters.event.rawValue: Event.click.rawValue,
+                    Parameters.screen.rawValue: Screen.setup_event.rawValue,
+                    Parameters.item.rawValue: Item.category.rawValue
                 ])
             }
             
@@ -508,9 +510,9 @@ extension TrackerSetupViewController: UITableViewDelegate {
             present(vc, animated: true)
           
             analyticsService.sendEvent(params: [
-                AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue,
-                AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.new_event.rawValue
+                Parameters.event.rawValue: Event.click.rawValue,
+                Parameters.screen.rawValue: Screen.setup_tracker.rawValue,
+                Parameters.item.rawValue: Item.new_event.rawValue
             ])
             
         }
@@ -658,15 +660,15 @@ extension TrackerSetupViewController {
             
             if isTracker {
                 analyticsService.sendEvent(params: [
-                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue,
-                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.emoji.rawValue
+                    Parameters.event.rawValue: Event.click.rawValue,
+                    Parameters.screen.rawValue: Screen.setup_tracker.rawValue,
+                    Parameters.item.rawValue: Item.emoji.rawValue
                 ])
             } else {
                 analyticsService.sendEvent(params: [
-                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue,
-                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.emoji.rawValue
+                    Parameters.event.rawValue: Event.click.rawValue,
+                    Parameters.screen.rawValue: Screen.setup_event.rawValue,
+                    Parameters.item.rawValue: Item.emoji.rawValue
                 ])
             }
         }
@@ -676,15 +678,15 @@ extension TrackerSetupViewController {
             
             if isTracker {
                 analyticsService.sendEvent(params: [
-                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_tracker.rawValue,
-                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.color.rawValue
+                    Parameters.event.rawValue: Event.click.rawValue,
+                    Parameters.screen.rawValue: Screen.setup_tracker.rawValue,
+                    Parameters.item.rawValue: Item.color.rawValue
                 ])
             } else {
                 analyticsService.sendEvent(params: [
-                    AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-                    AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.setup_event.rawValue,
-                    AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.color.rawValue
+                    Parameters.event.rawValue: Event.click.rawValue,
+                    Parameters.screen.rawValue: Screen.setup_event.rawValue,
+                    Parameters.item.rawValue: Item.color.rawValue
                 ])
             }
         }

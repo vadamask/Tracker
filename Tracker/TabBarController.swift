@@ -8,12 +8,13 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
-
+    
+    private let colors = Colors.shared
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabBar()
     }
-    private let colors = Colors.shared
     
     private func setupTabBar() {
         let trackersVC = TrackersCollectionViewController(params: GeometricParameters(

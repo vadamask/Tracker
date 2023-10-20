@@ -29,7 +29,8 @@ final class ScheduleCell: UITableViewCell {
         self.accessoryView = switcher
     }
     
-    @objc private func switchTapped() {
+    @objc
+    private func switchTapped() {
         viewModel?.switchTapped(switcher.isOn)
         completion?()
     }

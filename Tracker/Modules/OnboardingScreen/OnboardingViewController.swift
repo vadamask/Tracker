@@ -13,7 +13,6 @@ final class OnboardingViewController: UIViewController {
     private var viewControllers: [UIViewController] = []
     private let pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
     private let colors = Colors.shared
-    
     private let pageControl = UIPageControl()
     
     override func viewDidLoad() {
@@ -92,12 +91,12 @@ extension OnboardingViewController: UIPageViewControllerDataSource {
 // MARK: - UIPageViewControllerDelegate
 
 extension OnboardingViewController: UIPageViewControllerDelegate {
+    
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         
         if let currentVC = pageViewController.viewControllers?.first,
            let index = viewControllers.firstIndex(of: currentVC) {
             pageControl.currentPage = index
         }
-        
     }
 }

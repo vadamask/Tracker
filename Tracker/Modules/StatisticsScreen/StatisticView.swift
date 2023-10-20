@@ -29,15 +29,33 @@ final class StatisticView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func changeText(_ text: String) {
-        countLabel.text = text
-    }
-    
     override func layoutSubviews() {
         gradient.frame = self.bounds
         shape.path = UIBezierPath(roundedRect: self.bounds.insetBy(dx: 1, dy: 1), cornerRadius: 16).cgPath
     }
     
+    func changeText(_ text: String) {
+        countLabel.text = text
+    }
+    
+    func setupGradient() {
+        
+        gradient.startPoint = CGPoint(x: 0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1, y: 0.5)
+        gradient.colors = [
+            UIColor(red: 0, green: 0.48, blue: 0.98, alpha: 1).cgColor,
+            UIColor(red: 0.27, green: 0.9, blue: 0.62, alpha: 1).cgColor,
+            UIColor(red: 0.99, green: 0.3, blue: 0.29, alpha: 1).cgColor
+        ]
+        
+        shape.lineWidth = 1
+        shape.fillColor = UIColor.clear.cgColor
+        shape.strokeColor = UIColor.black.cgColor
+        gradient.mask = shape
+        
+        layer.addSublayer(gradient)
+    }
+
     private func setupViews() {
  
         stackView.addArrangedSubview(countLabel)
@@ -61,23 +79,5 @@ final class StatisticView: UIView {
             make.top.leading.equalTo(12)
             make.trailing.bottom.equalTo(-12)
         }
-    }
-    
-    func setupGradient() {
-        
-        gradient.startPoint = CGPoint(x: 0, y: 0.5)
-        gradient.endPoint = CGPoint(x: 1, y: 0.5)
-        gradient.colors = [
-            UIColor(red: 0, green: 0.48, blue: 0.98, alpha: 1).cgColor,
-            UIColor(red: 0.27, green: 0.9, blue: 0.62, alpha: 1).cgColor,
-            UIColor(red: 0.99, green: 0.3, blue: 0.29, alpha: 1).cgColor
-        ]
-        
-        shape.lineWidth = 1
-        shape.fillColor = UIColor.clear.cgColor
-        shape.strokeColor = UIColor.black.cgColor
-        gradient.mask = shape
-        
-        layer.addSublayer(gradient)
     }
 }

@@ -22,6 +22,15 @@ final class CategoriesListViewController: UIViewController {
     private let placeholderLabel = UILabel()
     private let colors = Colors.shared
     
+    init(viewModel: CategoriesListViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -33,26 +42,17 @@ final class CategoriesListViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.open.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.categories.rawValue
+            Parameters.event.rawValue: Event.open.rawValue,
+            Parameters.screen.rawValue: Screen.categories.rawValue
         ])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.closed.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.categories.rawValue
+            Parameters.event.rawValue: Event.closed.rawValue,
+            Parameters.screen.rawValue: Screen.categories.rawValue
         ])
-    }
-    
-    init(viewModel: CategoriesListViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     private func bind() {
@@ -77,14 +77,15 @@ final class CategoriesListViewController: UIViewController {
         }
     }
     
-    @objc private func addButtonTapped() {
+    @objc
+    private func addButtonTapped() {
         let vc = NewCategoryViewController()
         present(vc, animated: true)
         
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.categories.rawValue,
-            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.add_category.rawValue
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.categories.rawValue,
+            Parameters.item.rawValue: Item.add_category.rawValue
         ])
     }
     
@@ -165,9 +166,9 @@ extension CategoriesListViewController: UITableViewDelegate {
         viewModel.didSelectRow(at: indexPath)
         
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.categories.rawValue,
-            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.category.rawValue
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.categories.rawValue,
+            Parameters.item.rawValue: Item.category.rawValue
         ])
         
         dismiss(animated: true)
@@ -224,9 +225,9 @@ extension CategoriesListViewController: UITableViewDelegate {
         }
         
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.categories.rawValue,
-            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.context_menu.rawValue
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.categories.rawValue,
+            Parameters.item.rawValue: Item.context_menu.rawValue
         ])
         
         return config

@@ -8,14 +8,14 @@
 import Foundation
 
 struct Tracker: Comparable {
-    static func < (lhs: Tracker, rhs: Tracker) -> Bool {
-        lhs.name < rhs.name
-    }
-    
     let id: UUID
     let name: String
     let color: String
     let emoji: String
     let schedule: Set<WeekDay>
     let isPinned: Bool
+    
+    static func < (lhs: Tracker, rhs: Tracker) -> Bool {
+        lhs.name < rhs.name
+    }
 }

@@ -9,15 +9,6 @@ import Foundation
 
 final class TrackerSetupModel {
     
-    private let trackerStore = TrackerStore()
-    
-    private var title: String?
-    private var category: String?
-    private var schedule: Set<WeekDay>?
-    private var color: String?
-    private var emoji: String?
-    private var isPinned = false
-    
     var isAllSetup: Bool {
         guard title != nil,
               category != nil,
@@ -26,6 +17,14 @@ final class TrackerSetupModel {
               schedule != nil else { return false }
         return true
     }
+    
+    private let trackerStore = TrackerStore()
+    private var title: String?
+    private var category: String?
+    private var schedule: Set<WeekDay>?
+    private var color: String?
+    private var emoji: String?
+    private var isPinned = false
     
     func addTracker() {
         if isAllSetup {

@@ -10,7 +10,6 @@ import UIKit
 final class Colors {
     
     static let shared = Colors()
-    private init() {}
     
     let blackStaticYP = UIColor(red: 0.1, green: 0.11, blue: 0.13, alpha: 1)
     let blackStaticYP30 = UIColor(red: 0.1, green: 0.11, blue: 0.13, alpha: 0.3)
@@ -43,4 +42,6 @@ final class Colors {
             return UIColor(red: 0.25, green: 0.25, blue: 0.25, alpha: 0.85)
         }
     }
+    
+    private init() {}
 }

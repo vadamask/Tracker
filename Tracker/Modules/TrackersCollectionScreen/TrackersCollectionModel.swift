@@ -9,14 +9,12 @@ import Foundation
 
 final class TrackersCollectionModel {
     
-    private let trackerStore = TrackerStore()
-    private let recordStore = TrackerRecordStore()
-    
-    private var currentDate = Date()
-    
     var stringDate: String {
         dateFormatter.string(from: currentDate)
     }
+    private let trackerStore = TrackerStore()
+    private let recordStore = TrackerRecordStore()
+    private var currentDate = Date()
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()

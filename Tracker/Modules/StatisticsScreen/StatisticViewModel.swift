@@ -19,24 +19,24 @@ final class StatisticViewModel {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(updateView),
-            name: Notification.Name.recordsChanged,
+            name: .recordsChanged,
             object: nil
         )
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(updateView),
-            name: Notification.Name.trackersChanged,
+            name: .trackersChanged,
             object: nil
         )
     }
     
-    @objc func updateView() {
+    @objc
+    func updateView() {
         do {
             statistics = try recordStore.getStatistics()
         } catch {
             self.error = error
         }
-        
         emptyState = statistics == nil
     }
     

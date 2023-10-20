@@ -13,37 +13,38 @@ final class TrackersCollectionViewModel {
     @Observable var searchIsEmpty = false
     @Observable var filter: Filter = .all
     @Observable var error: Error?
-
-    private var model = TrackersCollectionModel()
     
     var stringSelectedDate: String {
         model.stringDate
     }
     
+    private var model = TrackersCollectionModel()
+    
     init() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(fetchTrackersAtCurrentDate),
-            name: Notification.Name.trackersChanged,
+            name: .trackersChanged,
             object: nil)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(fetchTrackersAtCurrentDate),
-            name: Notification.Name.categoryDeleted,
+            name: .categoryDeleted,
             object: nil)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(fetchTrackersAtCurrentDate),
-            name: Notification.Name.categoryChanged,
+            name: .categoryChanged,
             object: nil)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(fetchTrackersAtCurrentDate),
-            name: Notification.Name.recordsChanged,
+            name: .recordsChanged,
             object: nil)
     }
     
-    @objc func fetchTrackersAtCurrentDate() {
+    @objc
+    func fetchTrackersAtCurrentDate() {
         switch filter {
         case .all:
             do {

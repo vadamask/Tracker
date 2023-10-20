@@ -12,12 +12,11 @@ final class TrackerSetupViewModel {
     @Observable var textTooLong = false
     @Observable var createButtonIsAllowed = false
     @Observable var error: Error?
+    let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶",
+                  "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     
     private let model: TrackerSetupModel
     private var isTracker = true
-    
-    let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶",
-                  "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     
     init(model: TrackerSetupModel) {
         self.model = model

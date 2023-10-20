@@ -24,7 +24,8 @@ struct Details {
 final class TrackerRecordStore {
     
     private let context: NSManagedObjectContext
-    private var notification = Notification(name: Notification.Name.recordsChanged)
+    private let notification = Notification(name: .recordsChanged)
+    
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MM yyyy"

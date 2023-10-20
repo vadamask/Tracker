@@ -17,6 +17,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "TrackersCollectionViewCell"
     weak var delegate: TrackersCollectionViewCellDelegate?
+    
     private let colors = Colors.shared
     private let analyticsService = AnalyticsService.shared
     
@@ -70,8 +71,9 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             plusButton.tintColor = UIColor(named: tracker.color)
         }
     }
-      
-    @objc private func recordButtonTapped() {
+    
+    @objc
+    private func recordButtonTapped() {
         if let recordID = recordID {
             delegate?.deleteRecord(with: recordID)
             self.recordID = nil
@@ -82,9 +84,9 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         }
         
         analyticsService.sendEvent(params: [
-            AnalyticsService.Parameters.event.rawValue: AnalyticsService.Event.click.rawValue,
-            AnalyticsService.Parameters.screen.rawValue: AnalyticsService.Screen.main.rawValue,
-            AnalyticsService.Parameters.item.rawValue: AnalyticsService.Item.track.rawValue
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.main.rawValue,
+            Parameters.item.rawValue: Item.track.rawValue
         ])
     }
     
