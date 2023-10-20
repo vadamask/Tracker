@@ -10,31 +10,40 @@ import UIKit
 
 final class OnboardingViewController: UIViewController {
     
-    private let viewControllers: [UIViewController] = [
-        PageViewController(imageName: "first onboarding", textLabel: "Отслеживайте только то, что хотите"),
-        PageViewController(imageName: "second onboarding", textLabel: "Даже если это не литры воды и йога")
-    ]
-    
+    private var viewControllers: [UIViewController] = []
     private let pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-    
-    private let pageControl: UIPageControl = {
-        let control = UIPageControl()
-        control.currentPage = 0
-        control.numberOfPages = 2
-        control.currentPageIndicatorTintColor = .blackYP
-        control.pageIndicatorTintColor = .blackYP30
-        return control
-    }()
+    private let colors = Colors.shared
+    private let pageControl = UIPageControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        setupLayout()
+    }
+    
+    private func setupViews() {
+        let firstViewController = PageViewController(
+            image: UIImage(asset: Asset.Assets.OnboardingScreen.firstOnboarding),
+            textLabel: L10n.Localizable.OnboardingScreen.FirstPage.Label.title
+        )
+        let secondViewController = PageViewController(
+            image: UIImage(asset: Asset.Assets.OnboardingScreen.secondOnboarding),
+            textLabel: L10n.Localizable.OnboardingScreen.SecondPage.Label.title
+        )
+        viewControllers.append(contentsOf: [firstViewController, secondViewController])
         
         if let first = viewControllers.first {
             pageViewController.setViewControllers([first], direction: .forward, animated: true)
         }
+        
         pageViewController.dataSource = self
         pageViewController.delegate = self
-        setupLayout()
+        
+        pageControl.currentPage = 0
+        pageControl.numberOfPages = 2
+        pageControl.currentPageIndicatorTintColor = colors.blackStaticYP
+        pageControl.pageIndicatorTintColor = colors.blackStaticYP30
+        pageControl.isEnabled = false
     }
     
     private func setupLayout() {
@@ -82,12 +91,12 @@ extension OnboardingViewController: UIPageViewControllerDataSource {
 // MARK: - UIPageViewControllerDelegate
 
 extension OnboardingViewController: UIPageViewControllerDelegate {
+    
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         
         if let currentVC = pageViewController.viewControllers?.first,
            let index = viewControllers.firstIndex(of: currentVC) {
             pageControl.currentPage = index
         }
-        
     }
 }

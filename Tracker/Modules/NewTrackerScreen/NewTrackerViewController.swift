@@ -15,10 +15,11 @@ protocol NewTrackerViewControllerDelegate: AnyObject {
 final class NewTrackerViewController: UIViewController {
     
     weak var delegate: NewTrackerViewControllerDelegate?
-    
-    private let topLabel = UILabel(text: "Создание трекера", textColor: .blackYP, font: .systemFont(ofSize: 16, weight: .medium))
-    private let trackerButton = UIButton(title: "Привычка")
-    private let eventButton = UIButton(title: "Нерегулярное событие")
+    private let analyticsService = AnalyticsService.shared
+    private let colors = Colors.shared
+    private let topLabel = UILabel()
+    private let trackerButton = UIButton(type: .system)
+    private let eventButton = UIButton(type: .system)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,10 +27,42 @@ final class NewTrackerViewController: UIViewController {
         setupLayout()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.sendEvent(params: [
+            Parameters.event.rawValue: Event.open.rawValue,
+            Parameters.screen.rawValue: Screen.new_tracker.rawValue
+        ])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.sendEvent(params: [
+            Parameters.event.rawValue: Event.closed.rawValue,
+            Parameters.screen.rawValue: Screen.new_tracker.rawValue
+        ])
+    }
+    
     private func setupViews() {
-        view.backgroundColor = .whiteYP
+        view.backgroundColor = colors.whiteDynamicYP
+        
+        topLabel.text = L10n.Localizable.NewTrackerScreen.TopLabel.title
+        topLabel.textColor = colors.blackDynamicYP
+        topLabel.font = .systemFont(ofSize: 16, weight: .medium)
+        
         trackerButton.addTarget(self, action: #selector(trackerButtonTapped), for: .touchUpInside)
+        trackerButton.setTitle(L10n.Localizable.NewTrackerScreen.TrackerButton.title, for: .normal)
+        trackerButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        trackerButton.setTitleColor(colors.whiteDynamicYP, for: .normal)
+        trackerButton.backgroundColor = colors.blackDynamicYP
+        trackerButton.layer.cornerRadius = 16
+        
         eventButton.addTarget(self, action: #selector(eventButtonTapped), for: .touchUpInside)
+        eventButton.setTitle(L10n.Localizable.NewTrackerScreen.EventButton.title, for: .normal)
+        eventButton.setTitleColor(colors.whiteDynamicYP, for: .normal)
+        eventButton.backgroundColor = colors.blackDynamicYP
+        eventButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        eventButton.layer.cornerRadius = 16
     }
     
     private func setupLayout() {
@@ -55,16 +88,30 @@ final class NewTrackerViewController: UIViewController {
         }
     }
     
-    @objc private func trackerButtonTapped(sender: Any) {
-        let vc = TrackerSetupViewController()
+    @objc
+    private func trackerButtonTapped(sender: Any) {
+        let vc = TrackerSetupViewController(isTracker: true)
         vc.delegate = self
         present(vc, animated: true)
+        
+        analyticsService.sendEvent(params: [
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.new_tracker.rawValue,
+            Parameters.item.rawValue: Item.new_tracker.rawValue
+        ])
     }
     
-    @objc private func eventButtonTapped() {
+    @objc
+    private func eventButtonTapped() {
         let vc = TrackerSetupViewController(isTracker: false)
         vc.delegate = self
         present(vc, animated: true)
+        
+        analyticsService.sendEvent(params: [
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.new_tracker.rawValue,
+            Parameters.item.rawValue: Item.new_event.rawValue
+        ])
     }
 }
 

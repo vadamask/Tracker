@@ -8,20 +8,20 @@
 import CoreData
 import UIKit
 
-final class TrackerCategoryStore: NSObject {
+final class TrackerCategoryStore {
     
     static let shared = TrackerCategoryStore()
-    let context: NSManagedObjectContext
+    private let context: NSManagedObjectContext
     
-    private var addNotification = Notification(name: Notification.Name("Category added"))
-    private var changeNotification = Notification(name: Notification.Name("Category changed"))
-    private var deleteNotification = Notification(name: Notification.Name("Category deleted"))
+    private let addNotification = Notification(name: .categoryAdded)
+    private let changeNotification = Notification(name: .categoryChanged)
+    private let deleteNotification = Notification(name: .categoryDeleted)
     
     private init(context: NSManagedObjectContext) {
         self.context = context
     }
     
-    private convenience override init() {
+    private convenience init() {
         guard let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
             fatalError("Failed with context")
         }
@@ -59,6 +59,11 @@ final class TrackerCategoryStore: NSObject {
     
     func fetchCategories() throws -> [CategoryCellViewModel] {
         let request = TrackerCategoryCoreData.fetchRequest()
+        request.predicate = NSPredicate(
+            format: "%K != %@",
+            #keyPath(TrackerCategoryCoreData.title),
+            L10n.Localizable.CollectionScreen.pinHeader
+        )
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         let objects = try context.fetch(request)
         return objects.compactMap { CategoryCellViewModel(title: $0.title ?? "") }

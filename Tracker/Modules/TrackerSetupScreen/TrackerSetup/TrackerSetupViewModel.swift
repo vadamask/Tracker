@@ -11,12 +11,12 @@ final class TrackerSetupViewModel {
     
     @Observable var textTooLong = false
     @Observable var createButtonIsAllowed = false
+    @Observable var error: Error?
+    let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶",
+                  "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     
     private let model: TrackerSetupModel
     private var isTracker = true
-    
-    private let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶",
-                         "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     
     init(model: TrackerSetupModel) {
         self.model = model
@@ -26,9 +26,21 @@ final class TrackerSetupViewModel {
         model.addTracker()
     }
     
+    func saveButtonTapped(_ id: UUID) {
+        do {
+           try self.model.replaceTracker(with: id)
+        } catch {
+            self.error = error
+        }
+    }
+    
     func eventIsSelected() {
         model.eventIsSelected()
         isTracker = false
+    }
+    
+    func trackerIsPinned(_ isPinned: Bool) {
+        model.trackerIsPinned(isPinned)
     }
     
 }
@@ -52,10 +64,6 @@ extension TrackerSetupViewModel {
 // MARK: - TableView
 
 extension TrackerSetupViewModel {
-    
-    var numberOfRowsInTableView: Int {
-        isTracker ? 2 : 1
-    }
     
     func didSelectCategory(_ category: String) {
         model.didSelectCategory(category)
@@ -81,14 +89,6 @@ extension TrackerSetupViewModel {
 // MARK: - CollectionView
 
 extension TrackerSetupViewModel {
-    
-    var numberOfSectionsInCollectionView: Int {
-        2
-    }
-    
-    var numberOfRowsInCollectionView: Int {
-        18
-    }
     
     func emojiForCollectionView(at indexPath: IndexPath) -> String {
         emojis[indexPath.row]

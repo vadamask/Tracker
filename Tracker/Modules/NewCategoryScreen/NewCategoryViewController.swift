@@ -9,11 +9,13 @@ import UIKit
 
 final class NewCategoryViewController: UIViewController {
     
+    private let analyticsService = AnalyticsService.shared
     private let oldTitle: String?
     private let viewModel = NewCategoryViewModel(model: NewCategoryModel())
-    private let createButton = UIButton(title: "Готово", backgroundColor: .grayYP)
+    private let createButton = UIButton(type: .system)
     private let topLabel = UILabel()
     private let textField = UITextField()
+    private let colors = Colors.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,15 +33,35 @@ final class NewCategoryViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.sendEvent(params: [
+            Parameters.event.rawValue: Event.open.rawValue,
+            Parameters.screen.rawValue: Screen.new_category.rawValue
+        ])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.sendEvent(params: [
+            Parameters.event.rawValue: Event.closed.rawValue,
+            Parameters.screen.rawValue: Screen.new_category.rawValue
+        ])
+    }
+    
     private func bind() {
         
         viewModel.$isAllowed.bind { [weak self] isAllowed in
+            guard let self = self else { return }
+            
             if isAllowed {
-                self?.createButton.isEnabled = true
-                self?.createButton.backgroundColor = .blackYP
+                createButton.isEnabled = true
+                createButton.backgroundColor = colors.blackDynamicYP
+                createButton.setTitleColor(colors.whiteDynamicYP, for: .normal)
             } else {
-                self?.createButton.isEnabled = false
-                self?.createButton.backgroundColor = .grayYP
+                createButton.isEnabled = false
+                createButton.backgroundColor = colors.grayStaticYP
+                createButton.setTitleColor(colors.whiteStaticYP, for: .normal)
             }
         }
         
@@ -47,8 +69,15 @@ final class NewCategoryViewController: UIViewController {
             guard let isSame = isSame else { return }
             
             if isSame {
-                let alertController = UIAlertController(title: "Ошибка", message: "Такое название уже есть", preferredStyle: .alert)
-                let action = UIAlertAction(title: "Ок", style: .default)
+                let alertController = UIAlertController(
+                    title: L10n.Localizable.NewCategoryScreen.AlertController.title,
+                    message: L10n.Localizable.NewCategoryScreen.AlertController.message,
+                    preferredStyle: .alert
+                )
+                let action = UIAlertAction(
+                    title: L10n.Localizable.NewCategoryScreen.AlertController.action,
+                    style: .default
+                )
                 alertController.addAction(action)
                 self?.present(alertController, animated: true)
             } else {
@@ -57,30 +86,45 @@ final class NewCategoryViewController: UIViewController {
         }
     }
     
-    @objc private func doneButtonTapped() {
+    @objc
+    private func doneButtonTapped() {
         guard let newTitle = textField.text else { return }
         viewModel.updateCategory(oldTitle, with: newTitle)
+        
+        analyticsService.sendEvent(params: [
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.new_category.rawValue,
+            Parameters.item.rawValue: Item.done.rawValue
+        ])
     }
     
-    @objc private func textDidChanged() {
+    @objc
+    private func textDidChanged() {
         viewModel.textDidChanged(textField.text)
     }
     
     private func setupViews() {
-        topLabel.text = oldTitle == nil ? "Новая категория" : "Редактирование категории"
-        topLabel.textColor = .blackYP
-        topLabel.font = .systemFont(ofSize: 16, weight: .medium)
+        view.backgroundColor = colors.whiteDynamicYP
         
-        view.backgroundColor = .whiteYP
+        topLabel.text = oldTitle == nil ?
+        L10n.Localizable.NewCategoryScreen.topLabelForNew :
+        L10n.Localizable.NewCategoryScreen.topLabelForEdit
+        topLabel.textColor = colors.blackDynamicYP
+        topLabel.font = .systemFont(ofSize: 16, weight: .medium)
         
         createButton.isEnabled = false
         createButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+        createButton.setTitle(L10n.Localizable.NewCategoryScreen.doneButtonTitle, for: .normal)
+        createButton.setTitleColor(colors.whiteStaticYP, for: .normal)
+        createButton.backgroundColor = colors.grayStaticYP
+        createButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        createButton.layer.cornerRadius = 16
         
         textField.text = oldTitle
         textField.delegate = self
-        textField.placeholder = "Введите название категории"
+        textField.placeholder = L10n.Localizable.NewCategoryScreen.TextField.placeholder
         textField.clearButtonMode = .always
-        textField.backgroundColor = .backgroundYP
+        textField.backgroundColor = colors.backgroundDynamicYP
         textField.layer.cornerRadius = 16
         textField.leftViewMode = .always
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
@@ -120,6 +164,21 @@ extension NewCategoryViewController: UITextFieldDelegate {
 
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         viewModel.textDidChanged("")
+        analyticsService.sendEvent(params: [
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.new_category.rawValue,
+            Parameters.item.rawValue: Item.clear_textfield.rawValue
+        ])
         return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        analyticsService.sendEvent(params: [
+            Parameters.event.rawValue: Event.click.rawValue,
+            Parameters.screen.rawValue: Screen.new_category.rawValue,
+            Parameters.item.rawValue: Item.hide_keyboard.rawValue
+        ])
+        
+        return view.endEditing(true)
     }
 }

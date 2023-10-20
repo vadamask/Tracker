@@ -19,38 +19,38 @@ enum WeekDay: Int {
     var fullName: String {
         switch self {
         case .monday:
-            return "Понедельник"
+            return L10n.Localizable.mondayFull
         case .tuesday:
-            return "Вторник"
+            return L10n.Localizable.tuesdayFull
         case .wednesday:
-            return "Среда"
+            return L10n.Localizable.wednesdayFull
         case .thursday:
-            return "Четверг"
+            return L10n.Localizable.thursdayFull
         case .friday:
-            return "Пятница"
+            return L10n.Localizable.fridayFull
         case .saturday:
-            return "Суббота"
+            return L10n.Localizable.saturdayFull
         case .sunday:
-            return "Воскресенье"
+            return L10n.Localizable.sundayFull
         }
     }
     
     var shortName: String {
         switch self {
         case .monday:
-            return "Пн"
+            return L10n.Localizable.mondayShort
         case .tuesday:
-            return "Вт"
+            return L10n.Localizable.tuesdayShort
         case .wednesday:
-            return "Ср"
+            return L10n.Localizable.wednesdayShort
         case .thursday:
-            return "Чт"
+            return L10n.Localizable.thursdayShort
         case .friday:
-            return "Пт"
+            return L10n.Localizable.fridayShort
         case .saturday:
-            return "Сб"
+            return L10n.Localizable.saturdayShort
         case .sunday:
-            return "Вс"
+            return L10n.Localizable.sundayShort
         }
     }
 }

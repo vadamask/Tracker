@@ -10,18 +10,13 @@ import UIKit
 
 final class PageViewController: UIViewController {
     
+    private let colors = Colors.shared
     private let imageView = UIImageView()
-    private let label = UILabel(text: "", textColor: .blackYP, font: UIFont.systemFont(ofSize: 32, weight: .bold))
-    private let button = UIButton(title: "Вот это технологии!")
+    private let label = UILabel()
+    private let button = UIButton()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupViews()
-        setupLayout()
-    }
-    
-    init(imageName: String, textLabel: String) {
-        imageView.image = UIImage(named: imageName)
+    init(image: UIImage?, textLabel: String) {
+        imageView.image = image
         label.text = textLabel
         super.init(nibName: nil, bundle: nil)
     }
@@ -30,7 +25,14 @@ final class PageViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc private func buttonDidTapped() {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupViews()
+        setupLayout()
+    }
+    
+    @objc
+    private func buttonDidTapped() {
         if let delegate = UIApplication.shared.delegate as? AppDelegate {
             let vc = TabBarController()
             delegate.window?.rootViewController = vc
@@ -39,9 +41,19 @@ final class PageViewController: UIViewController {
     }
     
     private func setupViews() {
+        imageView.contentMode = .scaleAspectFill
+        
         label.numberOfLines = 0
         label.textAlignment = .center
+        label.textColor = colors.blackStaticYP
+        label.font = .systemFont(ofSize: 32, weight: .bold)
+        
         button.addTarget(self, action: #selector(buttonDidTapped), for: .touchUpInside)
+        button.setTitle(L10n.Localizable.OnboardingScreen.Button.title, for: .normal)
+        button.setTitleColor(colors.whiteStaticYP, for: .normal)
+        button.backgroundColor = colors.blackStaticYP
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        button.layer.cornerRadius = 16
     }
     
     private func setupLayout() {
@@ -56,7 +68,7 @@ final class PageViewController: UIViewController {
         label.snp.makeConstraints { make in
             make.leading.equalTo(16)
             make.trailing.equalTo(-16)
-            make.bottom.equalTo(button.snp.top).offset(-160)
+            make.bottom.equalTo(button.snp.top).offset(-190)
         }
         
         button.snp.makeConstraints { make in

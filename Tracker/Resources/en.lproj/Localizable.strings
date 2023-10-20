@@ -1,0 +1,97 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Вадим Шишков on 05.10.2023.
+  
+*/
+
+"mondayFull" = "Monday";
+"tuesdayFull" = "Tuesday";
+"wednesdayFull" = "Wednesday";
+"thursdayFull" = "Thursday";
+"fridayFull" = "Friday";
+"saturdayFull" = "Saturday";
+"sundayFull" = "Sunday";
+"mondayShort" = "Mo";
+"tuesdayShort" = "Tu";
+"wednesdayShort" = "We";
+"thursdayShort" = "Th";
+"fridayShort" = "Fr";
+"saturdayShort" = "Sa";
+"sundayShort" = "Su";
+"everyday" = "Everyday";
+
+"tabBarItem.collection" = "Trackers";
+"tabBarItem.statistics" = "Statistics";
+
+"onboardingScreen.firstPage.label.title" = "Track only what you want";
+"onboardingScreen.secondPage.label.title" = "Even if it's not liters of water and yoga";
+"onboardingScreen.button.title" = "These are technologies!";
+
+"statisticsScreen.emptyState.title" = "There is nothing to analyze yet";
+"statisticsScreen.navigationItem.title" = "Statistics";
+"statisticsScreen.bestPeriod" = "Best period";
+"statisticsScreen.perfectDays" = "Perfect days";
+"statisticsScreen.trackersCompleted" = "Тrackers completed";
+"statisticsScreen.avgValue" = "Average value";
+"statisticsScreen.alertController.title" = "Error";
+"statisticsScreen.alertController.ok" = "Ok";
+
+"collectionScreen.navigationItem.title" = "Trackers";
+"collectionScreen.emptyState.title" = "What will we track?";
+"collectionScreen.emptySearch.title" = "Nothing found";
+"collectionScreen.searchBar.placeholder" = "Search";
+"collectionScreen.searchBar.cancelButton" = "Cancel";
+"collectionScreen.contextMenu.pinAction" = "Pin";
+"collectionScreen.contextMenu.unpinAction" = "Unpin";
+"collectionScreen.contextMenu.editAction" = "Edit";
+"collectionScreen.contextMenu.deleteAction" = "Delete";
+"collectionScreen.alertController.message" = "Are you sure you want to delete the tracker?";
+"collectionScreen.alertController.deleteAction" = "Delete";
+"collectionScreen.alertController.cancelAction" = "Cancel";
+"collectionScreen.filterButton" = "Filters";
+"collectionScreen.pinHeader" = "Pinned";
+
+"filtersScreen.topLabel.title" = "Filters";
+"filtersScreen.filter.all" = "All trackers";
+"filtersScreen.filter.today" = "Trackers for today";
+"filtersScreen.filter.completed" = "Completed";
+"filtersScreen.filter.incomplete" = "Incomplete";
+
+"newTrackerScreen.topLabel.title" = "Creating a tracker";
+"newTrackerScreen.trackerButton.title" = "Habit";
+"newTrackerScreen.eventButton.title" = "Irregular event";
+
+"setupTrackerScreen.topLabel.trackerTitle" = "New habit";
+"setupTrackerScreen.topLabel.eventTitle" = "New irregular event";
+"setupTrackerScreen.topLabel.editingMode" = "Habit editing";
+"setupTrackerScreen.textField.placeholder" = "Enter tracker name";
+"setupTrackerScreen.warningLabel.title" = "Limit 38 characters";
+"setupTrackerScreen.category.title" = "Category";
+"setupTrackerScreen.schedule.title" = "Schedule";
+"setupTrackerScreen.emoji.header" = "Emoji";
+"setupTrackerScreen.color.header" = "Color";
+"setupTrackerScreen.createButton.title" = "Create";
+"setupTrackerScreen.saveButton.title" = "Save";
+"setupTrackerScreen.cancelButton.title" = "Cancel";
+
+"categoriesScreen.topLabel.title" = "Category";
+"categoriesScreen.emptyState.title" = "Habits and events can be combined by meaning";
+"categoriesScreen.button.addTitle" = "Add category";
+"categoriesScreen.editCategoryTitle" = "Edit";
+"categoriesScreen.deleteCategoryTitle" = "Delete";
+"categoriesScreen.alertController.message" = "Are you sure this category is not needed?";
+"categoriesScreen.alertController.delete" = "Delete";
+"categoriesScreen.alertController.cancel" = "Cancel";
+
+"newCategoryScreen.doneButtonTitle" = "Add";
+"newCategoryScreen.alertController.title" = "Error";
+"newCategoryScreen.alertController.message" = "This name already exists";
+"newCategoryScreen.alertController.action" = "Ok";
+"newCategoryScreen.topLabelForNew" = "New category";
+"newCategoryScreen.topLabelForEdit" = "Editing the category";
+"newCategoryScreen.textField.placeholder" = "Enter category name";
+
+"scheduleScreen.topLabel.title" = "Schedule";
+"scheduleScreen.doneButtonTitle" = "Done";

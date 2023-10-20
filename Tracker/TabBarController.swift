@@ -8,7 +8,9 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
-
+    
+    private let colors = Colors.shared
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabBar()
@@ -28,26 +30,26 @@ final class TabBarController: UITabBarController {
         statisticsNavigationVC.navigationBar.prefersLargeTitles = true
         
         trackersVC.tabBarItem = UITabBarItem(
-            title: "Трекеры",
+            title: L10n.Localizable.TabBarItem.collection,
             image: UIImage(imageLiteralResourceName: "trackersItem"),
             selectedImage: nil
         )
         
         statisticsVC.tabBarItem = UITabBarItem(
-            title: "Статистика",
+            title: L10n.Localizable.TabBarItem.statistics,
             image: UIImage(imageLiteralResourceName: "statsItem"),
             selectedImage: nil
         )
         
         let appearance = UITabBarAppearance()
         appearance.configureWithDefaultBackground()
-        appearance.backgroundColor = .whiteYP
+        appearance.backgroundColor = colors.whiteDynamicYP
         tabBar.standardAppearance = appearance
         if #available(iOS 15, *) {
             tabBar.scrollEdgeAppearance = appearance
         }
-        tabBar.tintColor = .blueYP
-        tabBar.unselectedItemTintColor = .grayYP
+        tabBar.tintColor = colors.blueStaticYP
+        tabBar.unselectedItemTintColor = colors.grayStaticYP
         
         self.viewControllers = [trackersNavigationVC, statisticsNavigationVC]
     }

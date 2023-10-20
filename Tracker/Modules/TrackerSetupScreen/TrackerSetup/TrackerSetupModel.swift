@@ -9,14 +9,6 @@ import Foundation
 
 final class TrackerSetupModel {
     
-    private let trackerStore = TrackerStore()
-    
-    private var title: String?
-    private var category: String?
-    private var schedule: Set<WeekDay>?
-    private var color: String?
-    private var emoji: String?
-    
     var isAllSetup: Bool {
         guard title != nil,
               category != nil,
@@ -26,20 +18,44 @@ final class TrackerSetupModel {
         return true
     }
     
+    private let trackerStore = TrackerStore()
+    private var title: String?
+    private var category: String?
+    private var schedule: Set<WeekDay>?
+    private var color: String?
+    private var emoji: String?
+    private var isPinned = false
+    
     func addTracker() {
         if isAllSetup {
             let tracker = Tracker(
-                uuid: UUID(),
+                id: UUID(),
                 name: title!,
                 color: color!,
                 emoji: emoji!,
-                schedule: schedule!
+                schedule: schedule!,
+                isPinned: isPinned
             )
             do {
                 try trackerStore.addTracker(tracker, with: category!)
             } catch {
                 print(error.localizedDescription)
             }
+        }
+    }
+    
+    func replaceTracker(with id: UUID) throws {
+        if isAllSetup {
+            let tracker = Tracker(
+                id: id,
+                name: title!,
+                color: color!,
+                emoji: emoji!,
+                schedule: schedule!,
+                isPinned: isPinned
+            )
+            
+            try trackerStore.changeTracker(with: TrackerCategory(title: category!, trackers: [tracker]))
         }
     }
     
@@ -91,4 +107,7 @@ final class TrackerSetupModel {
         self.color = nil
     }
     
+    func trackerIsPinned(_ isPinned: Bool) {
+        self.isPinned = isPinned
+    }
 }
